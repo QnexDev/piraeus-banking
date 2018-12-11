@@ -8,7 +8,7 @@ import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.extensions.currentScreen
 import ua.piraeusbank.banking.ui.extensions.openScreen
 import ua.piraeusbank.banking.ui.navigation.BackMessage
-import ua.piraeusbank.banking.ui.screen.MainScreen
+import ua.piraeusbank.banking.ui.screen.LoginScreen
 import ua.piraeusbank.banking.ui.screen.base.BackHandler
 
 class MainActivity : AppCompatActivity(), NavigationMessageHandler {
@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity(), NavigationMessageHandler {
         setContentView(R.layout.activity_main)
 
         if (savedInstanceState == null) {
-            supportFragmentManager.openScreen(MainScreen(), addToBackStack = false)
+            supportFragmentManager.openScreen(LoginScreen(), addToBackStack = false)
         }
     }
 

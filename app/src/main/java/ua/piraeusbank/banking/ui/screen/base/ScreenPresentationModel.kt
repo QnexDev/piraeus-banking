@@ -1,5 +1,6 @@
 package ua.piraeusbank.banking.ui.screen.base
 
+import android.support.annotation.CallSuper
 import me.dmdev.rxpm.PresentationModel
 import me.dmdev.rxpm.navigation.NavigationMessage
 import me.dmdev.rxpm.widget.dialogControl
@@ -14,6 +15,7 @@ abstract class ScreenPresentationModel : PresentationModel() {
 
     open val backAction: Action<Unit> = backActionDefault
 
+    @CallSuper
     override fun onCreate() {
         super.onCreate()
 
