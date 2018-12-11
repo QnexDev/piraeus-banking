@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Piraeus Banking</string>
+    <string name="sign_in">Sign In</string>
+
+    <string name="ok_button">OK</string>
+    <string name="display_a_password_chbx">Display a password</string>
+    <string name="next_button">Next</string>
+    <string name="login_txt">Login</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="password">Password</string>
+
+
+</resources>
