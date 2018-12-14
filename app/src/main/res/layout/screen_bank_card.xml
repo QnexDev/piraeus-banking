@@ -1,6 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              tools:ignore="RtlHardcoded"
+              android:theme="@style/AppTheme">
 
-</android.support.constraint.ConstraintLayout>
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="180dp"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical"
+                      android:layout_gravity="left">
+
+            <TextView
+                    android:id="@+id/cardName"
+                    android:layout_gravity="bottom"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:text="*4308 07/21"
+                    android:textSize="18sp"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="10dp"
+                    />
+
+            <TextView
+                    android:id="@+id/cardNumber"
+                    android:layout_gravity="bottom"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="Карта для выплат"
+                    android:textSize="12sp"
+                    android:layout_marginStart="10dp"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal" >
+
+        <TextView
+                android:id="@+id/moneyAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="9dp"
+                android:text="9950.00 UAH"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        <Button
+                android:id="@+id/transferLink"
+                style="@style/LinkButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="@string/transfer_money_link" />
+
+    </RelativeLayout>
+
+
+    <android.support.v7.widget.RecyclerView
+            android:id="@+id/historyStatements"
+            android:scrollbars="vertical"
+            android:layout_margin="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+
+    <Button
+            android:id="@+id/moreHistoryStatement"
+            style="@style/LinkButton"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="@string/more_history_statement_link"
+            android:textSize="12sp"/>
+
+
+</LinearLayout>

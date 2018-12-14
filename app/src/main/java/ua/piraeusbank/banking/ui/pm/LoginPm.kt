@@ -4,7 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import me.dmdev.rxpm.skipWhileInProgress
 import me.dmdev.rxpm.widget.inputControl
-import ua.piraeusbank.banking.ui.navigation.UserHasBeenAuthorizedMessage
+import ua.piraeusbank.banking.ui.navigation.UserHasAuthorizedMessage
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 import ua.piraeusbank.banking.util.PhoneUtils
 import ua.piraeusbank.banking.util.ResourceProvider
@@ -39,7 +39,7 @@ class LoginPm(
         loginAction.observable
             .skipWhileInProgress(inProgress.observable)
             .map { Pair(phoneNumberControl.text.value, passwordControl.text.value) }
-            .subscribe { sendMessage(UserHasBeenAuthorizedMessage) }
+            .subscribe { sendMessage(UserHasAuthorizedMessage) }
             .untilDestroy()
 
 

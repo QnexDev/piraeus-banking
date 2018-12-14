@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.bank_card_layout.view.*
 import ua.piraeusbank.banking.R
-import ua.piraeusbank.banking.ui.model.BankCard
+import ua.piraeusbank.banking.ui.model.PeymentCard
 
-class BankCardAdapter(private val cards: List<BankCard>, private val cardLayout: Int) :
-    RecyclerView.Adapter<BankCardAdapter.ViewHolder>() {
+class PaymentCardAdapter(private val cards: List<PeymentCard>, private val cardLayout: Int) :
+    RecyclerView.Adapter<PaymentCardAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
         return cards.size
@@ -26,8 +26,8 @@ class BankCardAdapter(private val cards: List<BankCard>, private val cardLayout:
         holder.cardNumber.text = "*${cards[position].cardNumber}"
         holder.cardType.setImageResource(
             when (cards[position].cardType) {
-                BankCard.Type.VISA -> R.drawable.ic_visa
-                BankCard.Type.MASTERCARD -> R.drawable.ic_mastercard
+                PeymentCard.Type.VISA -> R.drawable.ic_visa
+                PeymentCard.Type.MASTERCARD -> R.drawable.ic_mastercard
             }
         )
         holder.moneyAmount.text = cards[position].moneyAmount

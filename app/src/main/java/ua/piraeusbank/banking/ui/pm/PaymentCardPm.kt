@@ -2,5 +2,5 @@ package ua.piraeusbank.banking.ui.pm
 
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 
-class BankCardPm : ScreenPresentationModel() {
+class PaymentCardPm : ScreenPresentationModel() {
 }
