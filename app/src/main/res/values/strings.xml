@@ -1,4 +1,10 @@
 <resources>
+    <string name="font_family_medium">sans-serif-medium</string>
+    <string name="font_family_light">sans-serif-light</string>
+    <string name="font_family">sans-serif</string>
+    <string name="font_family_condensed">sans-serif-condensed</string>
+    <string name="font_family_thin">sans-serif-thin</string>
+
     <string name="app_name">Piraeus Banking</string>
     <string name="main_screen_title">Piraeus Online</string>
     <string name="sign_in">Sign In</string>
@@ -13,11 +19,8 @@
     <string name="enter_phone_number">Enter phone number</string>
     <string name="invalid_phone_number">Invalid phone number</string>
 
-    <string name="font_family_medium">sans-serif-medium</string>
-    <string name="font_family_light">sans-serif-light</string>
-    <string name="font_family">sans-serif</string>
-    <string name="font_family_condensed">sans-serif-condensed</string>
-    <string name="font_family_thin">sans-serif-thin</string>
     <string name="card_type_descr">Type of card</string>
+    <string name="all_cards_link">All cards</string>
+    <string name="account_title">My cards</string>
 
 </resources>

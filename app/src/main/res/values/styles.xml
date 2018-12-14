@@ -44,4 +44,12 @@
         <item name="android:textColor">@color/primary_text</item>
     </style>
 
+    <style name="LinkButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:layout_width">?attr/actionBarSize</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:scaleType">centerInside</item>
+        <item name="android:colorButtonNormal">@color/accent</item>
+        <item name="android:textColor">@color/primary_text</item>
+    </style>
+
 </resources>
