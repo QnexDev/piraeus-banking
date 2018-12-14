@@ -5,7 +5,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import kotlinx.android.synthetic.main.screen_bank_card.*
-import kotlinx.android.synthetic.main.screen_main.*
 import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.StatementAction
 import ua.piraeusbank.banking.ui.pm.PaymentCardPm
@@ -25,7 +24,7 @@ class PaymentCardScreen : Screen<PaymentCardPm>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        toolbar.inflateMenu(R.menu.main)
+//        toolbar.inflateMenu(R.menu.main)
     }
 
     override fun providePresentationModel(): PaymentCardPm {
@@ -44,12 +43,12 @@ class PaymentCardScreen : Screen<PaymentCardPm>() {
                     "14.12.18 04:24"
                 ),
                 StatementAction(
-                    StatementAction.TransferType.INCOMING,
+                    StatementAction.TransferType.OUTGOING,
                     "With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase",
                     "14.12.18 04:24"
                 ),
                 StatementAction(
-                    StatementAction.TransferType.INCOMING,
+                    StatementAction.TransferType.OUTGOING,
                     "With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase",
                     "14.12.18 04:24"
                 )

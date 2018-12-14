@@ -14,8 +14,8 @@
         <ImageView
                 android:id="@+id/transferType"
                 android:layout_marginStart="20dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/ic_mastercard_128"
                 android:contentDescription="@string/card_type_descr"/>
 
@@ -25,7 +25,7 @@
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:text="With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:layout_marginStart="10dp"/>
 
     </LinearLayout>
