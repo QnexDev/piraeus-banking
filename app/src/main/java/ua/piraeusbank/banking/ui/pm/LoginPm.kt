@@ -2,14 +2,20 @@ package ua.piraeusbank.banking.ui.pm
 
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
+import me.dmdev.rxpm.skipWhileInProgress
 import me.dmdev.rxpm.widget.inputControl
+import ua.piraeusbank.banking.ui.navigation.UserHasBeenSuccessfullyAuthorized
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 import ua.piraeusbank.banking.util.PhoneUtils
+import ua.piraeusbank.banking.util.ResourceProvider
 
-class LoginPm(private val phoneUtils: PhoneUtils) : ScreenPresentationModel() {
+class LoginPm(
+    private val phoneUtils: PhoneUtils,
+    private val resourceProvider: ResourceProvider
+) : ScreenPresentationModel() {
 
-    val phoneNumber = inputControl()
-    val password = inputControl()
+    val phoneNumberControl = inputControl()
+    val passwordControl = inputControl()
     val inProgress = State(false)
 
     val loginButtonEnabled = State(false)
@@ -18,12 +24,31 @@ class LoginPm(private val phoneUtils: PhoneUtils) : ScreenPresentationModel() {
     override fun onCreate() {
         super.onCreate()
 
-        Observable.combineLatest(phoneNumber.textChanges.observable,  password.textChanges.observable,
-            BiFunction { number: String, password: String ->
-                phoneUtils.isValidPhone(number)
-            })
+        Observable.combineLatest(
+            phoneNumberControl.textChanges.observable,
+            passwordControl.textChanges.observable,
+            BiFunction { phone: String, password: String -> Pair(phone, password) })
+            .map {
+                val (phone, password) = it
+                phoneUtils.isValidPhone(phone) && !password.isBlank()
+            }
             .subscribe(loginButtonEnabled.consumer)
             .untilDestroy()
 
+
+        loginAction.observable
+            .skipWhileInProgress(inProgress.observable)
+            .map { Pair(phoneNumberControl.text.value, passwordControl.text.value) }
+            .subscribe { sendMessage(UserHasBeenSuccessfullyAuthorized) }
+            .untilDestroy()
+
+
+//        phoneNumberControl.textChanges.observable
+//            .map { phoneUtils.isValidPhone(it) }
+//            .subscribe(loginButtonEnabled.consumer)
+//            .untilDestroy()
+//
+
     }
+
 }

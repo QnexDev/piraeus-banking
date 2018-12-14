@@ -8,10 +8,12 @@ import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.extensions.currentScreen
 import ua.piraeusbank.banking.ui.extensions.openScreen
 import ua.piraeusbank.banking.ui.navigation.BackMessage
+import ua.piraeusbank.banking.ui.navigation.UserHasBeenSuccessfullyAuthorized
 import ua.piraeusbank.banking.ui.screen.LoginScreen
+import ua.piraeusbank.banking.ui.screen.MainScreen
 import ua.piraeusbank.banking.ui.screen.base.BackHandler
 
-class MainActivity : AppCompatActivity(), NavigationMessageHandler {
+class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,9 +36,14 @@ class MainActivity : AppCompatActivity(), NavigationMessageHandler {
 
     override fun handleNavigationMessage(message: NavigationMessage): Boolean {
 
+        val sfm = supportFragmentManager
+
         when (message) {
 
             is BackMessage -> super.onBackPressed()
+
+            is UserHasBeenSuccessfullyAuthorized -> sfm.openScreen(MainScreen.create())
+
         }
 
         return true

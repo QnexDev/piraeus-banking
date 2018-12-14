@@ -4,6 +4,7 @@ import android.support.annotation.CallSuper
 import me.dmdev.rxpm.PresentationModel
 import me.dmdev.rxpm.navigation.NavigationMessage
 import me.dmdev.rxpm.widget.dialogControl
+import ua.piraeusbank.banking.ui.extensions.ValidationBuilder
 import ua.piraeusbank.banking.ui.navigation.BackMessage
 
 
@@ -20,7 +21,7 @@ abstract class ScreenPresentationModel : PresentationModel() {
         super.onCreate()
 
         backActionDefault.observable
-            .subscribe { sendMessage(BackMessage()) }
+            .subscribe { sendMessage(BackMessage) }
             .untilDestroy()
     }
 
@@ -30,5 +31,12 @@ abstract class ScreenPresentationModel : PresentationModel() {
 
     protected fun showError(errorMessage: String?) {
         errorDialog.show(errorMessage ?: "Unknown error")
+    }
+
+    internal fun ValidationBuilder.apply(): ValidationBuilder {
+        addErrorConsumer(inputControl.error.consumer)
+        addTextObservable(inputControl.text.observable)
+        build().untilDestroy()
+        return this
     }
 }

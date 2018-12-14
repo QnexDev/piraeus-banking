@@ -1,5 +1,6 @@
 package ua.piraeusbank.banking.ui.screen
 
+import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.screen_login.*
 import ua.piraeusbank.banking.App
 import ua.piraeusbank.banking.R
@@ -11,7 +12,7 @@ class LoginScreen : Screen<LoginPm>() {
     override val screenLayout = R.layout.screen_login
 
     override fun providePresentationModel(): LoginPm {
-        return LoginPm(App.component.phoneUtils)
+        return LoginPm(App.component.phoneUtils, App.component.resourceProvider)
     }
 
     override fun onBindPresentationModel(pm: LoginPm) {
@@ -19,9 +20,11 @@ class LoginScreen : Screen<LoginPm>() {
 
         //Bind PM to UI components
         pm.loginButtonEnabled bindTo loginButton::setEnabled
-        pm.phoneNumber bindTo phoneInput
-        pm.password bindTo passwordInput
+        pm.phoneNumberControl bindTo phoneInput
+        pm.passwordControl bindTo passwordInput
+        pm.inProgress bindTo progressConsumer
 
         //Bind UI components to PM
+        loginButton.clicks() bindTo pm.loginAction
     }
 }
