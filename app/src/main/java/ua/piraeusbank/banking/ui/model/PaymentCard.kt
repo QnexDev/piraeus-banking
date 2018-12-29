@@ -1,6 +1,6 @@
 package ua.piraeusbank.banking.ui.model
 
-data class PeymentCard(
+data class PaymentCard(
         val cardName: String,
         val cardNumber: Int,
         val cardType: Type,

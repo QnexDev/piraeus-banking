@@ -6,7 +6,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.touches
 import kotlinx.android.synthetic.main.screen_main.*
 import ua.piraeusbank.banking.R
-import ua.piraeusbank.banking.ui.model.PeymentCard
+import ua.piraeusbank.banking.ui.model.PaymentCard
 import ua.piraeusbank.banking.ui.pm.MainPm
 import ua.piraeusbank.banking.ui.screen.base.Screen
 import java.util.concurrent.TimeUnit
@@ -33,9 +33,9 @@ class MainScreen : Screen<MainPm>() {
         viewManager = LinearLayoutManager(this.context)
         bankCardAdapter = PaymentCardAdapter(
             listOf(
-                PeymentCard("Payment bank card", 7718, PeymentCard.Type.MASTERCARD, "9 950 UAH"),
-                PeymentCard("Credit bank card", 5614, PeymentCard.Type.VISA, "7 680 UAH"),
-                PeymentCard("Credit bank card", 1414, PeymentCard.Type.VISA, "10 150 UAH")
+                PaymentCard("Payment bank card", 7718, PaymentCard.Type.MASTERCARD, "9 950 UAH"),
+                PaymentCard("Credit bank card", 5614, PaymentCard.Type.VISA, "7 680 UAH"),
+                PaymentCard("Credit bank card", 1414, PaymentCard.Type.VISA, "10 150 UAH")
             ),
             R.layout.bank_card_layout
         )
