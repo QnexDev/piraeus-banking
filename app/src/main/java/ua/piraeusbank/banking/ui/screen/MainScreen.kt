@@ -7,8 +7,10 @@ import com.jakewharton.rxbinding2.view.touches
 import kotlinx.android.synthetic.main.screen_main.*
 import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.PaymentCard
-import ua.piraeusbank.banking.ui.pm.MainPm
+import ua.piraeusbank.banking.ui.navigation.ViewAllCardsMessage
+import ua.piraeusbank.banking.ui.navigation.ViewBankCardMessage
 import ua.piraeusbank.banking.ui.screen.base.Screen
+import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 import java.util.concurrent.TimeUnit
 
 class MainScreen : Screen<MainPm>() {
@@ -48,5 +50,24 @@ class MainScreen : Screen<MainPm>() {
 
         bankCardsView.touches().map { }.delay(10, TimeUnit.MILLISECONDS) bindTo pm.viewBankCardAction
         allCardsLink.clicks() bindTo pm.viewAllCardsAction
+    }
+}
+
+class MainPm : ScreenPresentationModel() {
+
+    val viewBankCardAction = Action<Unit>()
+    val viewAllCardsAction = Action<Unit>()
+
+    override fun onCreate() {
+        super.onCreate()
+
+
+        viewBankCardAction.observable
+            .subscribe { sendMessage(ViewBankCardMessage) }
+            .untilDestroy()
+
+        viewAllCardsAction.observable
+            .subscribe { sendMessage(ViewAllCardsMessage) }
+            .untilDestroy()
     }
 }
