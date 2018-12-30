@@ -4,6 +4,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import kotlinx.android.synthetic.main.bank_card_layout.view.*
 import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.PaymentCard
@@ -34,9 +36,9 @@ class PaymentCardAdapter(private val cards: List<PaymentCard>, private val cardL
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val cardName = view.cardName!!
-        val cardNumber = view.cardNumber!!
-        val cardType = view.cardType!!
-        val moneyAmount = view.moneyAmount!!
+        val cardName: TextView = view.cardName
+        val cardNumber: TextView = view.cardNumber
+        val cardType: ImageView = view.cardType
+        val moneyAmount: TextView = view.moneyAmount
     }
 }
