@@ -9,6 +9,7 @@ import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.PaymentCard
 import ua.piraeusbank.banking.ui.navigation.ViewAllCardsMessage
 import ua.piraeusbank.banking.ui.navigation.ViewBankCardMessage
+import ua.piraeusbank.banking.ui.screen.adapter.PaymentCardAdapter
 import ua.piraeusbank.banking.ui.screen.base.Screen
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 import java.util.concurrent.TimeUnit

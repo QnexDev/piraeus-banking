@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.screen_account.*
 import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.PaymentCard
+import ua.piraeusbank.banking.ui.screen.adapter.PaymentCardAdapter
 import ua.piraeusbank.banking.ui.screen.base.Screen
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 

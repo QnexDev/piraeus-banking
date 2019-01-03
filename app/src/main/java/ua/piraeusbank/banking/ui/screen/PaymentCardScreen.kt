@@ -7,6 +7,7 @@ import android.view.View
 import kotlinx.android.synthetic.main.screen_bank_card.*
 import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.StatementAction
+import ua.piraeusbank.banking.ui.screen.adapter.StatementAdapter
 import ua.piraeusbank.banking.ui.screen.base.Screen
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 
