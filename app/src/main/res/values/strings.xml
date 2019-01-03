@@ -1,9 +1,9 @@
 <resources>
-    <string name="font_family_medium">sans-serif-medium</string>
-    <string name="font_family_light">sans-serif-light</string>
+    <string name="font_family_medium">sans-serif</string>
+    <string name="font_family_light">sans-serif</string>
     <string name="font_family">sans-serif</string>
-    <string name="font_family_condensed">sans-serif-condensed</string>
-    <string name="font_family_thin">sans-serif-thin</string>
+    <string name="font_family_condensed">sans-serif</string>
+    <string name="font_family_thin">sans-serif</string>
 
     <string name="app_name">Piraeus Banking</string>
     <string name="main_screen_title">Piraeus Online</string>
@@ -24,5 +24,12 @@
     <string name="account_title">My cards</string>
     <string name="more_history_statement_link">More statement</string>
     <string name="transfer_money_link">Transfer</string>
+
+
+    <!--Names of main services-->
+    <string name="main_service_transfer_money">Money Transfer</string>
+    <string name="main_service_card_menu">Cards Menu</string>
+    <string name="main_service_app_settings">Settings</string>
+
 
 </resources>
