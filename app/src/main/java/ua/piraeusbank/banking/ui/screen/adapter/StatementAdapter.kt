@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.ui.screen
+package ua.piraeusbank.banking.ui.screen.adapter
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
