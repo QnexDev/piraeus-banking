@@ -12,7 +12,7 @@ class CardMenuScreen : Screen<CardMenuPm>() {
 
 
     companion object {
-        fun create() = AccountScreen()
+        fun create() = CardMenuScreen()
     }
 
     override val screenLayout = R.layout.screen_card_menu

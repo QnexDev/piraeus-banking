@@ -7,15 +7,11 @@ import me.dmdev.rxpm.navigation.NavigationMessageHandler
 import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.extensions.currentScreen
 import ua.piraeusbank.banking.ui.extensions.openScreen
-import ua.piraeusbank.banking.ui.navigation.BackMessage
-import ua.piraeusbank.banking.ui.navigation.UserHasAuthorizedMessage
-import ua.piraeusbank.banking.ui.navigation.ViewAllCardsMessage
-import ua.piraeusbank.banking.ui.navigation.ViewBankCardMessage
-import ua.piraeusbank.banking.ui.screen.AccountScreen
-import ua.piraeusbank.banking.ui.screen.PaymentCardScreen
-import ua.piraeusbank.banking.ui.screen.LoginScreen
-import ua.piraeusbank.banking.ui.screen.MainScreen
+import ua.piraeusbank.banking.ui.navigation.*
+import ua.piraeusbank.banking.ui.screen.*
 import ua.piraeusbank.banking.ui.screen.base.BackHandler
+import ua.piraeusbank.banking.ui.screen.base.Screen
+import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 
 class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
 
@@ -52,7 +48,16 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
 
             is ViewBankCardMessage -> sfm.openScreen(PaymentCardScreen.create())
 
+            is OpenScreenMessage -> sfm.openScreen(dispatchScreen(message))
         }
         return true
+    }
+
+    private fun dispatchScreen(message: OpenScreenMessage): Screen<out ScreenPresentationModel> {
+        return when (message.appScreen) {
+            AppScreenName.CARDS_MENU -> CardMenuScreen.create()
+            AppScreenName.MONEY_TRANSFER -> MoneyTransferScreen.create()
+            AppScreenName.SETTINGS -> AppSettingsScreen.create()
+        }
     }
 }

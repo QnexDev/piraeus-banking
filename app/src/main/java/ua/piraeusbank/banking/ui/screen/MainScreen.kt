@@ -1,20 +1,16 @@
 package ua.piraeusbank.banking.ui.screen
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.widget.ArrayAdapter
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.touches
 import kotlinx.android.synthetic.main.screen_main.*
 import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.PaymentCard
-import ua.piraeusbank.banking.ui.navigation.ViewAllCardsMessage
-import ua.piraeusbank.banking.ui.navigation.ViewBankCardMessage
-import ua.piraeusbank.banking.ui.screen.adapter.MainServiceAdapter
+import ua.piraeusbank.banking.ui.navigation.*
+import ua.piraeusbank.banking.ui.screen.adapter.BankServiceAdapter
 import ua.piraeusbank.banking.ui.screen.adapter.PaymentCardAdapter
-import ua.piraeusbank.banking.ui.screen.adapter.ServiceViewResources
+import ua.piraeusbank.banking.ui.screen.adapter.BankServiceViewConfig
 import ua.piraeusbank.banking.ui.screen.base.Screen
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 import java.util.concurrent.TimeUnit
@@ -24,7 +20,7 @@ class MainScreen : Screen<MainPm>() {
     private lateinit var bankCardsView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var bankCardAdapter: RecyclerView.Adapter<*>
-    private lateinit var mainServicesAdapter: MainServiceAdapter
+    private lateinit var bankServicesAdapter: BankServiceAdapter
 
 
     companion object {
@@ -37,15 +33,16 @@ class MainScreen : Screen<MainPm>() {
         return MainPm()
     }
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        mainServicesAdapter = MainServiceAdapter(mainServices)
-    }
-
     override fun onBindPresentationModel(pm: MainPm) {
         super.onBindPresentationModel(pm)
+
+        bankServicesAdapter = BankServiceAdapter(mainBankServices)
+        { _, config ->  pm.openScreenAction.consumer.accept(config.appScreen)}
+
+        mainBankServicesGrid.apply {
+            adapter = bankServicesAdapter
+            numColumns = 3
+        }
 
         viewManager = LinearLayoutManager(this.context)
         bankCardAdapter = PaymentCardAdapter(
@@ -68,11 +65,10 @@ class MainScreen : Screen<MainPm>() {
     }
 
 
-    private val mainServices = listOf(
-        ServiceViewResources(R.layout.screen_money_transfer, 0, R.string.main_service_transfer_money),
-        ServiceViewResources(R.layout.screen_card_menu, 0, R.string.main_service_card_menu),
-        ServiceViewResources(R.layout.screen_app_settings, 0, R.string.main_service_app_settings)
-
+    private val mainBankServices = listOf(
+        BankServiceViewConfig(AppScreenName.MONEY_TRANSFER, R.drawable.ic_arrow_double_right, R.string.bank_service_transfer_money),
+        BankServiceViewConfig(AppScreenName.CARDS_MENU, R.drawable.ic_cards_menu, R.string.bank_service_card_menu),
+        BankServiceViewConfig(AppScreenName.SETTINGS, R.drawable.ic_app_settings, R.string.bank_service_app_settings)
     )
 }
 
@@ -80,6 +76,7 @@ class MainPm : ScreenPresentationModel() {
 
     val viewBankCardAction = Action<Unit>()
     val viewAllCardsAction = Action<Unit>()
+    val openScreenAction = Action<AppScreenName>()
 
     override fun onCreate() {
         super.onCreate()
@@ -91,6 +88,10 @@ class MainPm : ScreenPresentationModel() {
 
         viewAllCardsAction.observable
             .subscribe { sendMessage(ViewAllCardsMessage) }
+            .untilDestroy()
+
+        openScreenAction.observable
+            .subscribe { sendMessage(OpenScreenMessage(it)) }
             .untilDestroy()
     }
 }

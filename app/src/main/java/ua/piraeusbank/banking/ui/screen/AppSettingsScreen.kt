@@ -12,7 +12,7 @@ class AppSettingsScreen : Screen<AppSettingsPm>() {
 
 
     companion object {
-        fun create() = AppSettingsPm()
+        fun create() = AppSettingsScreen()
     }
 
     override val screenLayout = R.layout.screen_app_settings

@@ -12,7 +12,7 @@ class MoneyTransferScreen : Screen<MoneyTransferPm>() {
 
 
     companion object {
-        fun create() = AppSettingsPm()
+        fun create() = MoneyTransferScreen()
     }
 
     override val screenLayout = R.layout.screen_money_transfer

@@ -44,11 +44,13 @@
             android:textSize="16sp"/>
 
     <GridView
-            android:id="@+id/mainServices"
+            android:id="@+id/mainBankServicesGrid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="20dp">
+            android:layout_margin="20dp">
     </GridView>
+
+
 
 
 </LinearLayout>
