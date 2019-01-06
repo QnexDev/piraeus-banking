@@ -27,6 +27,7 @@
 
 
     <!--Names of main services-->
+    <string name="bank_services_screen_title">Services</string>
     <string name="bank_service_transfer_money">Money Transfer</string>
     <string name="bank_service_card_menu">Cards Menu</string>
     <string name="bank_service_app_settings">Settings</string>

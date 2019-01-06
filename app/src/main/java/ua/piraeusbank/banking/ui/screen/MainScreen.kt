@@ -11,7 +11,6 @@ import ua.piraeusbank.banking.ui.model.PaymentCard
 import ua.piraeusbank.banking.ui.navigation.*
 import ua.piraeusbank.banking.ui.screen.adapter.BankServiceAdapter
 import ua.piraeusbank.banking.ui.screen.adapter.PaymentCardAdapter
-import ua.piraeusbank.banking.ui.screen.adapter.BankServiceViewConfig
 import ua.piraeusbank.banking.ui.screen.base.Screen
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
 import java.util.concurrent.TimeUnit
@@ -37,7 +36,7 @@ class MainScreen : Screen<MainPm>() {
     override fun onBindPresentationModel(pm: MainPm) {
         super.onBindPresentationModel(pm)
 
-        bankServicesAdapter = BankServiceAdapter(mainBankServices)
+        bankServicesAdapter = BankServiceAdapter(BankServicesScreen.BANK_SERVICE_VIEW_CONFIGS.take(6))
         { _, config ->  pm.selectBankServiceAction.consumer.accept(config.bankServiceKind)}
 
         mainBankServicesGrid.apply {
@@ -63,14 +62,8 @@ class MainScreen : Screen<MainPm>() {
 
         bankCardsView.touches().map { }.delay(10, TimeUnit.MILLISECONDS) bindTo pm.viewBankCardAction
         allCardsLink.clicks() bindTo pm.viewAllCardsAction
+        servicesMenuButton.clicks() bindTo pm.showMoreBankServicesAction
     }
-
-
-    private val mainBankServices = listOf(
-        BankServiceViewConfig(BankServiceKind.MONEY_TRANSFER, R.drawable.ic_arrow_double_right, R.string.bank_service_transfer_money),
-        BankServiceViewConfig(BankServiceKind.CARDS_MENU, R.drawable.ic_cards_menu, R.string.bank_service_card_menu),
-        BankServiceViewConfig(BankServiceKind.SETTINGS, R.drawable.ic_app_settings, R.string.bank_service_app_settings)
-    )
 }
 
 class MainPm : ScreenPresentationModel() {
@@ -78,10 +71,10 @@ class MainPm : ScreenPresentationModel() {
     val viewBankCardAction = Action<Unit>()
     val viewAllCardsAction = Action<Unit>()
     val selectBankServiceAction = Action<BankServiceKind>()
+    val showMoreBankServicesAction = Action<Unit>()
 
     override fun onCreate() {
         super.onCreate()
-
 
         viewBankCardAction.observable
             .subscribe { sendMessage(ViewBankCardMessage) }
@@ -93,6 +86,10 @@ class MainPm : ScreenPresentationModel() {
 
         selectBankServiceAction.observable
             .subscribe { sendMessage(SelectBankServiceMessage(it)) }
+            .untilDestroy()
+
+        showMoreBankServicesAction.observable
+            .subscribe {sendMessage(ShowMoreBankServices)}
             .untilDestroy()
     }
 }

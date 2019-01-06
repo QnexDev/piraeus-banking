@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary"
-            app:title="@string/main_screen_title">
+            app:title="@string/bank_services_screen_title">
 
         <ImageView
                 android:id="@+id/bank_logo"
@@ -25,39 +25,13 @@
                 android:src="@drawable/ic_bank_logo"/>
     </android.support.v7.widget.Toolbar>
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/bankCards"
-            android:scrollbars="vertical"
-            android:layout_margin="0dp"
-            android:layout_width="match_parent"
-            android:layout_height="220dp"/>
-
-    <Button
-            android:id="@+id/allCardsLink"
-            style="@style/LinkButton"
-            android:layout_gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/all_cards_link"
-            android:textAllCaps="true"
-            android:textSize="16sp"/>
 
     <GridView
-            android:id="@+id/mainBankServicesGrid"
+            android:id="@+id/bankServicesGrid"
             android:layout_width="match_parent"
-            android:layout_height="280dp"
+            android:layout_height="match_parent"
             android:layout_margin="20dp">
     </GridView>
-
-    <ImageButton
-            android:id="@+id/servicesMenuButton"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:adjustViewBounds="true"
-            android:layout_gravity="left|bottom"
-            android:layout_marginLeft="20dp"
-            android:src="@drawable/ic_services_menu"/>
 
 
 </LinearLayout>
