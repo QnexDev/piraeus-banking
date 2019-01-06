@@ -15,7 +15,7 @@
             android:layout_alignParentStart="true"
             android:layout_gravity="center|bottom"
             android:layout_marginTop="10dp"
-            android:src="@drawable/ic_cards_menu"/>
+            android:src="@drawable/ic_circle_app_setting"/>
 
     <TextView
             android:layout_width="match_parent"

@@ -6,6 +6,7 @@ import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.touches
 import kotlinx.android.synthetic.main.screen_main.*
 import ua.piraeusbank.banking.R
+import ua.piraeusbank.banking.ui.model.BankServiceKind
 import ua.piraeusbank.banking.ui.model.PaymentCard
 import ua.piraeusbank.banking.ui.navigation.*
 import ua.piraeusbank.banking.ui.screen.adapter.BankServiceAdapter
@@ -37,7 +38,7 @@ class MainScreen : Screen<MainPm>() {
         super.onBindPresentationModel(pm)
 
         bankServicesAdapter = BankServiceAdapter(mainBankServices)
-        { _, config ->  pm.openScreenAction.consumer.accept(config.appScreen)}
+        { _, config ->  pm.openScreenAction.consumer.accept(config.bankServiceKindScreen)}
 
         mainBankServicesGrid.apply {
             adapter = bankServicesAdapter
@@ -66,9 +67,9 @@ class MainScreen : Screen<MainPm>() {
 
 
     private val mainBankServices = listOf(
-        BankServiceViewConfig(AppScreenName.MONEY_TRANSFER, R.drawable.ic_arrow_double_right, R.string.bank_service_transfer_money),
-        BankServiceViewConfig(AppScreenName.CARDS_MENU, R.drawable.ic_cards_menu, R.string.bank_service_card_menu),
-        BankServiceViewConfig(AppScreenName.SETTINGS, R.drawable.ic_app_settings, R.string.bank_service_app_settings)
+        BankServiceViewConfig(BankServiceKind.MONEY_TRANSFER, R.drawable.ic_arrow_double_right, R.string.bank_service_transfer_money),
+        BankServiceViewConfig(BankServiceKind.CARDS_MENU, R.drawable.ic_cards_menu, R.string.bank_service_card_menu),
+        BankServiceViewConfig(BankServiceKind.SETTINGS, R.drawable.ic_app_settings, R.string.bank_service_app_settings)
     )
 }
 
@@ -76,7 +77,7 @@ class MainPm : ScreenPresentationModel() {
 
     val viewBankCardAction = Action<Unit>()
     val viewAllCardsAction = Action<Unit>()
-    val openScreenAction = Action<AppScreenName>()
+    val openScreenAction = Action<BankServiceKind>()
 
     override fun onCreate() {
         super.onCreate()
@@ -91,7 +92,7 @@ class MainPm : ScreenPresentationModel() {
             .untilDestroy()
 
         openScreenAction.observable
-            .subscribe { sendMessage(OpenScreenMessage(it)) }
+            .subscribe { sendMessage(SelectBankServiceMessage(it)) }
             .untilDestroy()
     }
 }

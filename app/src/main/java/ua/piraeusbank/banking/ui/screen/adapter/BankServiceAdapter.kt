@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import kotlinx.android.synthetic.main.main_service_view_item.view.*
+import kotlinx.android.synthetic.main.bank_service_view_item.view.*
 import ua.piraeusbank.banking.R
-import ua.piraeusbank.banking.ui.navigation.AppScreenName
+import ua.piraeusbank.banking.ui.model.BankServiceKind
 
 class BankServiceAdapter(private val bankServices: List<BankServiceViewConfig>,
                          private val itemClickListener: (View, BankServiceViewConfig) -> Unit) : BaseAdapter() {
@@ -36,7 +36,7 @@ class BankServiceAdapter(private val bankServices: List<BankServiceViewConfig>,
         val bankServiceView = if (convertView == null) {
             val innerBankServiceView = LayoutInflater
                     .from(parent.context)
-                    .inflate(R.layout.main_service_view_item, parent, false)
+                    .inflate(R.layout.bank_service_view_item, parent, false)
             viewHolder = ViewHolder(innerBankServiceView)
             innerBankServiceView.tag = viewHolder
             innerBankServiceView
@@ -59,5 +59,5 @@ class BankServiceAdapter(private val bankServices: List<BankServiceViewConfig>,
 
 }
 
-data class BankServiceViewConfig(val appScreen: AppScreenName, val icon: Int, val name: Int)
+data class BankServiceViewConfig(val bankServiceKindScreen: BankServiceKind, val icon: Int, val name: Int)
 
