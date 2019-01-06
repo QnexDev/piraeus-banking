@@ -89,7 +89,7 @@ class MainPm : ScreenPresentationModel() {
             .untilDestroy()
 
         showMoreBankServicesAction.observable
-            .subscribe {sendMessage(ShowMoreBankServices)}
+            .subscribe {sendMessage(ShowMoreBankServicesMessage)}
             .untilDestroy()
     }
 }

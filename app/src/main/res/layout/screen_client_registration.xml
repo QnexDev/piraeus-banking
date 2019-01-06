@@ -34,7 +34,7 @@
             android:orientation="vertical">
 
         <android.support.design.widget.TextInputLayout
-                android:id="@+id/phoneInput"
+                android:id="@+id/regPhoneInput"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -52,7 +52,7 @@
 
 
         <EditText
-                android:id="@+id/emailInput"
+                android:id="@+id/regEmailInput"
                 style="@style/Widget.AppCompat.EditText"
                 android:drawableLeft="@drawable/ic_email"
                 android:layout_width="match_parent"
@@ -65,7 +65,7 @@
 
 
         <EditText
-                android:id="@+id/passwordInput"
+                android:id="@+id/regPasswordInput"
                 style="@style/Widget.AppCompat.EditText"
                 android:drawableLeft="@drawable/ic_password"
                 android:layout_width="match_parent"
@@ -77,7 +77,7 @@
                 android:textColorHint="#cccbcb"/>
 
         <EditText
-                android:id="@+id/passwordAgainInput"
+                android:id="@+id/regPasswordAgainInput"
                 style="@style/Widget.AppCompat.EditText"
                 android:drawableLeft="@drawable/ic_password"
                 android:layout_width="match_parent"

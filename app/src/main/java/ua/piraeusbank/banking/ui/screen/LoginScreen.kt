@@ -8,6 +8,7 @@ import me.dmdev.rxpm.skipWhileInProgress
 import me.dmdev.rxpm.widget.inputControl
 import ua.piraeusbank.banking.App
 import ua.piraeusbank.banking.R
+import ua.piraeusbank.banking.ui.navigation.StartRegistrationMessage
 import ua.piraeusbank.banking.ui.navigation.UserHasAuthorizedMessage
 import ua.piraeusbank.banking.ui.screen.base.Screen
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
@@ -33,6 +34,7 @@ class LoginScreen : Screen<LoginPm>() {
 
         //Bind UI components to PM
         loginButton.clicks() bindTo pm.loginAction
+        startRegistrationLink.clicks() bindTo pm.startRegistrationAction
     }
 }
 
@@ -47,6 +49,7 @@ class LoginPm(
 
     val loginButtonEnabled = State(false)
     val loginAction = Action<Unit>()
+    val startRegistrationAction = Action<Unit>()
 
     override fun onCreate() {
         super.onCreate()
@@ -69,13 +72,9 @@ class LoginPm(
             .subscribe { sendMessage(UserHasAuthorizedMessage) }
             .untilDestroy()
 
-
-//        phoneNumberControl.textChanges.observable
-//            .map { phoneUtils.isValidPhone(it) }
-//            .subscribe(loginButtonEnabled.consumer)
-//            .untilDestroy()
-//
-
+        startRegistrationAction.observable
+            .subscribe { sendMessage(StartRegistrationMessage) }
+            .untilDestroy()
     }
 
 }

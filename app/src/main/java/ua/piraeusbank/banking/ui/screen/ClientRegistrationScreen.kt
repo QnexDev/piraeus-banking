@@ -12,7 +12,7 @@ class ClientRegistrationScreen : Screen<ClientRegistrationPm>() {
 
 
     companion object {
-        fun create() = ClientRegistrationPm()
+        fun create() = ClientRegistrationScreen()
     }
 
     override val screenLayout = R.layout.screen_client_registration

@@ -81,7 +81,7 @@
                 android:textSize="20sp"/>
 
         <Button
-                android:id="@+id/allCardsLink"
+                android:id="@+id/startRegistrationLink"
                 style="@style/LinkButton"
                 android:layout_gravity="right"
                 android:layout_width="wrap_content"
