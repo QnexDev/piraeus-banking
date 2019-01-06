@@ -38,7 +38,7 @@ class MainScreen : Screen<MainPm>() {
         super.onBindPresentationModel(pm)
 
         bankServicesAdapter = BankServiceAdapter(mainBankServices)
-        { _, config ->  pm.openScreenAction.consumer.accept(config.bankServiceKindScreen)}
+        { _, config ->  pm.selectBankServiceAction.consumer.accept(config.bankServiceKindScreen)}
 
         mainBankServicesGrid.apply {
             adapter = bankServicesAdapter
@@ -77,7 +77,7 @@ class MainPm : ScreenPresentationModel() {
 
     val viewBankCardAction = Action<Unit>()
     val viewAllCardsAction = Action<Unit>()
-    val openScreenAction = Action<BankServiceKind>()
+    val selectBankServiceAction = Action<BankServiceKind>()
 
     override fun onCreate() {
         super.onCreate()
@@ -91,7 +91,7 @@ class MainPm : ScreenPresentationModel() {
             .subscribe { sendMessage(ViewAllCardsMessage) }
             .untilDestroy()
 
-        openScreenAction.observable
+        selectBankServiceAction.observable
             .subscribe { sendMessage(SelectBankServiceMessage(it)) }
             .untilDestroy()
     }
