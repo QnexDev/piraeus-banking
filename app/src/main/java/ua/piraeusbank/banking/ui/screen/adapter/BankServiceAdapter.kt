@@ -11,7 +11,7 @@ import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.BankServiceKind
 
 class BankServiceAdapter(private val bankServices: List<BankServiceViewConfig>,
-                         private val itemClickListener: (View, BankServiceViewConfig) -> Unit) : BaseAdapter() {
+                         private val onSelectService: (View, BankServiceViewConfig) -> Unit) : BaseAdapter() {
 
     override fun getCount(): Int {
         return bankServices.size
@@ -25,31 +25,31 @@ class BankServiceAdapter(private val bankServices: List<BankServiceViewConfig>,
         return position.toLong()
     }
 
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-        class OnClickListener:  (View) -> Unit {
+    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+        class OnSelectServiceListener:  (View) -> Unit {
             override fun invoke(view: View) {
-                itemClickListener.invoke(view, bankServices[position])
+                onSelectService.invoke(view, bankServices[position])
             }
         }
 
         val viewHolder: ViewHolder
-        val bankServiceView = if (convertView == null) {
-            val innerBankServiceView = LayoutInflater
+        val view = if (convertView == null) {
+            val innerView = LayoutInflater
                     .from(parent.context)
                     .inflate(R.layout.bank_service_view_item, parent, false)
-            viewHolder = ViewHolder(innerBankServiceView)
-            innerBankServiceView.tag = viewHolder
-            innerBankServiceView
+            viewHolder = ViewHolder(innerView)
+            innerView.setOnClickListener(OnSelectServiceListener())
+            innerView.tag = viewHolder
+            innerView
         } else {
             viewHolder = convertView.tag as ViewHolder
             convertView
         }
 
-        bankServiceView.setOnClickListener(OnClickListener())
         viewHolder.text.setText(bankServices[position].name)
         viewHolder.icon.setImageResource(bankServices[position].icon)
 
-        return bankServiceView
+        return view
     }
 
     private class ViewHolder(view: View) {
@@ -59,5 +59,5 @@ class BankServiceAdapter(private val bankServices: List<BankServiceViewConfig>,
 
 }
 
-data class BankServiceViewConfig(val bankServiceKindScreen: BankServiceKind, val icon: Int, val name: Int)
+data class BankServiceViewConfig(val bankServiceKind: BankServiceKind, val icon: Int, val name: Int)
 

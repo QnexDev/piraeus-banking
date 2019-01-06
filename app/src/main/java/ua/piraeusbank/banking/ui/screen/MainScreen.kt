@@ -38,7 +38,7 @@ class MainScreen : Screen<MainPm>() {
         super.onBindPresentationModel(pm)
 
         bankServicesAdapter = BankServiceAdapter(mainBankServices)
-        { _, config ->  pm.selectBankServiceAction.consumer.accept(config.bankServiceKindScreen)}
+        { _, config ->  pm.selectBankServiceAction.consumer.accept(config.bankServiceKind)}
 
         mainBankServicesGrid.apply {
             adapter = bankServicesAdapter
