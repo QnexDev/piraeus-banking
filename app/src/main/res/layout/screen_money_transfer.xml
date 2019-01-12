@@ -54,25 +54,24 @@
     <EditText
             android:id="@+id/amountInput"
             style="@style/Widget.AppCompat.EditText"
-            android:layout_width="200dp"
+            android:layout_width="180dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:layout_margin="20dp"
             android:hint="@string/amount_txt"
             android:inputType="number"
-            android:drawablePadding="10dp"
             android:textSize="24sp"
             android:layout_gravity="left|center"
             android:textColorHint="#cccbcb"/>
 
-    <Spinner
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_marginTop="50dp"
-            android:id="@+id/currencySpinner"
-            android:layout_width="80dp"
-            android:layout_margin="20dp"
-            android:layout_gravity="right|center"
-            android:layout_height="match_parent"/>
+        <Spinner
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:id="@+id/currencySpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:layout_margin="20dp"
+                android:textSize="24sp"
+        />
     </LinearLayout>
 
 

@@ -12,6 +12,7 @@ class MoneyTransferScreen : Screen<MoneyTransferPm>() {
 
     private lateinit var fromCardAdapter: TransferPaymentCardAdapter
     private lateinit var toCardAdapter: TransferPaymentCardAdapter
+    private lateinit var currenciesAdapter: ArrayAdapter<*>
 
     companion object {
         fun create() = MoneyTransferScreen()
@@ -42,7 +43,7 @@ class MoneyTransferScreen : Screen<MoneyTransferPm>() {
             toCards.adapter = adapter
         }
 
-        ArrayAdapter.createFromResource(
+        currenciesAdapter = ArrayAdapter.createFromResource(
             requireContext(),
             R.array.currencies,
             android.R.layout.simple_spinner_item

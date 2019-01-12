@@ -25,6 +25,35 @@
                 android:src="@drawable/ic_bank_logo"/>
     </android.support.v7.widget.Toolbar>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="20dp"
+                  android:layout_marginBottom="20dp"
+                  android:orientation="horizontal"
+                  style="@style/Widget.AppCompat.EditText">
+
+        <TextView
+                android:id="@+id/amountInput"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_margin="20dp"
+                android:drawablePadding="10dp"
+                android:textSize="24sp"
+                android:text="@string/app_settings_appearance"
+                android:layout_gravity="left|center"
+                android:textColorHint="#cccbcb"/>
+
+        <Spinner
+                android:id="@+id/languageSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|center"
+                android:textSize="24sp"
+        />
+    </LinearLayout>
+
 
 
 </LinearLayout>
