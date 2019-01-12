@@ -52,7 +52,7 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
 
             is ShowMoreBankServicesMessage -> sfm.openScreen(BankServicesScreen.create())
 
-            is StartRegistrationMessage -> sfm.openScreen(ClientRegistrationScreen.create())
+            is StartRegistrationMessage -> sfm.openScreen(RegistrationScreen.create())
         }
         return true
     }

@@ -8,7 +8,10 @@ import kotlinx.android.synthetic.main.screen_main.*
 import ua.piraeusbank.banking.R
 import ua.piraeusbank.banking.ui.model.BankServiceKind
 import ua.piraeusbank.banking.ui.model.PaymentCard
-import ua.piraeusbank.banking.ui.navigation.*
+import ua.piraeusbank.banking.ui.navigation.SelectBankServiceMessage
+import ua.piraeusbank.banking.ui.navigation.ShowMoreBankServicesMessage
+import ua.piraeusbank.banking.ui.navigation.ViewAllCardsMessage
+import ua.piraeusbank.banking.ui.navigation.ViewBankCardMessage
 import ua.piraeusbank.banking.ui.screen.adapter.BankServiceAdapter
 import ua.piraeusbank.banking.ui.screen.adapter.PaymentCardAdapter
 import ua.piraeusbank.banking.ui.screen.base.Screen
@@ -25,6 +28,12 @@ class MainScreen : Screen<MainPm>() {
 
     companion object {
         fun create() = MainScreen()
+
+        val PAYMENT_CARDS = listOf(
+            PaymentCard("Payment bank card", 7718, PaymentCard.Type.MASTERCARD, "9 950 UAH"),
+            PaymentCard("Credit bank card", 5614, PaymentCard.Type.VISA, "7 680 UAH"),
+            PaymentCard("Credit bank card", 1414, PaymentCard.Type.VISA, "10 150 UAH")
+        )
     }
 
     override val screenLayout = R.layout.screen_main
@@ -37,7 +46,7 @@ class MainScreen : Screen<MainPm>() {
         super.onBindPresentationModel(pm)
 
         bankServicesAdapter = BankServiceAdapter(BankServicesScreen.BANK_SERVICE_VIEW_CONFIGS.take(6))
-        { _, config ->  pm.selectBankServiceAction.consumer.accept(config.bankServiceKind)}
+        { _, config -> pm.selectBankServiceAction.consumer.accept(config.bankServiceKind) }
 
         mainBankServicesGrid.apply {
             adapter = bankServicesAdapter
@@ -46,11 +55,7 @@ class MainScreen : Screen<MainPm>() {
 
         viewManager = LinearLayoutManager(this.context)
         bankCardAdapter = PaymentCardAdapter(
-            listOf(
-                PaymentCard("Payment bank card", 7718, PaymentCard.Type.MASTERCARD, "9 950 UAH"),
-                PaymentCard("Credit bank card", 5614, PaymentCard.Type.VISA, "7 680 UAH"),
-                PaymentCard("Credit bank card", 1414, PaymentCard.Type.VISA, "10 150 UAH")
-            ),
+            PAYMENT_CARDS,
             R.layout.bank_card_layout
         )
 
@@ -89,7 +94,7 @@ class MainPm : ScreenPresentationModel() {
             .untilDestroy()
 
         showMoreBankServicesAction.observable
-            .subscribe {sendMessage(ShowMoreBankServicesMessage)}
+            .subscribe { sendMessage(ShowMoreBankServicesMessage) }
             .untilDestroy()
     }
 }

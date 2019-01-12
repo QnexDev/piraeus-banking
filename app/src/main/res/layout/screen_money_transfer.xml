@@ -26,5 +26,67 @@
     </android.support.v7.widget.Toolbar>
 
 
+    <Spinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_marginTop="50dp"
+            android:id="@+id/fromCards"
+            android:layout_width="fill_parent"
+            android:layout_margin="20dp"
+            android:layout_height="80dp"
+    />
+
+    <Spinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_marginTop="50dp"
+            android:id="@+id/toCards"
+            android:layout_width="fill_parent"
+            android:layout_margin="20dp"
+            android:layout_height="80dp"
+    />
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal" >
+
+    <EditText
+            android:id="@+id/amountInput"
+            style="@style/Widget.AppCompat.EditText"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_margin="20dp"
+            android:hint="@string/amount_txt"
+            android:inputType="number"
+            android:drawablePadding="10dp"
+            android:textSize="24sp"
+            android:layout_gravity="left|center"
+            android:textColorHint="#cccbcb"/>
+
+    <Spinner
+            style="@style/Widget.AppCompat.Spinner.Underlined"
+            android:layout_marginTop="50dp"
+            android:id="@+id/currencySpinner"
+            android:layout_width="80dp"
+            android:layout_margin="20dp"
+            android:layout_gravity="right|center"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+
+
+
+    <Button
+            android:id="@+id/transferLink"
+            style="@style/LinkButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="20dp"
+            android:text="@string/next_txt"
+            android:textSize="28sp"/>
+
 
 </LinearLayout>

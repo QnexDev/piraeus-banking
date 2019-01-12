@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary"
-            app:title="@string/sign_in">
+            app:title="@string/registration_txt">
 
         <ImageView
                 android:id="@+id/bank_logo"

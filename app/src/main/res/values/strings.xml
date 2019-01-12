@@ -11,12 +11,13 @@
 
     <string name="ok_button">OK</string>
     <string name="display_a_password_chbx">Display a password</string>
-    <string name="next_button">Next</string>
+    <string name="next_txt">Next</string>
     <string name="login_txt">Login</string>
     <string name="email_txt">Email</string>
     <string name="registration_txt">Registration</string>
     <string name="phone_number">Phone Number</string>
     <string name="password_txt">Password</string>
+    <string name="amount_txt">Amount</string>
     <string name="password_again_txt">Passwrod Again</string>
 
     <string name="enter_phone_number">Enter phone number</string>
@@ -35,5 +36,9 @@
     <string name="bank_service_card_menu">Cards Menu</string>
     <string name="bank_service_app_settings">Settings</string>
 
-
+    <string-array name="currencies">
+        <item>EUR</item>
+        <item>USD</item>
+        <item>UAH</item>
+    </string-array>
 </resources>

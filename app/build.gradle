@@ -51,4 +51,9 @@ dependencies {
     //RxPm
     implementation 'me.dmdev.rxpm:rxpm:1.2.3'
 
+    //Jackson
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.9.8'
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.9.8'
+    api group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.9.8'
+
 }

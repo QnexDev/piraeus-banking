@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:layout_marginTop="20sp">
+
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="180dp"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/cardNumber"
+                android:layout_gravity="center"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:text="*7718"
+                android:textSize="12sp"
+                android:layout_marginStart="10dp"/>
+        <TextView
+                android:id="@+id/cardName"
+                android:layout_gravity="center"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:text="Карта для выплат"
+                android:textSize="18sp"
+                android:layout_marginStart="10dp"
+                />
+    </LinearLayout>
+
+    <TextView
+            android:id="@+id/moneyAmount"
+            android:layout_gravity="center|end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:textSize="17sp"
+            android:text="9950 UAH"
+            android:fontFamily="@string/font_family_medium"
+            />
+
+</LinearLayout>

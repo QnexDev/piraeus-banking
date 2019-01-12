@@ -5,7 +5,7 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil
 import com.google.i18n.phonenumbers.Phonenumber
 import java.util.*
 
-class PhoneUtils {
+object PhoneUtils {
 
     private val countriesMap = HashMap<String, Country>()
     private val phoneNumberUtil = PhoneNumberUtil.getInstance()
