@@ -1,10 +1,13 @@
 package ua.piraeusbank.banking.ui.screen
 
 import android.widget.ArrayAdapter
+import com.jakewharton.rxbinding2.widget.selectionEvents
 import kotlinx.android.synthetic.main.screen_app_settings.*
 import ua.piraeusbank.banking.R
+import ua.piraeusbank.banking.ui.model.LanguageCode
 import ua.piraeusbank.banking.ui.screen.base.Screen
 import ua.piraeusbank.banking.ui.screen.base.ScreenPresentationModel
+import ua.piraeusbank.banking.util.toSelectedItemTransformation
 
 class AppSettingsScreen : Screen<AppSettingsPm>() {
 
@@ -27,13 +30,37 @@ class AppSettingsScreen : Screen<AppSettingsPm>() {
             R.array.languages,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
-            // Specify the layout to use when the list of choices appears
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            // Apply the adapter to the spinner
             languageSpinner.adapter = adapter
+            languageSpinner.setSelection(0, false)
+            languageSpinner.selectionEvents().skipInitialValue()
+                .compose(toSelectedItemTransformation)
+                .map { toLanguageCode(it.id().toInt()) }
+                .subscribe { pm.languageSelection.consumer }
         }
+    }
 
+    private fun toLanguageCode(it: Int): LanguageCode {
+        return when (it) {
+            0 -> LanguageCode.ENG
+            1 -> LanguageCode.RUS
+            2 -> LanguageCode.URK
+            else -> throw IllegalStateException("Wrong id!")
+        }
     }
 }
 
-class AppSettingsPm : ScreenPresentationModel()
+// TODO Maybe need to extract ot separate component (spinner actions)
+class AppSettingsPm : ScreenPresentationModel() {
+    val languageSelection = Action<LanguageCode>()
+
+    val selectedlanguage = State<LanguageCode>()
+
+    override fun onCreate() {
+        super.onCreate()
+        languageSelection.observable.subscribe { selectedlanguage.consumer }.untilDestroy()
+
+
+
+    }
+}
