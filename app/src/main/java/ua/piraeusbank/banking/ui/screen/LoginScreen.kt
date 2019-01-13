@@ -60,7 +60,8 @@ class LoginPm(
             BiFunction { phone: String, password: String -> Pair(phone, password) })
             .map {
                 val (phone, password) = it
-                phoneUtils.isValidPhone(phone) && !password.isBlank()
+//                phoneUtils.isValidPhone(phone) && !password.isBlank()
+                true
             }
             .subscribe(loginButtonEnabled.consumer)
             .untilDestroy()

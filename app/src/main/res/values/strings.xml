@@ -29,6 +29,11 @@
     <string name="more_history_statement_link">More statement</string>
     <string name="transfer_money_link">Transfer</string>
 
+    <string name="menu_card_block_card">Block card</string>
+    <string name="menu_card_unblock_card">Unblock card</string>
+    <string name="menu_card_add_card">Add card</string>
+    <string name="menu_card_close_card">Close card</string>
+
 
     <!--Names of main services-->
     <string name="bank_services_screen_title">Services</string>
