@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking
+package ua.piraeusbank.banking.client
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getTargetContext()
-        assertEquals("ua.piraeusbank.banking", appContext.packageName)
+        assertEquals("ua.piraeusbank.banking.client", appContext.packageName)
     }
 }

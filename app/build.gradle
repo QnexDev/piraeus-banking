@@ -7,7 +7,7 @@ apply plugin: 'kotlin-android-extensions'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "ua.piraeusbank.banking"
+        applicationId "ua.piraeusbank.banking.client"
         minSdkVersion 21
         targetSdkVersion 28
         versionCode 1

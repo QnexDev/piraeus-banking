@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking
+package ua.piraeusbank.banking.client
 
 import org.junit.Test
 
