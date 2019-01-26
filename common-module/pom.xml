@@ -9,14 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>piraeus-banking-services</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>ms-payment-card</module>
-        <module>ms-bank-account</module>
-        <module>ms-auth</module>
-        <module>ms-client</module>
-    </modules>
-
+    <artifactId>common-module</artifactId>
 
 </project>
