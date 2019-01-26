@@ -13,9 +13,9 @@
     <packaging>pom</packaging>
     <modules>
         <module>ms-payment-card</module>
-        <module>ms-bank-account</module>
+        <module>ms-account</module>
         <module>ms-auth</module>
-        <module>ms-client</module>
+        <module>ms-customer</module>
     </modules>
 
 
