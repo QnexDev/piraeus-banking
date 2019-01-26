@@ -12,10 +12,10 @@
     <artifactId>piraeus-banking-services</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>ms-payment-card</module>
+        <module>ms-bank-card</module>
         <module>ms-account</module>
         <module>ms-auth</module>
-        <module>ms-customer</module>
+        <module>common-config</module>
     </modules>
 
 

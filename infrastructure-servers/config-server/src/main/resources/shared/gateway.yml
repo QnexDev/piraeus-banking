@@ -28,7 +28,7 @@ zuul:
         serviceId: ms-account
         stripPrefix: false
         sensitiveHeaders:
-    ms-payment-card:
+    ms-bank-card:
       path: /card/**
       serviceId: ms-account
       stripPrefix: false

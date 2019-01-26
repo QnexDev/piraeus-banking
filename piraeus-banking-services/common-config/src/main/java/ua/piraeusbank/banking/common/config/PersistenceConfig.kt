@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.auth.config
+package ua.piraeusbank.banking.common.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -20,10 +20,10 @@ import javax.sql.DataSource
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = ["ua.piraeusbank.banking"])
-open class PersistenceConfig {
+class PersistenceConfig {
 
     @Bean
-    open fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean {
+    fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean {
         val vendorAdapter = HibernateJpaVendorAdapter()
         vendorAdapter.setDatabase(Database.HSQL)
         vendorAdapter.setGenerateDdl(true)
@@ -38,20 +38,20 @@ open class PersistenceConfig {
     }
 
     @Bean
-    open fun dataSource(): DataSource {
+    fun dataSource(): DataSource {
         val builder = EmbeddedDatabaseBuilder()
         return builder.setType(EmbeddedDatabaseType.HSQL).build()
     }
 
     @Bean
-    open fun transactionManager(): PlatformTransactionManager {
+    fun transactionManager(): PlatformTransactionManager {
         val transactionManager = JpaTransactionManager()
         transactionManager.entityManagerFactory = entityManagerFactory().getObject()
         return transactionManager
     }
 
     @Bean
-    open fun exceptionTranslation(): PersistenceExceptionTranslationPostProcessor {
+    fun exceptionTranslation(): PersistenceExceptionTranslationPostProcessor {
         return PersistenceExceptionTranslationPostProcessor()
     }
 
