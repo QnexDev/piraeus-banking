@@ -5,18 +5,20 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ua.piraeusbank.banking.card.CardProcessingException
+import ua.piraeusbank.banking.card.conversion.CardModelConverterAlias
 import ua.piraeusbank.banking.card.domain.BankCard
+import ua.piraeusbank.banking.card.domain.BankCardData
 import ua.piraeusbank.banking.card.domain.BankCardState.*
 import ua.piraeusbank.banking.card.domain.BankCardType.DEBIT
 import ua.piraeusbank.banking.card.repository.BankCardRepository
 import ua.piraeusbank.banking.card.repository.BankNetworkRepository
 import java.time.LocalDate
 
-interface BankCardService {
+internal interface BankCardService {
 
-    fun getCardById(cardId: Long): BankCard
+    fun getCardInfoById(cardId: Long): BankCardData
 
-    fun findAllCards(): List<BankCard>
+    fun findAllCardInfos(): List<BankCardData>
 
     fun issueCard(issueCardRequest: IssueCardRequest)
 
@@ -33,7 +35,7 @@ interface BankCardService {
 
 
 @Service
-class BankCardServiceImpl(
+internal class BankCardServiceImpl(
         @Autowired private val bankCardRepository: BankCardRepository,
         @Autowired private val bankNetworkRepository: BankNetworkRepository,
         @Qualifier("pinCodeGenerator")
@@ -43,7 +45,8 @@ class BankCardServiceImpl(
         private val securityCodeGenerator: SecurityCodeGeneratorAlias,
         @Qualifier("cardNumberGenerator")
         @Autowired
-        private val cardNumberGenerator: CardNumberGeneratorAlias) : BankCardService {
+        private val cardNumberGenerator: CardNumberGeneratorAlias,
+        @Autowired  private val cardModelConverter: CardModelConverterAlias) : BankCardService {
 
     companion object {
         const val SERVICE_DURATION_IN_YEAR = 3L
@@ -51,13 +54,13 @@ class BankCardServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun getCardById(cardId: Long): BankCard {
-        return bankCardRepository.getOne(cardId)
+    override fun getCardInfoById(cardId: Long): BankCardData {
+        return cardModelConverter(bankCardRepository.getOne(cardId))
     }
 
     @Transactional(readOnly = true)
-    override fun findAllCards(): List<BankCard> {
-        return bankCardRepository.findAll()
+    override fun findAllCardInfos(): List<BankCardData> {
+        return bankCardRepository.findAll().map { cardModelConverter(it) }
     }
 
     @Transactional

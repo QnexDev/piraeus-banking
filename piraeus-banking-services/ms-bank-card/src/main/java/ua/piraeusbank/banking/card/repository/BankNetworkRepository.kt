@@ -6,7 +6,7 @@ import ua.piraeusbank.banking.card.domain.BankCard
 import ua.piraeusbank.banking.card.domain.BankCardNetwork
 
 @Repository
-interface BankNetworkRepository : JpaRepository<BankCardNetwork, Long> {
+internal interface BankNetworkRepository : JpaRepository<BankCardNetwork, Long> {
 
     fun findByCode(code: String): BankCardNetwork
 

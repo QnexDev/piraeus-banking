@@ -7,10 +7,10 @@ import ua.piraeusbank.banking.card.service.ChangePinCodeRequest
 import ua.piraeusbank.banking.card.service.IssueCardRequest
 
 @RestController
-class BankCardController(@Autowired val bankCardService: BankCardService) {
+internal class BankCardController(@Autowired val bankCardService: BankCardService) {
 
     @GetMapping
-    fun findAllCards() = bankCardService.findAllCards()
+    fun findAllCards() = bankCardService.findAllCardInfos()
 
     @PostMapping
     fun issueCard(@RequestBody issueCardRequest: IssueCardRequest) {
@@ -18,7 +18,7 @@ class BankCardController(@Autowired val bankCardService: BankCardService) {
     }
 
     @GetMapping("/{cardId}")
-    fun getCardById(@PathVariable cardId: Long) = bankCardService.getCardById(cardId)
+    fun getCardById(@PathVariable cardId: Long) = bankCardService.getCardInfoById(cardId)
 
     @PutMapping("/{cardId}/close")
     fun closeCard(@PathVariable cardId: Long) = bankCardService.closeCard(cardId)

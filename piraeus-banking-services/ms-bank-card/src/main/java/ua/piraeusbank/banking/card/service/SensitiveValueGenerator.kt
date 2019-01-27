@@ -8,14 +8,14 @@ import ua.piraeusbank.banking.card.domain.BankCardNumber
 import java.math.BigInteger
 import kotlin.random.Random
 
-interface SensitiveValueGenerator<T, V> {
+internal interface SensitiveValueGenerator<T, V> {
 
     fun generate(params: T): V
 
 
 }
 
-typealias PinCodeGeneratorAlias = SensitiveValueGenerator<Empty, Short>
+internal typealias PinCodeGeneratorAlias = SensitiveValueGenerator<Empty, Short>
 
 @Service("pinCodeGenerator")
 class NaivePinCodeGenerator : PinCodeGeneratorAlias {
@@ -24,7 +24,7 @@ class NaivePinCodeGenerator : PinCodeGeneratorAlias {
 
 }
 
-typealias SecurityCodeGeneratorAlias = SensitiveValueGenerator<Empty, Short>
+internal typealias SecurityCodeGeneratorAlias = SensitiveValueGenerator<Empty, Short>
 
 @Service("securityCodeGenerator")
 class NaiveSecurityCodeGenerator : SecurityCodeGeneratorAlias {
@@ -32,10 +32,10 @@ class NaiveSecurityCodeGenerator : SecurityCodeGeneratorAlias {
     override fun generate(params: Empty): Short = Random.nextInt(1000, 9999).toShort()
 }
 
-typealias CardNumberGeneratorAlias = SensitiveValueGenerator<BankCardNetworkCode, BankCardNumber>
+internal typealias CardNumberGeneratorAlias = SensitiveValueGenerator<BankCardNetworkCode, BankCardNumber>
 
 @Service("cardNumberGenerator")
-class NaiveCardNumberGenerator : CardNumberGeneratorAlias {
+internal class NaiveCardNumberGenerator : CardNumberGeneratorAlias {
 
     override fun generate(params: BankCardNetworkCode): BankCardNumber = when (params) {
         VISA -> generateNumber(params)

@@ -4,17 +4,25 @@ import java.math.BigInteger
 import java.time.LocalDate
 import javax.persistence.*
 
+data class BankCardData(
+        val id: Long? = null,
+        val type: BankCardType,
+        val cardholderId: Long,
+        val binCode: Int,
+        val networkCode: BankCardNetworkCode,
+        val expirationDate: LocalDate)
 
-data class BankCardNumber(val number: BigInteger, val binCode: Int)
+
+internal data class BankCardNumber(val number: BigInteger, val binCode: Int)
 
 @Entity
-data class BankCardNetwork(@Column(name = "payment_card_network_id") val id: Long? = null,
+internal data class BankCardNetwork(@Column(name = "payment_card_network_id") val id: Long? = null,
                            @Enumerated(EnumType.STRING) @Column(name = "code") val code: BankCardNetworkCode,
                            @Column(name = "name") val name: String,
                            @Column(name = "description") val description: String)
 
 @Entity
-data class BankCard(
+internal data class BankCard(
         @Id
         @GeneratedValue
         @Column(name = "payment_card_id") val id: Long? = null,
@@ -36,14 +44,16 @@ data class BankCard(
         @Column(name = "security_code") val securityCode: Short
 )
 
+internal enum class BankCardState {
+    OPENED, CLOSED, BLOCKED
+}
+
 enum class BankCardType {
-    DEBIT, CREDIT
+        DEBIT, CREDIT
 }
 
 enum class BankCardNetworkCode(val startDigit: Byte) {
-    VISA(4), MASTERCARD(5)
+        VISA(4), MASTERCARD(5)
 }
 
-enum class BankCardState {
-    OPENED, CLOSED, BLOCKED
-}
+

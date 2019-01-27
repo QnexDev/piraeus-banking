@@ -5,4 +5,4 @@ import org.springframework.stereotype.Repository
 import ua.piraeusbank.banking.card.domain.BankCard
 
 @Repository
-interface BankCardRepository : JpaRepository<BankCard, Long>
+internal interface BankCardRepository : JpaRepository<BankCard, Long>
