@@ -29,7 +29,7 @@ zuul:
         stripPrefix: false
         sensitiveHeaders:
     ms-bank-card:
-      path: /card/**
+      path: /cards/**
       serviceId: ms-account
       stripPrefix: false
       sensitiveHeaders:
