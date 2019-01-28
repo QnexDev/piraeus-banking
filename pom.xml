@@ -20,8 +20,10 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <java.version>1.8</java.version>
-        <kotlin.version>1.3.20</kotlin.version>
+        <kotlin.version>${moneta.version}.20</kotlin.version>
         <guava.version>21.0</guava.version>
+        <moneta.version>1.3</moneta.version>
+        <jackson-datatype-money.version>1.1.0</jackson-datatype-money.version>
     </properties>
 
     <dependencyManagement>
@@ -37,6 +39,16 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javamoney.moneta</groupId>
+                <artifactId>moneta-core</artifactId>
+                <version>${moneta.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.zalando</groupId>
+                <artifactId>jackson-datatype-money</artifactId>
+                <version>${jackson-datatype-money.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

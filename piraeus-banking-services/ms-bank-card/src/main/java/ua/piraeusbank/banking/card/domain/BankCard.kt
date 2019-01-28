@@ -9,25 +9,32 @@ data class BankCardData(
         val type: BankCardType,
         val cardholderId: Long,
         val binCode: Int,
-        val networkCode: BankCardNetworkCode,
+        val networkCode: CardNetworkCode,
         val expirationDate: LocalDate)
 
 
 internal data class BankCardNumber(val number: BigInteger, val binCode: Int)
 
 @Entity
-internal data class BankCardNetwork(@Column(name = "payment_card_network_id") val id: Long? = null,
-                           @Enumerated(EnumType.STRING) @Column(name = "code") val code: BankCardNetworkCode,
-                           @Column(name = "name") val name: String,
-                           @Column(name = "description") val description: String)
+internal data class BankCardNetwork(
+        @Column(name = "payment_card_network_id") val id: Long? = null,
+        @Enumerated(EnumType.STRING)
+        @Column(name = "code")
+        val code: CardNetworkCode,
+        @Column(name = "name") val name: String,
+        @Column(name = "description") val description: String)
 
 @Entity
 internal data class BankCard(
         @Id
         @GeneratedValue
         @Column(name = "payment_card_id") val id: Long? = null,
-        @Enumerated(EnumType.STRING) @Column(name = "type") val type: BankCardType,
-        @Enumerated(EnumType.STRING) @Column(name = "state") val state: BankCardState,
+        @Enumerated(EnumType.STRING)
+        @Column(name = "type")
+        val type: BankCardType,
+        @Enumerated(EnumType.STRING)
+        @Column(name = "state")
+        val state: BankCardState,
         //TODO Customer entity
         @Column(name = "cardholder_id") val cardholderId: Long,
 //        @Column(name = "name") val name: String,
@@ -49,11 +56,11 @@ internal enum class BankCardState {
 }
 
 enum class BankCardType {
-        DEBIT, CREDIT
+    DEBIT, CREDIT, INTERNET
 }
 
-enum class BankCardNetworkCode(val startDigit: Byte) {
-        VISA(4), MASTERCARD(5)
+enum class CardNetworkCode(val startDigit: Byte) {
+    VISA(4), MASTERCARD(5)
 }
 
 
