@@ -6,6 +6,7 @@ import javax.persistence.*
 
 data class BankCardData(
         val id: Long? = null,
+        val accountId: Long,
         val type: BankCardType,
         val cardholderId: Long,
         val binCode: Int,
@@ -16,6 +17,7 @@ data class BankCardData(
 internal data class BankCardNumber(val number: BigInteger, val binCode: Int)
 
 @Entity
+@Table(name = "CARD_NETWORK")
 internal data class BankCardNetwork(
         @Column(name = "payment_card_network_id") val id: Long? = null,
         @Enumerated(EnumType.STRING)
@@ -25,6 +27,7 @@ internal data class BankCardNetwork(
         @Column(name = "description") val description: String)
 
 @Entity
+@Table(name = "CARD")
 internal data class BankCard(
         @Id
         @GeneratedValue

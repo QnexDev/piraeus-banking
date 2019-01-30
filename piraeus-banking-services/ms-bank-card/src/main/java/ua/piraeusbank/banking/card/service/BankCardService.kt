@@ -10,6 +10,7 @@ import ua.piraeusbank.banking.card.domain.BankCard
 import ua.piraeusbank.banking.card.domain.BankCardData
 import ua.piraeusbank.banking.card.domain.BankCardState.*
 import ua.piraeusbank.banking.card.domain.BankCardType.DEBIT
+import ua.piraeusbank.banking.card.domain.CardNetworkCode
 import ua.piraeusbank.banking.card.repository.BankCardRepository
 import ua.piraeusbank.banking.card.repository.BankNetworkRepository
 import java.time.LocalDate
@@ -133,16 +134,16 @@ internal class BankCardServiceImpl(
 
     private fun throwIfBlocked(bankCard: BankCard) {
         if (bankCard.state == BLOCKED) {
-            throw CardProcessingException("This card already has been blocked!")
+            throw CardProcessingException("This card has been blocked!")
         }
     }
 
     private fun throwIfClosed(bankCard: BankCard) {
         if (bankCard.state == CLOSED) {
-            throw CardProcessingException("This card already has been closed!")
+            throw CardProcessingException("This card has been closed!")
         }
     }
 }
 
-data class IssueCardRequest(val customerId: Long, val networkCode: String)
+data class IssueCardRequest(val customerId: Long, val networkCode: CardNetworkCode)
 data class ChangePinCodeRequest(val cardId: Long, val newPinCode: Short)

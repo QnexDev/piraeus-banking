@@ -6,62 +6,118 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
 import ua.piraeusbank.banking.account.TransactionProcessingException
-import ua.piraeusbank.banking.account.domain.AccountTransaction
-import ua.piraeusbank.banking.account.domain.AccountTransactionType
-import ua.piraeusbank.banking.account.domain.DEFAULT_CURRENCY
-import ua.piraeusbank.banking.account.repository.AccountTransactionRepository
+import ua.piraeusbank.banking.account.domain.*
+import ua.piraeusbank.banking.account.domain.TransactionStatus.*
+import ua.piraeusbank.banking.account.domain.TransactionTypeCode.*
+import ua.piraeusbank.banking.account.repository.AccountRepository
+import ua.piraeusbank.banking.account.repository.TransactionRepository
+import ua.piraeusbank.banking.account.repository.TransactionTypeRepository
+import java.time.Instant
+
+interface AccountService {
+
+    fun checkCurrentBalance(accountId: Long): Money
+
+    fun transferMoney(request: MoneyTransferRequest)
+
+    fun getTransaction(transactionId: Long): TransactionEntity
+
+    fun getOutgoingTransactions(accountId: Long)
+
+    fun getIncomingTransactions(accountId: Long)
+}
 
 @Service
 class AccountServiceImpl(
-        @Autowired val transactionExecutor: AccountTransactionExecutor,
-        @Autowired val accountTransactionRepository: AccountTransactionRepository) {
+        @Autowired val txExecutor: TransactionExecutor,
+        @Autowired val txRepository: TransactionRepository,
+        @Autowired val accountRepository: AccountRepository) : AccountService {
 
     companion object {
         private const val TRANSACTION_EXECUTION_ERROR_MSG = "An error occurred during the execution of the transaction"
     }
 
     @Transactional
-    fun checkCurrentBalance(accountId: Long) =
-            transactionExecutor.execute(AccountTransactionType.CHECK) {
-                Money.of(0, DEFAULT_CURRENCY)
-            } ?: throw TransactionProcessingException(TRANSACTION_EXECUTION_ERROR_MSG)
+    override fun checkCurrentBalance(accountId: Long) = txExecutor.execute(context(CHECK)) {
+        accountRepository.getAccountBalance(accountId)
+    } ?: throw TransactionProcessingException(TRANSACTION_EXECUTION_ERROR_MSG)
 
     @Transactional
-    fun transferMoney(request: MoneyTransferRequest) {
-
-        transactionExecutor.execute(AccountTransactionType.TRANSFER) {
-
-        }
-
-    }
+    override fun transferMoney(request: MoneyTransferRequest) = txExecutor.execute(context(TRANSFER, request)) {
+        accountRepository.transferMoney(request.sourceAccountId, request.sourceAccountId, request.amount)
+    } ?: throw TransactionProcessingException(TRANSACTION_EXECUTION_ERROR_MSG)
 
     @Transactional(readOnly = true)
-    fun getTransaction(transactionId: Long) = accountTransactionRepository.getOne(transactionId)
+    override fun getTransaction(transactionId: Long): TransactionEntity = txRepository.getOne(transactionId)
 
     @Transactional(readOnly = true)
-    fun getAccountTransactions(accountId: Long) = accountTransactionRepository.findAll()
+    override fun getOutgoingTransactions(accountId: Long) = txRepository.getOutgoingTransactionsByAccountId(accountId)
+
+    @Transactional(readOnly = true)
+    override fun getIncomingTransactions(accountId: Long) = txRepository.getIncommingTransactionsByAccountId(accountId)
 }
 
-@Service
-class AccountTransactionExecutor(
-        val transactionTemplate: TransactionTemplate) {
+interface TransactionExecutor {
 
-    fun <T> execute(transactionType: AccountTransactionType, execution: () -> T): T? {
+    fun <T> execute(context: TransactionExecutorContext, execution: () -> T): T?
+
+}
+
+@Service("checkTxExecutor")
+class CheckTransactionExecutor(
+        @Autowired val txTemplate: TransactionTemplate,
+        @Autowired val txRepository: TransactionRepository,
+        @Autowired val txTypeRepository: TransactionTypeRepository) : TransactionExecutor {
+
+    override fun <T> execute(context: TransactionExecutorContext, execution: () -> T): T? {
+        val (type, transferRequest) = context
+
+        val transactionType = txTypeRepository.findByCode(type)
+
+        val entity = txRepository.saveAndFlush(
+                TransactionEntity(
+                        status = STARTED,
+                        timestamp = Instant.now(),
+                        type = transactionType,
+                        amount = transferRequest?.amount,
+                        sourceAccountId = transferRequest?.sourceAccountId,
+                        targetAccountId = transferRequest?.targetAccountId,
+                        description = transferRequest?.description))
         try {
-            return transactionTemplate.execute {
+            val result = txTemplate.execute {
                 execution()
             }
+            txRepository.saveAndFlush(
+                    TransactionEntity(
+                            id = entity.id,
+                            status = COMPLETED,
+                            timestamp = Instant.now(),
+                            type = transactionType))
+            return result
         } catch (e: Throwable) {
-
-        } finally {
-
+            txRepository.saveAndFlush(
+                    TransactionEntity(
+                            id = entity.id,
+                            status = FAILED,
+                            timestamp = Instant.now(),
+                            errorMessage = e.message,
+                            type = transactionType))
         }
         return null
     }
 }
 
+fun context(type: TransactionTypeCode,
+            moneyTransferRequest: MoneyTransferRequest? = null) =
+        TransactionExecutorContext(type, moneyTransferRequest)
+
+
+data class TransactionExecutorContext(val type: TransactionTypeCode,
+                                      val moneyTransferRequest: MoneyTransferRequest? = null)
+
+
 data class MoneyTransferRequest(
-        val sourceAccountId: String,
-        val targetAccountId: String,
+        val sourceAccountId: Long,
+        val targetAccountId: Long,
         val amount: Money,
         val description: String?)
