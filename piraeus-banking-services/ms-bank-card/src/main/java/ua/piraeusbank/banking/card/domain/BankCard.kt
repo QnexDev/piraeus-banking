@@ -24,6 +24,7 @@ internal data class BankCardNetwork(
         @Column(name = "code")
         val code: CardNetworkCode,
         @Column(name = "name") val name: String,
+        @Column(name = "prefix_numbers") val prefixNumbers: Int,
         @Column(name = "description") val description: String)
 
 @Entity
@@ -31,13 +32,14 @@ internal data class BankCardNetwork(
 internal data class BankCard(
         @Id
         @GeneratedValue
-        @Column(name = "payment_card_id") val id: Long? = null,
+        @Column(name = "bank_card_id") val id: Long? = null,
+        @Column(name = "account_id") val accountId: Long,
         @Enumerated(EnumType.STRING)
         @Column(name = "type")
         val type: BankCardType,
         @Enumerated(EnumType.STRING)
-        @Column(name = "state")
-        val state: BankCardState,
+        @Column(name = "status")
+        val status: BankCardStatus,
         //TODO Customer entity
         @Column(name = "cardholder_id") val cardholderId: Long,
 //        @Column(name = "name") val name: String,
@@ -54,7 +56,7 @@ internal data class BankCard(
         @Column(name = "security_code") val securityCode: Short
 )
 
-internal enum class BankCardState {
+internal enum class BankCardStatus {
     OPENED, CLOSED, BLOCKED
 }
 
@@ -62,8 +64,8 @@ enum class BankCardType {
     DEBIT, CREDIT, INTERNET
 }
 
-enum class CardNetworkCode(val startDigit: Byte) {
-    VISA(4), MASTERCARD(5)
+enum class CardNetworkCode {
+    VISA, MASTERCARD
 }
 
 

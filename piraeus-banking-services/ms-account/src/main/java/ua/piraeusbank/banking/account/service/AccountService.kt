@@ -2,6 +2,7 @@ package ua.piraeusbank.banking.account.service
 
 import org.javamoney.moneta.Money
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.jms.core.JmsTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
@@ -12,6 +13,7 @@ import ua.piraeusbank.banking.account.domain.TransactionTypeCode.*
 import ua.piraeusbank.banking.account.repository.AccountRepository
 import ua.piraeusbank.banking.account.repository.TransactionRepository
 import ua.piraeusbank.banking.account.repository.TransactionTypeRepository
+import ua.piraeusbank.banking.common.config.AccountMoneyTransferMessage
 import java.time.Instant
 
 interface AccountService {
@@ -67,43 +69,52 @@ interface TransactionExecutor {
 class CheckTransactionExecutor(
         @Autowired val txTemplate: TransactionTemplate,
         @Autowired val txRepository: TransactionRepository,
-        @Autowired val txTypeRepository: TransactionTypeRepository) : TransactionExecutor {
+        @Autowired val txTypeRepository: TransactionTypeRepository,
+        @Autowired val jmsTemplate: JmsTemplate) : TransactionExecutor {
 
     override fun <T> execute(context: TransactionExecutorContext, execution: () -> T): T? {
-        val (type, transferRequest) = context
-
-        val transactionType = txTypeRepository.findByCode(type)
-
-        val entity = txRepository.saveAndFlush(
-                TransactionEntity(
-                        status = STARTED,
-                        timestamp = Instant.now(),
-                        type = transactionType,
-                        amount = transferRequest?.amount,
-                        sourceAccountId = transferRequest?.sourceAccountId,
-                        targetAccountId = transferRequest?.targetAccountId,
-                        description = transferRequest?.description))
         try {
-            val result = txTemplate.execute {
-                execution()
+            val (type, transferRequest) = context
+
+            val transactionType = txTypeRepository.findByCode(type)
+
+            val entity = txRepository.saveAndFlush(
+                    TransactionEntity(
+                            status = STARTED,
+                            timestamp = Instant.now(),
+                            type = transactionType,
+                            amount = transferRequest?.amount,
+                            sourceAccountId = transferRequest?.sourceAccountId,
+                            targetAccountId = transferRequest?.targetAccountId,
+                            description = transferRequest?.description))
+            try {
+                val result = txTemplate.execute {
+                    execution()
+                }
+                txRepository.saveAndFlush(
+                        TransactionEntity(
+                                id = entity.id,
+                                status = COMPLETED,
+                                timestamp = Instant.now(),
+                                type = transactionType))
+                return result
+            } catch (e: Throwable) {
+                txRepository.saveAndFlush(
+                        TransactionEntity(
+                                id = entity.id,
+                                status = FAILED,
+                                timestamp = Instant.now(),
+                                errorMessage = e.message,
+                                type = transactionType))
+                return null
+            } finally {
+                jmsTemplate.convertAndSend(
+                        "account",
+                        AccountMoneyTransferMessage(requireNotNull(entity.id)))
             }
-            txRepository.saveAndFlush(
-                    TransactionEntity(
-                            id = entity.id,
-                            status = COMPLETED,
-                            timestamp = Instant.now(),
-                            type = transactionType))
-            return result
         } catch (e: Throwable) {
-            txRepository.saveAndFlush(
-                    TransactionEntity(
-                            id = entity.id,
-                            status = FAILED,
-                            timestamp = Instant.now(),
-                            errorMessage = e.message,
-                            type = transactionType))
+            return null
         }
-        return null
     }
 }
 

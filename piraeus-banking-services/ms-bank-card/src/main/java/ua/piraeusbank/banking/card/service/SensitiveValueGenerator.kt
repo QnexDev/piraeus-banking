@@ -1,6 +1,7 @@
 package ua.piraeusbank.banking.card.service
 
 import org.springframework.stereotype.Service
+import ua.piraeusbank.banking.card.domain.BankCardNetwork
 import ua.piraeusbank.banking.card.domain.BankCardNumber
 import ua.piraeusbank.banking.card.domain.CardNetworkCode
 import ua.piraeusbank.banking.card.domain.CardNetworkCode.*
@@ -31,19 +32,19 @@ class NaiveSecurityCodeGenerator : SecurityCodeGeneratorAlias {
     override fun generate(params: Empty): Short = Random.nextInt(1000, 9999).toShort()
 }
 
-internal typealias CardNumberGeneratorAlias = SensitiveValueGenerator<CardNetworkCode, BankCardNumber>
+internal typealias CardNumberGeneratorAlias = SensitiveValueGenerator<BankCardNetwork, BankCardNumber>
 
 @Service("cardNumberGenerator")
 internal class NaiveCardNumberGenerator : CardNumberGeneratorAlias {
 
-    override fun generate(params: CardNetworkCode): BankCardNumber = when (params) {
+    override fun generate(params: BankCardNetwork): BankCardNumber = when (params.code) {
         VISA -> generateNumber(params)
         MASTERCARD -> generateNumber(params)
     }
 
-    fun generateNumber(network: CardNetworkCode): BankCardNumber {
+    fun generateNumber(network: BankCardNetwork): BankCardNumber {
         val number =
-                "${network.startDigit}${threeDigits()}${fourDigits()}${fourDigits()}${fourDigits()}".toBigInteger()
+                "${network.prefixNumbers}${threeDigits()}${fourDigits()}${fourDigits()}${fourDigits()}".toBigInteger()
 
         val binCode = extractBin(number)
 

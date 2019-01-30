@@ -8,7 +8,7 @@ import ua.piraeusbank.banking.card.CardProcessingException
 import ua.piraeusbank.banking.card.conversion.CardModelConverterAlias
 import ua.piraeusbank.banking.card.domain.BankCard
 import ua.piraeusbank.banking.card.domain.BankCardData
-import ua.piraeusbank.banking.card.domain.BankCardState.*
+import ua.piraeusbank.banking.card.domain.BankCardStatus.*
 import ua.piraeusbank.banking.card.domain.BankCardType.DEBIT
 import ua.piraeusbank.banking.card.domain.CardNetworkCode
 import ua.piraeusbank.banking.card.repository.BankCardRepository
@@ -47,7 +47,7 @@ internal class BankCardServiceImpl(
         @Qualifier("cardNumberGenerator")
         @Autowired
         private val cardNumberGenerator: CardNumberGeneratorAlias,
-        @Autowired  private val cardModelConverter: CardModelConverterAlias) : BankCardService {
+        @Autowired private val cardModelConverter: CardModelConverterAlias) : BankCardService {
 
     companion object {
         const val SERVICE_DURATION_IN_YEAR = 3L
@@ -68,10 +68,10 @@ internal class BankCardServiceImpl(
     override fun issueCard(issueCardRequest: IssueCardRequest) {
         val cardNetwork = bankNetworkRepository.findByCode(issueCardRequest.networkCode)
 
-        val (number, binCode) = cardNumberGenerator.generate(cardNetwork.code)
+        val (number, binCode) = cardNumberGenerator.generate(cardNetwork)
 
         val newBankCard = BankCard(
-                state = OPENED,
+                status = OPENED,
                 type = DEBIT,
                 pinCode = pinCodeGenerator.generate(Empty),
                 securityCode = securityCodeGenerator.generate(Empty),
@@ -79,7 +79,9 @@ internal class BankCardServiceImpl(
                 cardholderId = issueCardRequest.customerId,
                 network = cardNetwork,
                 binCode = binCode,
-                number = number
+                number = number,
+                //FIXME
+                accountId = 0L
         )
         bankCardRepository.saveAndFlush(newBankCard)
     }
@@ -88,7 +90,7 @@ internal class BankCardServiceImpl(
     override fun closeCard(cardId: Long) {
         val bankCard = bankCardRepository.getOne(cardId)
         throwIfClosed(bankCard)
-        bankCardRepository.saveAndFlush(bankCard.copy(state = CLOSED))
+        bankCardRepository.saveAndFlush(bankCard.copy(status = CLOSED))
     }
 
     @Transactional
@@ -96,7 +98,7 @@ internal class BankCardServiceImpl(
         val bankCard = bankCardRepository.getOne(cardId)
         throwIfClosed(bankCard)
         throwIfBlocked(bankCard)
-        bankCardRepository.saveAndFlush(bankCard.copy(state = BLOCKED))
+        bankCardRepository.saveAndFlush(bankCard.copy(status = BLOCKED))
     }
 
     @Transactional
@@ -104,7 +106,7 @@ internal class BankCardServiceImpl(
         val bankCard = bankCardRepository.getOne(cardId)
         throwIfClosed(bankCard)
         throwIfOpened(bankCard)
-        bankCardRepository.saveAndFlush(bankCard.copy(state = BLOCKED))
+        bankCardRepository.saveAndFlush(bankCard.copy(status = BLOCKED))
     }
 
     @Transactional
@@ -127,19 +129,19 @@ internal class BankCardServiceImpl(
     }
 
     private fun throwIfOpened(bankCard: BankCard) {
-        if (bankCard.state == OPENED) {
+        if (bankCard.status == OPENED) {
             throw CardProcessingException("This card is opened!")
         }
     }
 
     private fun throwIfBlocked(bankCard: BankCard) {
-        if (bankCard.state == BLOCKED) {
+        if (bankCard.status == BLOCKED) {
             throw CardProcessingException("This card has been blocked!")
         }
     }
 
     private fun throwIfClosed(bankCard: BankCard) {
-        if (bankCard.state == CLOSED) {
+        if (bankCard.status == CLOSED) {
             throw CardProcessingException("This card has been closed!")
         }
     }

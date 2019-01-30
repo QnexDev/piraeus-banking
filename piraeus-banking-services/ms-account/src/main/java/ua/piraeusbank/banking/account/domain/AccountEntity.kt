@@ -16,7 +16,7 @@ data class AccountEntity(
         val accountTypeId: AccountType,
         @Column(name = "customer_id") val customerId: Long,
         @Column(name = "creation_date") val creationDate: LocalDateTime,
-        @Column(name = "state") val state: AccountState,
+        @Column(name = "status") val status: AccountStatus,
         @Column(name = "balance") val balance: Money,
         @JoinColumn(name = "currency_id")
         @ManyToOne val currency: Currency)
@@ -61,7 +61,7 @@ data class Currency(
         @Column(name = "numeric_id") val numericCode: Int
 )
 
-enum class AccountState {
+enum class AccountStatus {
     OPENED, BLOCKED, CLOSED
 }
 

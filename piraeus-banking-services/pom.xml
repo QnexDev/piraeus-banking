@@ -13,10 +13,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>ms-bank-card</module>
-        <module>ms-account</module>
-        <module>ms-auth</module>
         <module>common-config</module>
+        <module>ms-customer</module>
+        <module>ms-account</module>
+        <module>ms-bank-card</module>
+        <module>ms-auth</module>
     </modules>
 
     <build>

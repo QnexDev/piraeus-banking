@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository
 import ua.piraeusbank.banking.account.NotEnoughMoneyException
 import ua.piraeusbank.banking.account.TransactionProcessingException
 import ua.piraeusbank.banking.account.domain.AccountEntity
-import ua.piraeusbank.banking.account.domain.AccountState
+import ua.piraeusbank.banking.account.domain.AccountStatus
 import ua.piraeusbank.banking.account.domain.TransactionType
 import ua.piraeusbank.banking.account.domain.TransactionTypeCode
 import javax.persistence.EntityManager
@@ -21,6 +21,7 @@ interface TransactionTypeRepository: JpaRepository<TransactionType, Long> {
 interface BaseAccountRepository : JpaRepository<AccountEntity, Long>
 
 interface AccountRepository {
+
     fun getAccountBalance(accountId: Long): Money
 
     fun transferMoney(sourceAccountId: Long, targetAccountId: Long, amount: Money)
@@ -55,11 +56,11 @@ class AccountRepositoryImpl(
         val targetAccount = em.find(AccountEntity::class.java, targetAccountId)
 
 
-        if (sourceAccount.state == AccountState.BLOCKED) {
+        if (sourceAccount.status == AccountStatus.BLOCKED) {
             throw TransactionProcessingException("This account has been blocked!")
         }
 
-        if (sourceAccount.state == AccountState.CLOSED) {
+        if (sourceAccount.status == AccountStatus.CLOSED) {
             throw TransactionProcessingException("This account has been closed!")
         }
 

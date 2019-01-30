@@ -17,7 +17,7 @@ internal class CardModelConverter : CardModelConverterAlias {
                     expirationDate = source.expirationDate,
                     type = source.type,
                     binCode = source.binCode,
-                    networkCode = source.network.code
-
+                    networkCode = source.network.code,
+                    accountId = source.accountId
             )
 }
