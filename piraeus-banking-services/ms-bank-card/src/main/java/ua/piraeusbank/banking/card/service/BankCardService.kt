@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ua.piraeusbank.banking.card.CardProcessingException
 import ua.piraeusbank.banking.card.conversion.CardModelConverterAlias
-import ua.piraeusbank.banking.card.domain.BankCard
-import ua.piraeusbank.banking.card.domain.BankCardData
-import ua.piraeusbank.banking.card.domain.BankCardStatus.*
-import ua.piraeusbank.banking.card.domain.BankCardType.DEBIT
-import ua.piraeusbank.banking.card.domain.CardNetworkCode
+import ua.piraeusbank.banking.domain.entity.BankCard
+import ua.piraeusbank.banking.domain.entity.BankCardData
+import ua.piraeusbank.banking.domain.entity.BankCardStatus.*
+import ua.piraeusbank.banking.domain.entity.BankCardType.DEBIT
+import ua.piraeusbank.banking.domain.entity.CardNetworkCode
 import ua.piraeusbank.banking.card.repository.BankCardRepository
 import ua.piraeusbank.banking.card.repository.BankNetworkRepository
 import java.time.LocalDate

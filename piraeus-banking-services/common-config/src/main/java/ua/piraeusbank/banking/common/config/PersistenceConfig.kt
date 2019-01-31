@@ -1,5 +1,6 @@
 package ua.piraeusbank.banking.common.config
 
+import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Primary
@@ -20,19 +21,20 @@ import javax.sql.DataSource
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = ["ua.piraeusbank.banking"])
+@EntityScan("ua.piraeusbank.banking")
 class PersistenceConfig {
 
     @Bean
     fun entityManagerFactory(): LocalContainerEntityManagerFactoryBean {
         val vendorAdapter = HibernateJpaVendorAdapter()
-        vendorAdapter.setDatabase(Database.HSQL)
+        vendorAdapter.setDatabase(Database.H2)
         vendorAdapter.setGenerateDdl(true)
 
         val emf = LocalContainerEntityManagerFactoryBean()
         emf.dataSource = dataSource()
         emf.setPackagesToScan("ua.piraeusbank.banking")
         emf.jpaVendorAdapter = vendorAdapter
-        // emf.setJpaProperties(hibernateProperties());
+        emf.setJpaProperties(hibernateProperties())
 
         return emf
     }
@@ -40,7 +42,7 @@ class PersistenceConfig {
     @Bean
     fun dataSource(): DataSource {
         val builder = EmbeddedDatabaseBuilder()
-        return builder.setType(EmbeddedDatabaseType.HSQL).build()
+        return builder.setType(EmbeddedDatabaseType.H2).build()
     }
 
     @Bean

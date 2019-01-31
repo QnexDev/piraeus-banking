@@ -1,8 +1,8 @@
 package ua.piraeusbank.banking.card.conversion
 
 import org.springframework.stereotype.Service
-import ua.piraeusbank.banking.card.domain.BankCard
-import ua.piraeusbank.banking.card.domain.BankCardData
+import ua.piraeusbank.banking.domain.entity.BankCard
+import ua.piraeusbank.banking.domain.entity.BankCardData
 
 
 internal typealias CardModelConverterAlias = (BankCard) -> BankCardData

@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import ua.piraeusbank.banking.account.NotEnoughMoneyException
 import ua.piraeusbank.banking.account.TransactionProcessingException
-import ua.piraeusbank.banking.account.domain.AccountEntity
-import ua.piraeusbank.banking.account.domain.AccountStatus
-import ua.piraeusbank.banking.account.domain.TransactionType
-import ua.piraeusbank.banking.account.domain.TransactionTypeCode
+import ua.piraeusbank.banking.domain.entity.AccountEntity
+import ua.piraeusbank.banking.domain.entity.AccountStatus
+import ua.piraeusbank.banking.domain.entity.TransactionType
+import ua.piraeusbank.banking.domain.entity.TransactionTypeCode
 import javax.persistence.EntityManager
 import javax.persistence.LockModeType
 import javax.persistence.PersistenceContext

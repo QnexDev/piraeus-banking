@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.account.domain
+package ua.piraeusbank.banking.domain.entity
 
 import org.javamoney.moneta.Money
 import java.time.Instant
@@ -10,7 +10,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "ACCOUNT")
 data class AccountEntity(
-        @Column(name = "account_id") val accountId: Long? = null,
+        @Id @Column(name = "account_id") val accountId: Long? = null,
         @ManyToOne
         @JoinColumn(name = "accountTypeId")
         val accountTypeId: AccountType,
@@ -25,7 +25,7 @@ data class AccountEntity(
 @Entity
 @Table(name = "ACCOUNT_TYPE")
 data class AccountType(
-        @Column(name = "account_type_id") val accountTypeId: Long,
+        @Id @Column(name = "account_type_id") val accountTypeId: Long,
         @Column(name = "name") val name: String,
         @Column(name = "description") val description: String
 )
@@ -33,7 +33,7 @@ data class AccountType(
 @Entity
 @Table(name = "TRANSACTION")
 data class TransactionEntity(
-        @Column(name = "transaction_id") val id: Long? = null,
+        @Id @Column(name = "transaction_id") val id: Long? = null,
         @Column(name = "status") val status: TransactionStatus,
         @ManyToOne
         @JoinColumn(name = "transaction_type_id")
@@ -48,7 +48,7 @@ data class TransactionEntity(
 @Entity
 @Table(name = "TRANSACTION_TYPE")
 data class TransactionType(
-        @Column(name = "transaction_type_id") val transactionTypeId: Long,
+        @Id @Column(name = "transaction_type_id") val transactionTypeId: Long,
         @Column(name = "code") val code: TransactionTypeCode,
         @Column(name = "description") val description: String
 )
@@ -56,9 +56,9 @@ data class TransactionType(
 @Entity
 @Table(name = "CURRENCY")
 data class Currency(
-        @Column(name = "currency_id") val id: Long,
+        @Id @Column(name = "currency_id") val id: Long,
         @Column(name = "currency_code") val currencyCode: String,
-        @Column(name = "numeric_id") val numericCode: Int
+        @Column(name = "numeric_code") val numericCode: Int
 )
 
 enum class AccountStatus {

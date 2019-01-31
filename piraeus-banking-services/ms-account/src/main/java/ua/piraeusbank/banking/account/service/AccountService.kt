@@ -7,13 +7,14 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
 import ua.piraeusbank.banking.account.TransactionProcessingException
-import ua.piraeusbank.banking.account.domain.*
-import ua.piraeusbank.banking.account.domain.TransactionStatus.*
-import ua.piraeusbank.banking.account.domain.TransactionTypeCode.*
 import ua.piraeusbank.banking.account.repository.AccountRepository
 import ua.piraeusbank.banking.account.repository.TransactionRepository
 import ua.piraeusbank.banking.account.repository.TransactionTypeRepository
 import ua.piraeusbank.banking.common.config.AccountMoneyTransferMessage
+import ua.piraeusbank.banking.domain.entity.TransactionEntity
+import ua.piraeusbank.banking.domain.entity.TransactionStatus.*
+import ua.piraeusbank.banking.domain.entity.TransactionTypeCode
+import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.*
 import java.time.Instant
 
 interface AccountService {
@@ -24,9 +25,9 @@ interface AccountService {
 
     fun getTransaction(transactionId: Long): TransactionEntity
 
-    fun getOutgoingTransactions(accountId: Long)
+    fun getOutgoingTransactions(accountId: Long): List<TransactionEntity>
 
-    fun getIncomingTransactions(accountId: Long)
+    fun getIncomingTransactions(accountId: Long): List<TransactionEntity>
 }
 
 @Service
@@ -56,7 +57,7 @@ class AccountServiceImpl(
     override fun getOutgoingTransactions(accountId: Long) = txRepository.getOutgoingTransactionsByAccountId(accountId)
 
     @Transactional(readOnly = true)
-    override fun getIncomingTransactions(accountId: Long) = txRepository.getIncommingTransactionsByAccountId(accountId)
+    override fun getIncomingTransactions(accountId: Long) = txRepository.getIncomingTransactionsByAccountId(accountId)
 }
 
 interface TransactionExecutor {

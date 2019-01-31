@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.card.domain
+package ua.piraeusbank.banking.domain.entity
 
 import java.math.BigInteger
 import java.time.LocalDate
@@ -14,12 +14,12 @@ data class BankCardData(
         val expirationDate: LocalDate)
 
 
-internal data class BankCardNumber(val number: BigInteger, val binCode: Int)
+data class BankCardNumber(val number: BigInteger, val binCode: Int)
 
 @Entity
 @Table(name = "CARD_NETWORK")
-internal data class BankCardNetwork(
-        @Column(name = "payment_card_network_id") val id: Long? = null,
+data class BankCardNetwork(
+        @Id @Column(name = "payment_card_network_id") val id: Long? = null,
         @Enumerated(EnumType.STRING)
         @Column(name = "code")
         val code: CardNetworkCode,
@@ -29,7 +29,7 @@ internal data class BankCardNetwork(
 
 @Entity
 @Table(name = "CARD")
-internal data class BankCard(
+data class BankCard(
         @Id
         @GeneratedValue
         @Column(name = "bank_card_id") val id: Long? = null,
@@ -49,14 +49,13 @@ internal data class BankCard(
 
         @ManyToOne
         @JoinColumn(name = "payment_card_network_id")
-        @Column(name = "network")
         val network: BankCardNetwork,
 
         @Column(name = "expiration_date") val expirationDate: LocalDate,
         @Column(name = "security_code") val securityCode: Short
 )
 
-internal enum class BankCardStatus {
+enum class BankCardStatus {
     OPENED, CLOSED, BLOCKED
 }
 

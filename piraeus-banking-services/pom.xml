@@ -18,6 +18,7 @@
         <module>ms-account</module>
         <module>ms-bank-card</module>
         <module>ms-auth</module>
+        <module>common-domain</module>
     </modules>
 
     <build>

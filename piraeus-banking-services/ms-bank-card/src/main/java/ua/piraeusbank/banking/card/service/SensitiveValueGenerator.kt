@@ -1,10 +1,9 @@
 package ua.piraeusbank.banking.card.service
 
 import org.springframework.stereotype.Service
-import ua.piraeusbank.banking.card.domain.BankCardNetwork
-import ua.piraeusbank.banking.card.domain.BankCardNumber
-import ua.piraeusbank.banking.card.domain.CardNetworkCode
-import ua.piraeusbank.banking.card.domain.CardNetworkCode.*
+import ua.piraeusbank.banking.domain.entity.BankCardNetwork
+import ua.piraeusbank.banking.domain.entity.BankCardNumber
+import ua.piraeusbank.banking.domain.entity.CardNetworkCode.*
 import java.math.BigInteger
 import kotlin.random.Random
 
