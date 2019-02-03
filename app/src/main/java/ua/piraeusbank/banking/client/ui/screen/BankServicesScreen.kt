@@ -21,6 +21,7 @@ class BankServicesScreen : Screen<BankServicesPm>() {
         val BANK_SERVICE_VIEW_CONFIGS = listOf(
             BankServiceViewConfig(BankServiceKind.MONEY_TRANSFER, R.drawable.ic_arrow_double_right, R.string.bank_service_transfer_money),
             BankServiceViewConfig(BankServiceKind.CARDS_MENU, R.drawable.ic_cards_menu, R.string.bank_service_card_menu),
+            BankServiceViewConfig(BankServiceKind.ACCOUNT_STATEMENT, R.drawable.ic_account_statement, R.string.bank_service_statement),
             BankServiceViewConfig(BankServiceKind.SETTINGS, R.drawable.ic_app_settings, R.string.bank_service_app_settings)
         )
     }

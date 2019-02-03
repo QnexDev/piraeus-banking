@@ -28,7 +28,7 @@
     <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:orientation="vertical">
@@ -62,6 +62,51 @@
                 android:inputType="textEmailAddress"
                 android:drawablePadding="10dp"
                 android:textColorHint="#cccbcb"/>
+
+        <EditText
+                android:id="@+id/regNameInput"
+                style="@style/Widget.AppCompat.EditText"
+                android:drawableLeft="@drawable/ic_person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/name_txt"
+                android:drawablePadding="10dp"
+                android:textColorHint="#cccbcb"/>
+
+        <EditText
+                android:id="@+id/regLastNameInput"
+                style="@style/Widget.AppCompat.EditText"
+                android:drawableLeft="@drawable/ic_person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/last_name_txt"
+                android:drawablePadding="10dp"
+                android:textColorHint="#cccbcb"/>
+
+        <!--<DatePicker-->
+                <!--android:id="@+id/regDateOfBirthdayInput"-->
+                <!--style="@style/Widget.AppCompat.EditText"-->
+                <!--android:drawableLeft="@drawable/ic_person"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_marginTop="20dp"-->
+                <!--android:hint="@string/last_name_txt"-->
+                <!--android:drawablePadding="10dp"-->
+                <!--android:textColorHint="#cccbcb"/>-->
+        <EditText
+                android:id="@+id/regDateOfBirthdayInput"
+                style="@style/Widget.AppCompat.EditText"
+                android:drawableLeft="@drawable/ic_person"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:hint="@string/date_of_birthday_txt"
+                android:drawablePadding="10dp"
+                android:textColorHint="#cccbcb"
+                android:text="18/02/1993"/>
 
 
         <EditText

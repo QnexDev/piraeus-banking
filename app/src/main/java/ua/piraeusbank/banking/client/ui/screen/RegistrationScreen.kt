@@ -2,8 +2,7 @@ package ua.piraeusbank.banking.client.ui.screen
 
 import com.jakewharton.rxbinding2.view.clicks
 import io.reactivex.Observable
-import kotlinx.android.synthetic.main.screen_client_registration.*
-import kotlinx.android.synthetic.main.screen_login.*
+import kotlinx.android.synthetic.main.screen_registration.*
 import me.dmdev.rxpm.skipWhileInProgress
 import me.dmdev.rxpm.widget.inputControl
 import ua.piraeusbank.banking.client.R
@@ -19,7 +18,7 @@ class RegistrationScreen : Screen<RegistrationPm>() {
         fun create() = RegistrationScreen()
     }
 
-    override val screenLayout = R.layout.screen_client_registration
+    override val screenLayout = R.layout.screen_registration
 
     override fun providePresentationModel(): RegistrationPm {
         return RegistrationPm()
@@ -29,7 +28,7 @@ class RegistrationScreen : Screen<RegistrationPm>() {
         super.onBindPresentationModel(pm)
 
         //Bind PM to UI components
-        pm.registrationButtonEnabled bindTo loginButton::setEnabled
+        pm.registrationButtonEnabled bindTo registrationButton::setEnabled
         pm.phoneNumberControl bindTo regPhoneInput
         pm.emailControl bindTo regEmailInput
         pm.passwordControl bindTo regPasswordInput

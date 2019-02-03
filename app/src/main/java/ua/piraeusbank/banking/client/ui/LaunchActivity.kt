@@ -62,6 +62,7 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
             BankServiceKind.CARDS_MENU -> CardMenuScreen.create()
             BankServiceKind.MONEY_TRANSFER -> MoneyTransferScreen.create()
             BankServiceKind.SETTINGS -> AppSettingsScreen.create()
+            BankServiceKind.ACCOUNT_STATEMENT -> AppSettingsScreen.create()
         }
     }
 }

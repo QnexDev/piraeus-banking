@@ -8,7 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.menu_card_layout.view.*
 
-class MenuCardAdapter(private val menuItems: List<CardMenuItemViewConfig>, private val menuLayout: Int) :
+class MenuCardAdapter(private val menuItems: List<CardMenuPreferences>, private val menuLayout: Int) :
     RecyclerView.Adapter<MenuCardAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
@@ -32,4 +32,4 @@ class MenuCardAdapter(private val menuItems: List<CardMenuItemViewConfig>, priva
     }
 }
 
-data class CardMenuItemViewConfig(val icon: Int, val name: Int)
+data class CardMenuPreferences(val icon: Int, val name: Int)

@@ -14,11 +14,14 @@
     <string name="next_txt">Next</string>
     <string name="login_txt">Login</string>
     <string name="email_txt">Email</string>
+    <string name="name_txt">Name</string>
+    <string name="last_name_txt">Last name</string>
+    <string name="date_of_birthday_txt">Date of Birthday</string>
     <string name="registration_txt">Registration</string>
     <string name="phone_number">Phone Number</string>
     <string name="password_txt">Password</string>
     <string name="amount_txt">Amount</string>
-    <string name="password_again_txt">Passwrod Again</string>
+    <string name="password_again_txt">Password Again</string>
 
     <string name="enter_phone_number">Enter phone number</string>
     <string name="invalid_phone_number">Invalid phone number</string>
@@ -33,12 +36,15 @@
     <string name="menu_card_unblock_card">Unblock card</string>
     <string name="menu_card_add_card">Add card</string>
     <string name="menu_card_close_card">Close card</string>
+    <string name="menu_card_get_security_code">Get Security Code</string>
+    <string name="menu_card_get_pin">Get PIN Code</string>
 
 
     <!--Names of main services-->
     <string name="bank_services_screen_title">Services</string>
     <string name="bank_service_transfer_money">Money Transfer</string>
     <string name="bank_service_card_menu">Cards Menu</string>
+    <string name="bank_service_statement">Account statement</string>
     <string name="bank_service_app_settings">Settings</string>
     <string name="app_settings_appearance">Appearance:</string>
 

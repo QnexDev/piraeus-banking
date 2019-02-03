@@ -4,7 +4,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.screen_card_menu.*
 import ua.piraeusbank.banking.client.R
-import ua.piraeusbank.banking.client.ui.screen.adapter.CardMenuItemViewConfig
+import ua.piraeusbank.banking.client.ui.screen.adapter.CardMenuPreferences
 import ua.piraeusbank.banking.client.ui.screen.adapter.MenuCardAdapter
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
@@ -18,10 +18,12 @@ class CardMenuScreen : Screen<CardMenuPm>() {
     companion object {
         fun create() = CardMenuScreen()
         val CARD_MENU_ITEM_VIEW_CONFIGS = listOf(
-            CardMenuItemViewConfig(R.drawable.ic_block_card, R.string.menu_card_block_card),
-            CardMenuItemViewConfig(R.drawable.ic_unblock_card, R.string.menu_card_unblock_card),
-            CardMenuItemViewConfig(R.drawable.ic_add_card, R.string.menu_card_add_card),
-            CardMenuItemViewConfig(R.drawable.ic_close_card, R.string.menu_card_close_card)
+            CardMenuPreferences(R.drawable.ic_block_card, R.string.menu_card_block_card),
+            CardMenuPreferences(R.drawable.ic_unblock_card, R.string.menu_card_unblock_card),
+            CardMenuPreferences(R.drawable.ic_add_card, R.string.menu_card_add_card),
+            CardMenuPreferences(R.drawable.ic_secutity_code, R.string.menu_card_get_security_code),
+            CardMenuPreferences(R.drawable.ic_pin_code, R.string.menu_card_get_pin),
+            CardMenuPreferences(R.drawable.ic_close_card, R.string.menu_card_close_card)
         )
     }
 
