@@ -1,60 +1,73 @@
 package ua.piraeusbank.banking.client.ui.screen
 
-import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import kotlinx.android.synthetic.main.screen_bank_card.*
+import kotlinx.android.synthetic.main.screen_card_statement.*
 import ua.piraeusbank.banking.client.R
-import ua.piraeusbank.banking.client.ui.model.StatementAction
+import ua.piraeusbank.banking.client.ui.model.StatementRecord
+import ua.piraeusbank.banking.client.ui.model.TransferType
 import ua.piraeusbank.banking.client.ui.screen.adapter.StatementAdapter
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
 
-class PaymentCardScreen : Screen<PaymentCardPm>() {
+class CardStatementScreen : Screen<CardStatementPm>() {
 
     private lateinit var statementView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
     private lateinit var statementAdapter: RecyclerView.Adapter<*>
 
     companion object {
-        fun create() = PaymentCardScreen()
+        fun create() = CardStatementScreen()
     }
 
-    override val screenLayout = R.layout.screen_bank_card
+    override val screenLayout = R.layout.screen_card_statement
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        toolbar.inflateMenu(R.menu.main)
+    override fun providePresentationModel(): CardStatementPm {
+        return CardStatementPm()
     }
 
-    override fun providePresentationModel(): PaymentCardPm {
-        return PaymentCardPm()
-    }
-
-    override fun onBindPresentationModel(pm: PaymentCardPm) {
+    override fun onBindPresentationModel(pm: CardStatementPm) {
         super.onBindPresentationModel(pm)
 
         viewManager = LinearLayoutManager(this.context)
         statementAdapter = StatementAdapter(
             listOf(
-                StatementAction(
-                    StatementAction.TransferType.INCOMING,
+                StatementRecord(
+                    "*4308",
+                    "",
+                    "Petrenko Grigory",
+                    "",
+                    TransferType.INCOMING,
                     "With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase",
-                    "14.12.18 04:24"
+                    "14.12.18 05:23",
+                    "+200",
+                    "UAH"
                 ),
-                StatementAction(
-                    StatementAction.TransferType.OUTGOING,
+                StatementRecord(
+                    "",
+                    "*7408",
+                    "",
+                    "Pavlov Oleg",
+                    TransferType.OUTGOING,
                     "With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase",
-                    "14.12.18 04:24"
+                    "15.12.18 04:11",
+                    "-1000",
+                    "UAH"
+
                 ),
-                StatementAction(
-                    StatementAction.TransferType.OUTGOING,
+                StatementRecord(
+                    "",
+                    "*7408",
+                    "",
+                    "Pavlov Oleg",
+                    TransferType.OUTGOING,
                     "With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase",
-                    "14.12.18 04:24"
+                    "16.12.18 14:54",
+                    "-2000",
+                    "UAH"
                 )
             ),
-            R.layout.card_statement_action_layout
+            R.layout.statement_record_layout
         )
 
         statementView = historyStatements.apply {
@@ -65,4 +78,4 @@ class PaymentCardScreen : Screen<PaymentCardPm>() {
     }
 }
 
-class PaymentCardPm : ScreenPresentationModel()
+class CardStatementPm : ScreenPresentationModel()

@@ -32,5 +32,7 @@
     <color name="hint_text_light">#61FFFFFF</color>
     <color name="disabled_light">@color/hint_text_light</color>
     <color name="dividers_light">#1FFFFFFF</color>
+    <color name="green">#b449bc40</color>
+    <color name="red">#d7ca2e17</color>
 
 </resources>

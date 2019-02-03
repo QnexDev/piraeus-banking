@@ -47,6 +47,9 @@
     <string name="bank_service_statement">Account statement</string>
     <string name="bank_service_app_settings">Settings</string>
     <string name="app_settings_appearance">Appearance:</string>
+    <string name="recipient_txt">Recipient:</string>
+    <string name="statement_recipient_label_txt">Recipient:</string>
+    <string name="statement_sender_label_txt">Sender:</string>
 
     <string-array name="currencies">
         <item>EUR</item>

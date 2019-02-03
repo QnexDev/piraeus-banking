@@ -46,7 +46,7 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
 
             is ViewAllCardsMessage -> sfm.openScreen(AccountScreen.create())
 
-            is ViewBankCardMessage -> sfm.openScreen(PaymentCardScreen.create())
+            is ViewBankCardMessage -> sfm.openScreen(CardStatementScreen.create())
 
             is SelectBankServiceMessage -> sfm.openScreen(selectBankServiceScreen(message))
 
@@ -62,7 +62,7 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
             BankServiceKind.CARDS_MENU -> CardMenuScreen.create()
             BankServiceKind.MONEY_TRANSFER -> MoneyTransferScreen.create()
             BankServiceKind.SETTINGS -> AppSettingsScreen.create()
-            BankServiceKind.ACCOUNT_STATEMENT -> AppSettingsScreen.create()
+            BankServiceKind.ACCOUNT_STATEMENT -> AccountStatementScreen.create()
         }
     }
 }
