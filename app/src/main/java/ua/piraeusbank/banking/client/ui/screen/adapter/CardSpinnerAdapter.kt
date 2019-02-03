@@ -11,10 +11,10 @@ import kotlinx.android.synthetic.main.bank_card_layout.view.*
 import ua.piraeusbank.banking.client.R
 import ua.piraeusbank.banking.client.ui.model.PaymentCard
 
-class TransferPaymentCardAdapter(context: Context,
-                                 private val viewResourceId: Int,
-                                 private val dropDownViewResourceId: Int,
-                                 private val cards: List<PaymentCard>) :
+class CardSpinnerAdapter(context: Context,
+                         private val viewResourceId: Int,
+                         private val dropDownViewResourceId: Int,
+                         private val cards: List<PaymentCard>) :
     ArrayAdapter<PaymentCard>(context, viewResourceId, cards) {
 
     override fun getCount(): Int {

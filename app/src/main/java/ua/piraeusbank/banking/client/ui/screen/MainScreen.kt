@@ -13,7 +13,7 @@ import ua.piraeusbank.banking.client.ui.navigation.ShowMoreBankServicesMessage
 import ua.piraeusbank.banking.client.ui.navigation.ViewAllCardsMessage
 import ua.piraeusbank.banking.client.ui.navigation.ViewBankCardMessage
 import ua.piraeusbank.banking.client.ui.screen.adapter.BankServiceAdapter
-import ua.piraeusbank.banking.client.ui.screen.adapter.PaymentCardAdapter
+import ua.piraeusbank.banking.client.ui.screen.adapter.AccountCardsAdapter
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
 import java.util.concurrent.TimeUnit
@@ -54,7 +54,7 @@ class MainScreen : Screen<MainPm>() {
         }
 
         viewManager = LinearLayoutManager(this.context)
-        bankCardAdapter = PaymentCardAdapter(
+        bankCardAdapter = AccountCardsAdapter(
             PAYMENT_CARDS,
             R.layout.bank_card_layout
         )

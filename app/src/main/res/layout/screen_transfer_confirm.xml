@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              tools:ignore="RtlHardcoded"
+              android:theme="@style/AppTheme">
+
+    <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primary"
+            app:title="@string/confirmation_title">
+
+        <ImageView
+                android:id="@+id/bank_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:layout_gravity="right"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_bank_logo"/>
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/toCardLabel"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="To the card: "
+                android:textSize="18sp"
+                android:textColor="@color/secondary_text"
+                android:layout_marginStart="10dp"
+        />
+
+        <TextView
+                android:id="@+id/toCard"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Internet card *7624"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:layout_marginStart="10dp"
+        />
+
+        <TextView
+                android:id="@+id/amountLabel"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Amount: "
+                android:textSize="18sp"
+                android:textColor="@color/secondary_text"
+                android:layout_marginStart="10dp"
+        />
+
+        <TextView
+                android:id="@+id/amount"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1000 UAH"
+                android:textSize="24sp"
+                android:textColor="@color/green"
+                android:layout_marginStart="10dp"
+        />
+        <Button
+                android:id="@+id/confirmButton"
+                style="@style/ActionButton"
+                android:layout_gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:text="Confirm"
+                android:textSize="20sp"/>
+    </LinearLayout>
+
+
+</LinearLayout>

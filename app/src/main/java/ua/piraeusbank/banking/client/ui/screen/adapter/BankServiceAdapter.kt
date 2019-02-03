@@ -10,8 +10,8 @@ import kotlinx.android.synthetic.main.bank_service_view_item.view.*
 import ua.piraeusbank.banking.client.R
 import ua.piraeusbank.banking.client.ui.model.BankServiceKind
 
-class BankServiceAdapter(private val bankServices: List<BankServiceViewConfig>,
-                         private val onSelectService: (View, BankServiceViewConfig) -> Unit) : BaseAdapter() {
+class BankServiceAdapter(private val bankServices: List<BankServicePreferences>,
+                         private val onSelectService: (View, BankServicePreferences) -> Unit) : BaseAdapter() {
 
     override fun getCount(): Int {
         return bankServices.size
@@ -59,5 +59,5 @@ class BankServiceAdapter(private val bankServices: List<BankServiceViewConfig>,
 
 }
 
-data class BankServiceViewConfig(val bankServiceKind: BankServiceKind, val icon: Int, val name: Int)
+data class BankServicePreferences(val bankServiceKind: BankServiceKind, val icon: Int, val name: Int)
 

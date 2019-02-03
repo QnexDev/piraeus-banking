@@ -8,6 +8,7 @@ import ua.piraeusbank.banking.client.R
 import ua.piraeusbank.banking.client.ui.extensions.currentScreen
 import ua.piraeusbank.banking.client.ui.extensions.openScreen
 import ua.piraeusbank.banking.client.ui.model.BankServiceKind
+import ua.piraeusbank.banking.client.ui.model.CardMenuKind
 import ua.piraeusbank.banking.client.ui.navigation.*
 import ua.piraeusbank.banking.client.ui.screen.*
 import ua.piraeusbank.banking.client.ui.screen.base.BackHandler
@@ -53,6 +54,10 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
             is ShowMoreBankServicesMessage -> sfm.openScreen(BankServicesScreen.create())
 
             is StartRegistrationMessage -> sfm.openScreen(RegistrationScreen.create())
+
+            is MoneyTransferStartedMessage -> sfm.openScreen(TransferConfirmDialog.create())
+
+            is SelectCardMenuMessage -> sfm.openScreen(selectCardMenuScreen(message))
         }
         return true
     }
@@ -63,6 +68,13 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
             BankServiceKind.MONEY_TRANSFER -> MoneyTransferScreen.create()
             BankServiceKind.SETTINGS -> AppSettingsScreen.create()
             BankServiceKind.ACCOUNT_STATEMENT -> AccountStatementScreen.create()
+        }
+    }
+
+    private fun selectCardMenuScreen(message: SelectCardMenuMessage): Screen<*> {
+        return when (message.preferences.kind) {
+            CardMenuKind.ORDER_CARD -> OrderCardDialogScreen.create(message.preferences)
+            else -> CardMenuDialogScreen.create(message.preferences)
         }
     }
 }

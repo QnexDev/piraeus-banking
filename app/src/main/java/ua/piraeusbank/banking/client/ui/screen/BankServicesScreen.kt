@@ -1,12 +1,11 @@
 package ua.piraeusbank.banking.client.ui.screen
 
 import kotlinx.android.synthetic.main.screen_bank_services.*
-import kotlinx.android.synthetic.main.screen_main.*
 import ua.piraeusbank.banking.client.R
 import ua.piraeusbank.banking.client.ui.model.BankServiceKind
-import ua.piraeusbank.banking.client.ui.navigation.*
+import ua.piraeusbank.banking.client.ui.navigation.SelectBankServiceMessage
 import ua.piraeusbank.banking.client.ui.screen.adapter.BankServiceAdapter
-import ua.piraeusbank.banking.client.ui.screen.adapter.BankServiceViewConfig
+import ua.piraeusbank.banking.client.ui.screen.adapter.BankServicePreferences
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
 
@@ -19,10 +18,10 @@ class BankServicesScreen : Screen<BankServicesPm>() {
         fun create() = BankServicesScreen()
 
         val BANK_SERVICE_VIEW_CONFIGS = listOf(
-            BankServiceViewConfig(BankServiceKind.MONEY_TRANSFER, R.drawable.ic_arrow_double_right, R.string.bank_service_transfer_money),
-            BankServiceViewConfig(BankServiceKind.CARDS_MENU, R.drawable.ic_cards_menu, R.string.bank_service_card_menu),
-            BankServiceViewConfig(BankServiceKind.ACCOUNT_STATEMENT, R.drawable.ic_account_statement, R.string.bank_service_statement),
-            BankServiceViewConfig(BankServiceKind.SETTINGS, R.drawable.ic_app_settings, R.string.bank_service_app_settings)
+            BankServicePreferences(BankServiceKind.MONEY_TRANSFER, R.drawable.ic_arrow_double_right, R.string.bank_service_transfer_money),
+            BankServicePreferences(BankServiceKind.CARDS_MENU, R.drawable.ic_cards_menu, R.string.bank_service_card_menu),
+            BankServicePreferences(BankServiceKind.ACCOUNT_STATEMENT, R.drawable.ic_account_statement, R.string.bank_service_statement),
+            BankServicePreferences(BankServiceKind.SETTINGS, R.drawable.ic_app_settings, R.string.bank_service_app_settings)
         )
     }
 

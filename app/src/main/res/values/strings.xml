@@ -8,6 +8,8 @@
     <string name="app_name">Piraeus Banking</string>
     <string name="main_screen_title">Piraeus Online</string>
     <string name="sign_in">Sign In</string>
+    <string name="confirmation_title">Confirmation</string>
+    <string name="account_statement_title">Account statement</string>
 
     <string name="ok_button">OK</string>
     <string name="display_a_password_chbx">Display a password</string>
@@ -21,6 +23,7 @@
     <string name="phone_number">Phone Number</string>
     <string name="password_txt">Password</string>
     <string name="amount_txt">Amount</string>
+    <string name="note_txt">Note</string>
     <string name="password_again_txt">Password Again</string>
 
     <string name="enter_phone_number">Enter phone number</string>
@@ -34,10 +37,14 @@
 
     <string name="menu_card_block_card">Block card</string>
     <string name="menu_card_unblock_card">Unblock card</string>
-    <string name="menu_card_add_card">Add card</string>
+    <string name="menu_card_order_card">Order card</string>
     <string name="menu_card_close_card">Close card</string>
     <string name="menu_card_get_security_code">Get Security Code</string>
     <string name="menu_card_get_pin">Get PIN Code</string>
+    <string name="menu_card_change_pin_descr">After the changes You will receive a new PIN code in an SMS message</string>
+    <string name="menu_card_change_security_code_descr">This code is required for card payment online.
+        You will receive a CVV2 code of the selected card in a SMS masagge</string>
+    <string name="menu_card_close_card_descr">You can close the card only with zero balance!</string>
 
 
     <!--Names of main services-->
@@ -46,7 +53,7 @@
     <string name="bank_service_card_menu">Cards Menu</string>
     <string name="bank_service_statement">Account statement</string>
     <string name="bank_service_app_settings">Settings</string>
-    <string name="app_settings_appearance">Appearance:</string>
+    <string name="app_settings_language">Language:</string>
     <string name="recipient_txt">Recipient:</string>
     <string name="statement_recipient_label_txt">Recipient:</string>
     <string name="statement_sender_label_txt">Sender:</string>
@@ -61,5 +68,10 @@
         <item>English</item>
         <item>Russian</item>
         <item>Ukrainian</item>
+    </string-array>
+
+    <string-array name="cardTypes">
+        <item>Payment Card Mastercard</item>
+        <item>Payment Card Visa</item>
     </string-array>
 </resources>

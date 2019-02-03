@@ -29,7 +29,6 @@
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
                   android:layout_marginTop="20dp"
-                  android:layout_marginBottom="20dp"
                   android:orientation="horizontal"
                   style="@style/Widget.AppCompat.EditText"
                     android:backgroundTint="@color/dividers_dark">
@@ -41,8 +40,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_margin="20dp"
                 android:drawablePadding="10dp"
-                android:textSize="24sp"
-                android:text="@string/app_settings_appearance"
+                android:textSize="18sp"
+                android:text="@string/app_settings_language"
                 android:layout_gravity="left|center"
                 android:textColorHint="#cccbcb"/>
 
@@ -51,9 +50,31 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center"
-                android:textSize="24sp"
+                android:textSize="18sp"
         />
     </LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="20dp"
+                  android:orientation="horizontal"
+                  style="@style/Widget.AppCompat.EditText"
+                  android:backgroundTint="@color/dividers_dark">
+
+
+        <Button
+                android:id="@+id/passwordRecoveryButton"
+                style="@style/LinkButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawablePadding="10dp"
+                android:layout_gravity="left|center"
+                android:textSize="18sp"
+                android:text="Password recovery" />
+
+    </LinearLayout>
+
 
 
 

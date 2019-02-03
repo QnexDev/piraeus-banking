@@ -10,8 +10,8 @@ import kotlinx.android.synthetic.main.bank_card_layout.view.*
 import ua.piraeusbank.banking.client.R
 import ua.piraeusbank.banking.client.ui.model.PaymentCard
 
-class PaymentCardAdapter(private val cards: List<PaymentCard>, private val cardLayout: Int) :
-    RecyclerView.Adapter<PaymentCardAdapter.ViewHolder>() {
+class AccountCardsAdapter(private val cards: List<PaymentCard>, private val cardLayout: Int) :
+    RecyclerView.Adapter<AccountCardsAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
         return cards.size

@@ -4,8 +4,10 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import kotlinx.android.synthetic.main.screen_card_menu.*
 import ua.piraeusbank.banking.client.R
+import ua.piraeusbank.banking.client.ui.model.CardMenuKind.*
+import ua.piraeusbank.banking.client.ui.navigation.SelectCardMenuMessage
+import ua.piraeusbank.banking.client.ui.screen.adapter.CardMenuAdapter
 import ua.piraeusbank.banking.client.ui.screen.adapter.CardMenuPreferences
-import ua.piraeusbank.banking.client.ui.screen.adapter.MenuCardAdapter
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
 
@@ -18,12 +20,15 @@ class CardMenuScreen : Screen<CardMenuPm>() {
     companion object {
         fun create() = CardMenuScreen()
         val CARD_MENU_ITEM_VIEW_CONFIGS = listOf(
-            CardMenuPreferences(R.drawable.ic_block_card, R.string.menu_card_block_card),
-            CardMenuPreferences(R.drawable.ic_unblock_card, R.string.menu_card_unblock_card),
-            CardMenuPreferences(R.drawable.ic_add_card, R.string.menu_card_add_card),
-            CardMenuPreferences(R.drawable.ic_secutity_code, R.string.menu_card_get_security_code),
-            CardMenuPreferences(R.drawable.ic_pin_code, R.string.menu_card_get_pin),
-            CardMenuPreferences(R.drawable.ic_close_card, R.string.menu_card_close_card)
+            CardMenuPreferences(R.drawable.ic_block_card, R.string.menu_card_block_card, BLOCK_CARD),
+            CardMenuPreferences(R.drawable.ic_unblock_card, R.string.menu_card_unblock_card, UNBLOCK_CARD),
+            CardMenuPreferences(R.drawable.ic_add_card, R.string.menu_card_order_card, ORDER_CARD),
+            CardMenuPreferences(R.drawable.ic_secutity_code, R.string.menu_card_get_security_code, GET_SECURITY_CODE,
+                R.string.menu_card_change_security_code_descr),
+            CardMenuPreferences(R.drawable.ic_pin_code, R.string.menu_card_get_pin, GET_PIN_CODE,
+                R.string.menu_card_change_pin_descr),
+            CardMenuPreferences(R.drawable.ic_close_card, R.string.menu_card_close_card, CLOSE_CARD,
+                R.string.menu_card_close_card_descr)
         )
     }
 
@@ -38,9 +43,10 @@ class CardMenuScreen : Screen<CardMenuPm>() {
 
         viewManager = LinearLayoutManager(this.context)
 
-        cardMenuAdapter = MenuCardAdapter(
+        cardMenuAdapter = CardMenuAdapter(
             CARD_MENU_ITEM_VIEW_CONFIGS,
-            R.layout.menu_card_layout
+            R.layout.menu_card_layout,
+            onSelect = { _, preferences -> pm.selectMenuAction.consumer.accept(preferences) }
         )
 
         cardMenuItemsView = cardMenuItems.apply {
@@ -51,4 +57,16 @@ class CardMenuScreen : Screen<CardMenuPm>() {
     }
 }
 
-class CardMenuPm : ScreenPresentationModel()
+class CardMenuPm : ScreenPresentationModel() {
+
+    val selectMenuAction = Action<CardMenuPreferences>()
+
+    override fun onCreate() {
+        super.onCreate()
+
+
+        selectMenuAction.observable
+            .subscribe { sendMessage(SelectCardMenuMessage(it)) }
+            .untilDestroy()
+    }
+}
