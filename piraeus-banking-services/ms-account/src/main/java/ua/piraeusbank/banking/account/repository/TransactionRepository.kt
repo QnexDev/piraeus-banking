@@ -6,10 +6,10 @@ import ua.piraeusbank.banking.domain.entity.TransactionEntity
 
 interface TransactionRepository : JpaRepository<TransactionEntity, Long> {
 
-    @Query("select t from TransactionEntity t where t.sourceAccountId = :accountId")
+    @Query("select t from TransactionEntity t where t.id = :accountId")
     fun getOutgoingTransactionsByAccountId(accountId: Long): List<TransactionEntity>
 
 
-    @Query("select t from TransactionEntity t where t.targetAccountId = :accountId")
+    @Query("select t from TransactionEntity t where t.id = :accountId")
     fun getIncomingTransactionsByAccountId(accountId: Long): List<TransactionEntity>
 }

@@ -17,9 +17,9 @@ data class BankCardData(
 data class BankCardNumber(val number: BigInteger, val binCode: Int)
 
 @Entity
-@Table(name = "CARD_NETWORK")
+@Table(name = "CARD_PAYMENT_NETWORK")
 data class BankCardNetwork(
-        @Id @Column(name = "payment_card_network_id") val id: Long? = null,
+        @Id @Column(name = "card_payment_network_id") val id: Long? = null,
         @Enumerated(EnumType.STRING)
         @Column(name = "code")
         val code: CardNetworkCode,
@@ -33,19 +33,22 @@ data class BankCard(
         @Id
         @GeneratedValue
         @Column(name = "bank_card_id") val id: Long? = null,
-        @Column(name = "account_id") val accountId: Long,
+        @ManyToOne
+        @JoinColumn(name = "account_id")
+        val account: AccountEntity,
         @Enumerated(EnumType.STRING)
         @Column(name = "type")
         val type: BankCardType,
         @Enumerated(EnumType.STRING)
         @Column(name = "status")
         val status: BankCardStatus,
-        //TODO Customer entity
-        @Column(name = "cardholder_id") val cardholderId: Long,
+        @ManyToOne
+        @JoinColumn(name = "customer_id")
+        val cardholder: CustomerEntity,
 //        @Column(name = "name") val name: String,
         @Column(name = "number") val number: BigInteger,
-        @Column(name = "binCode") val binCode: Int,
-        @Column(name = "pinCode") val pinCode: Short,
+        @Column(name = "bin_code") val binCode: Int,
+        @Column(name = "pin_code") val pinCode: Short,
 
         @ManyToOne
         @JoinColumn(name = "payment_card_network_id")
@@ -55,12 +58,26 @@ data class BankCard(
         @Column(name = "security_code") val securityCode: Short
 )
 
+data class BankCardParams(
+        val id: Long? = null,
+        val accountId: Long?,
+        val type: BankCardType?,
+        val status: BankCardStatus?,
+        val customerId: Long?,
+        val number: BigInteger?,
+        val binCode: Int?,
+        val pinCode: Short?,
+        val network: BankCardNetwork?,
+        val expirationDate: LocalDate?,
+        val securityCode: Short?
+)
+
 enum class BankCardStatus {
     OPENED, CLOSED, BLOCKED
 }
 
 enum class BankCardType {
-    DEBIT, CREDIT, INTERNET
+    DEBIT
 }
 
 enum class CardNetworkCode {

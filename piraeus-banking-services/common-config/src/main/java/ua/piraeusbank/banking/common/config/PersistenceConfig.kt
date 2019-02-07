@@ -1,13 +1,12 @@
 package ua.piraeusbank.banking.common.config
 
+import org.h2.Driver
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Primary
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType
+import org.springframework.jdbc.datasource.DriverManagerDataSource
 import org.springframework.orm.jpa.JpaTransactionManager
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean
 import org.springframework.orm.jpa.vendor.Database
@@ -41,8 +40,12 @@ class PersistenceConfig {
 
     @Bean
     fun dataSource(): DataSource {
-        val builder = EmbeddedDatabaseBuilder()
-        return builder.setType(EmbeddedDatabaseType.H2).build()
+        val dataSource = DriverManagerDataSource()
+        dataSource.setDriverClassName(Driver::class.java.name)
+        dataSource.url = "jdbc:h2:tcp://localhost/~/test"
+        dataSource.username = "sa"
+        dataSource.password = ""
+        return dataSource
     }
 
     @Bean
@@ -64,7 +67,6 @@ class PersistenceConfig {
         hibernateProperties.setProperty("hibernate.format_sql", "true")
         hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true")
 
-        return hibernateProperties
+        return hibernateProperties}
     }
 
-}

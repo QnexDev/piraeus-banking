@@ -1,5 +1,6 @@
 package ua.piraeusbank.banking.account
 
+import org.h2.tools.Server
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient
@@ -16,6 +17,13 @@ import ua.piraeusbank.banking.common.config.PersistenceConfig
 class AccountApplication
 
 fun main(args: Array<String>) {
-    SpringApplication.run(AccountApplication::class.java, *args)
+    var server: Server? = null
+    try {
+        server = Server.createTcpServer().start()
+        SpringApplication.run(AccountApplication::class.java, *args)
+    } finally {
+        Thread.sleep(1000_000)
+        server?.stop()
+    }
 }
 

@@ -11,17 +11,18 @@ import ua.piraeusbank.banking.domain.entity.BankCardData
 import ua.piraeusbank.banking.domain.entity.BankCardStatus.*
 import ua.piraeusbank.banking.domain.entity.BankCardType.DEBIT
 import ua.piraeusbank.banking.domain.entity.CardNetworkCode
-import ua.piraeusbank.banking.card.repository.BankCardRepository
-import ua.piraeusbank.banking.card.repository.BankNetworkRepository
+import ua.piraeusbank.banking.card.repository.CardRepository
+import ua.piraeusbank.banking.card.repository.CardNetworkRepository
+import ua.piraeusbank.banking.domain.entity.BankCardParams
 import java.time.LocalDate
 
-internal interface BankCardService {
+internal interface CardService {
 
     fun getCardInfoById(cardId: Long): BankCardData
 
     fun findAllCardInfos(): List<BankCardData>
 
-    fun issueCard(issueCardRequest: IssueCardRequest)
+    fun orderCard(request: IssueCardRequest)
 
     fun closeCard(cardId: Long)
 
@@ -36,9 +37,9 @@ internal interface BankCardService {
 
 
 @Service
-internal class BankCardServiceImpl(
-        @Autowired private val bankCardRepository: BankCardRepository,
-        @Autowired private val bankNetworkRepository: BankNetworkRepository,
+internal class CardServiceImpl(
+        @Autowired private val cardRepository: CardRepository,
+        @Autowired private val cardNetworkRepository: CardNetworkRepository,
         @Qualifier("pinCodeGenerator")
         private val pinCodeGenerator: PinCodeGeneratorAlias,
         @Qualifier("securityCodeGenerator")
@@ -47,7 +48,7 @@ internal class BankCardServiceImpl(
         @Qualifier("cardNumberGenerator")
         @Autowired
         private val cardNumberGenerator: CardNumberGeneratorAlias,
-        @Autowired private val cardModelConverter: CardModelConverterAlias) : BankCardService {
+        @Autowired private val cardModelConverter: CardModelConverterAlias) : CardService {
 
     companion object {
         const val SERVICE_DURATION_IN_YEAR = 3L
@@ -56,73 +57,72 @@ internal class BankCardServiceImpl(
 
     @Transactional(readOnly = true)
     override fun getCardInfoById(cardId: Long): BankCardData {
-        return cardModelConverter(bankCardRepository.getOne(cardId))
+        return cardModelConverter(cardRepository.getOne(cardId))
     }
 
     @Transactional(readOnly = true)
     override fun findAllCardInfos(): List<BankCardData> {
-        return bankCardRepository.findAll().map { cardModelConverter(it) }
+        return cardRepository.findAll().map { cardModelConverter(it) }
     }
 
     @Transactional
-    override fun issueCard(issueCardRequest: IssueCardRequest) {
-        val cardNetwork = bankNetworkRepository.findByCode(issueCardRequest.networkCode)
+    override fun orderCard(request: IssueCardRequest) {
+        val cardNetwork = cardNetworkRepository.findByCode(request.networkCode)
 
         val (number, binCode) = cardNumberGenerator.generate(cardNetwork)
 
-        val newBankCard = BankCard(
+        val newBankCard = BankCardParams(
                 status = OPENED,
                 type = DEBIT,
                 pinCode = pinCodeGenerator.generate(Empty),
                 securityCode = securityCodeGenerator.generate(Empty),
                 expirationDate = LocalDate.now().plusYears(SERVICE_DURATION_IN_YEAR),
-                cardholderId = issueCardRequest.customerId,
+                customerId = request.customerId,
                 network = cardNetwork,
                 binCode = binCode,
                 number = number,
-                //FIXME
-                accountId = 0L
+                accountId = request.accountId
         )
-        bankCardRepository.saveAndFlush(newBankCard)
+        cardRepository.save(newBankCard)
     }
 
     @Transactional
     override fun closeCard(cardId: Long) {
-        val bankCard = bankCardRepository.getOne(cardId)
+        val bankCard = cardRepository.getOne(cardId)
         throwIfClosed(bankCard)
-        bankCardRepository.saveAndFlush(bankCard.copy(status = CLOSED))
+        cardRepository.save(bankCard.copy(status = CLOSED))
     }
 
     @Transactional
     override fun blockCard(cardId: Long) {
-        val bankCard = bankCardRepository.getOne(cardId)
+        val bankCard = cardRepository.getOne(cardId)
         throwIfClosed(bankCard)
         throwIfBlocked(bankCard)
-        bankCardRepository.saveAndFlush(bankCard.copy(status = BLOCKED))
+        cardRepository.save(bankCard.copy(status = BLOCKED))
     }
 
     @Transactional
     override fun unblockCard(cardId: Long) {
-        val bankCard = bankCardRepository.getOne(cardId)
+        val bankCard = cardRepository.getOne(cardId)
         throwIfClosed(bankCard)
         throwIfOpened(bankCard)
-        bankCardRepository.saveAndFlush(bankCard.copy(status = BLOCKED))
+        cardRepository.save(bankCard.copy(status = BLOCKED))
     }
 
     @Transactional
     override fun changePinCode(cardId: Long, request: ChangePinCodeRequest) {
-        val bankCard = bankCardRepository.getOne(cardId)
+        val bankCard = cardRepository.getOne(cardId)
         throwIfBlocked(bankCard)
         throwIfClosed(bankCard)
         if (request.newPinCode.toString().length != PIN_CODE_DIGITS_LENGTH) {
             throw CardProcessingException("Wrong length of PIN code!")
         }
-        bankCardRepository.saveAndFlush(bankCard.copy(pinCode = request.newPinCode))
+        cardRepository.save(bankCard.copy(pinCode = request.newPinCode))
     }
 
     @Transactional(readOnly = true)
     override fun getSecurityCode(cardId: Long): Short {
-        val bankCard = bankCardRepository.getOne(cardId)
+        val bankCard = cardRepository.getOne(cardId)
         throwIfBlocked(bankCard)
         throwIfClosed(bankCard)
         return bankCard.securityCode
@@ -147,5 +147,5 @@ internal class BankCardServiceImpl(
     }
 }
 
-data class IssueCardRequest(val customerId: Long, val networkCode: CardNetworkCode)
+data class IssueCardRequest(val customerId: Long, val accountId: Long, val networkCode: CardNetworkCode)
 data class ChangePinCodeRequest(val cardId: Long, val newPinCode: Short)

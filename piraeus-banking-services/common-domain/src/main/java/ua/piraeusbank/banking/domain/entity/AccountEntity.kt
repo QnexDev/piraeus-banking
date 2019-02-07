@@ -12,14 +12,17 @@ import javax.persistence.*
 data class AccountEntity(
         @Id @Column(name = "account_id") val accountId: Long? = null,
         @ManyToOne
-        @JoinColumn(name = "accountTypeId")
+        @JoinColumn(name = "account_type_id")
         val accountTypeId: AccountType,
-        @Column(name = "customer_id") val customerId: Long,
+        @ManyToOne
+        @JoinColumn(name = "customer_id")
+        val customer: CustomerEntity,
         @Column(name = "creation_date") val creationDate: LocalDateTime,
         @Column(name = "status") val status: AccountStatus,
         @Column(name = "balance") val balance: Money,
+        @ManyToOne
         @JoinColumn(name = "currency_id")
-        @ManyToOne val currency: Currency)
+        val currency: Currency)
 
 
 @Entity
@@ -40,8 +43,12 @@ data class TransactionEntity(
         val type: TransactionType,
         @Column(name = "timestamp") val timestamp: Instant,
         @Column(name = "amount") val amount: Money? = null,
-        @Column(name = "source_account_id") val sourceAccountId: Long? = null,
-        @Column(name = "target_account_id") val targetAccountId: Long? = null,
+        @ManyToOne
+        @JoinColumn(name = "source_account_id")
+        val sourceAccount: AccountEntity? = null,
+        @ManyToOne
+        @JoinColumn(name = "target_account_id")
+        val targetAccount: AccountEntity? = null,
         @Column(name = "description") val description: String? = null,
         @Column(name = "errorMessage") val errorMessage: String? = null)
 

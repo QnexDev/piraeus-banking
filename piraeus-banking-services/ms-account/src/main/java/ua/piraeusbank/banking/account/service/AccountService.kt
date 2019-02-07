@@ -85,8 +85,8 @@ class CheckTransactionExecutor(
                             timestamp = Instant.now(),
                             type = transactionType,
                             amount = transferRequest?.amount,
-                            sourceAccountId = transferRequest?.sourceAccountId,
-                            targetAccountId = transferRequest?.targetAccountId,
+//                            sourceAccountId = transferRequest?.sourceAccountId,
+//                            targetAccountId = transferRequest?.targetAccountId,
                             description = transferRequest?.description))
             try {
                 val result = txTemplate.execute {

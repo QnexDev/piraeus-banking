@@ -10,10 +10,10 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableResourceServer
 @EnableDiscoveryClient
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-class BankCardApplication
+class CardApplication
 
 fun main(args: Array<String>) {
-    SpringApplication.run(BankCardApplication::class.java, *args)
+    SpringApplication.run(CardApplication::class.java, *args)
 }
 
 

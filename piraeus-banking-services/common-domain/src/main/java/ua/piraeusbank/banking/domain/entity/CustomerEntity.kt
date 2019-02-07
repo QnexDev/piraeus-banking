@@ -2,10 +2,7 @@ package ua.piraeusbank.banking.domain.entity
 
 import org.javamoney.moneta.Money
 import java.time.LocalDate
-import javax.persistence.Column
-import javax.persistence.Entity
-import javax.persistence.Id
-import javax.persistence.Table
+import javax.persistence.*
 
 @Entity
 @Table(name = "CUSTOMER")
@@ -22,7 +19,9 @@ data class CustomerEntity(
 @Table(name = "STATEMENT")
 data class StatementEntity(
         @Id @Column(name = "statement_id") val statement_id: Long,
-        @Column(name = "customer_id") val customerId: Long,
+        @ManyToOne
+        @JoinColumn(name = "customer_id")
+        val customer: CustomerEntity,
         @Column(name = "date") val date: LocalDate,
         @Column(name = "type") val type: String,
         @Column(name = "description") val description: String,

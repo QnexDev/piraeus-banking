@@ -13,11 +13,11 @@ internal class CardModelConverter : CardModelConverterAlias {
     override fun invoke(source: BankCard) =
             BankCardData(
                     id = source.id,
-                    cardholderId = source.cardholderId,
+                    cardholderId = source.cardholder.customerId,
                     expirationDate = source.expirationDate,
                     type = source.type,
                     binCode = source.binCode,
                     networkCode = source.network.code,
-                    accountId = source.accountId
+                    accountId = source.account.accountId!!
             )
 }

@@ -5,8 +5,7 @@ import org.springframework.stereotype.Repository
 import ua.piraeusbank.banking.domain.entity.BankCardNetwork
 import ua.piraeusbank.banking.domain.entity.CardNetworkCode
 
-@Repository
-internal interface BankNetworkRepository : JpaRepository<BankCardNetwork, Long> {
+internal interface CardNetworkRepository : JpaRepository<BankCardNetwork, Long> {
 
     fun findByCode(code: CardNetworkCode): BankCardNetwork
 
