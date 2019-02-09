@@ -1,16 +1,16 @@
 security:
   oauth2:
     client:
-      clientId: ms-account
-      clientSecret: ${MS_ACCOUNT_PASSWORD}
+      clientId: ms-cutomer
+      clientSecret: ${MS_CUSTOMER_PASSWORD}
       accessTokenUri: http://localhost:8001/auth/oauth/token
       grant-type: client_credentials
       scope: server
 
 server:
   servlet:
-    context-path: /accounts
-  port: 8000
+    context-path: /customer
+  port: 8003
 
 feign:
   hystrix:

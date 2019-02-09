@@ -7,15 +7,15 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
 import ua.piraeusbank.banking.account.TransactionProcessingException
-import ua.piraeusbank.banking.account.repository.AccountRepository
-import ua.piraeusbank.banking.account.repository.TransactionRepository
-import ua.piraeusbank.banking.account.repository.TransactionTypeRepository
+import ua.piraeusbank.banking.account.repository.*
 import ua.piraeusbank.banking.common.config.AccountMoneyTransferMessage
-import ua.piraeusbank.banking.domain.entity.TransactionEntity
+import ua.piraeusbank.banking.domain.entity.*
 import ua.piraeusbank.banking.domain.entity.TransactionStatus.*
-import ua.piraeusbank.banking.domain.entity.TransactionTypeCode
-import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.*
+import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.CHECK
+import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.TRANSFER
 import java.time.Instant
+import java.time.LocalDateTime
+import javax.annotation.PostConstruct
 
 interface AccountService {
 
@@ -28,16 +28,46 @@ interface AccountService {
     fun getOutgoingTransactions(accountId: Long): List<TransactionEntity>
 
     fun getIncomingTransactions(accountId: Long): List<TransactionEntity>
+
+    fun createAccount(request: AccountCreationRequest)
 }
 
 @Service
 class AccountServiceImpl(
         @Autowired val txExecutor: TransactionExecutor,
         @Autowired val txRepository: TransactionRepository,
-        @Autowired val accountRepository: AccountRepository) : AccountService {
+        @Autowired val accountRepository: AccountRepository,
+        @Autowired val accountTypeRepository: AccountTypeRepository,
+        @Autowired val currencyRepository: CurrencyRepository) : AccountService {
+
+    @PostConstruct
+    @Transactional
+    fun init() {
+        accountTypeRepository.findByName("CURRENT").orElseGet {
+            accountTypeRepository.saveAndFlush(
+                    AccountTypeEntity(name = "CURRENT", description = "current account type"))
+        }
+    }
 
     companion object {
         private const val TRANSACTION_EXECUTION_ERROR_MSG = "An error occurred during the execution of the transaction"
+    }
+
+    @Transactional
+    override fun createAccount(request: AccountCreationRequest) {
+        val accountType = accountTypeRepository.findByName("CURRENT")
+                .orElseThrow { IllegalArgumentException("Wrong account type") }
+
+        val newAccount = AccountEntity(
+                status = AccountStatus.OPENED,
+                accountType = accountType,
+                creationDate = LocalDateTime.now(),
+                balance = Money.of(0, DEFAULT_CURRENCY),
+                currency = currencyRepository.getByCurrencyCode(request.currencyCode),
+                customer = accountRepository.getCustomerReference(request.customerId)
+        )
+
+        accountRepository.save(newAccount)
     }
 
     @Transactional
@@ -66,11 +96,12 @@ interface TransactionExecutor {
 
 }
 
-@Service("checkTxExecutor")
-class CheckTransactionExecutor(
+@Service("txExecutor")
+class TransactionExecutorImpl(
         @Autowired val txTemplate: TransactionTemplate,
         @Autowired val txRepository: TransactionRepository,
         @Autowired val txTypeRepository: TransactionTypeRepository,
+        @Autowired val accountRepository: AccountRepository,
         @Autowired val jmsTemplate: JmsTemplate) : TransactionExecutor {
 
     override fun <T> execute(context: TransactionExecutorContext, execution: () -> T): T? {
@@ -78,6 +109,9 @@ class CheckTransactionExecutor(
             val (type, transferRequest) = context
 
             val transactionType = txTypeRepository.findByCode(type)
+            val sourceAccount = transferRequest?.sourceAccountId?.let { accountRepository.getOne(it) }
+            val targetAccount = transferRequest?.targetAccountId?.let { accountRepository.getOne(it) }
+
 
             val entity = txRepository.saveAndFlush(
                     TransactionEntity(
@@ -85,8 +119,8 @@ class CheckTransactionExecutor(
                             timestamp = Instant.now(),
                             type = transactionType,
                             amount = transferRequest?.amount,
-//                            sourceAccountId = transferRequest?.sourceAccountId,
-//                            targetAccountId = transferRequest?.targetAccountId,
+                            sourceAccount = sourceAccount,
+                            targetAccount = targetAccount,
                             description = transferRequest?.description))
             try {
                 val result = txTemplate.execute {
@@ -133,3 +167,8 @@ data class MoneyTransferRequest(
         val targetAccountId: Long,
         val amount: Money,
         val description: String?)
+
+data class AccountCreationRequest(
+        val accountTypeId: AccountTypeEntity,
+        val customerId: Long,
+        val currencyCode: String)

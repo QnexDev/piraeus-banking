@@ -1,6 +1,6 @@
 spring:
   application:
-    name: gateway
+    name: ms-bank-card
   cloud:
     config:
       uri: http://localhost:8889

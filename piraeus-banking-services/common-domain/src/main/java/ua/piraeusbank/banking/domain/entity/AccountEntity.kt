@@ -1,6 +1,7 @@
 package ua.piraeusbank.banking.domain.entity
 
 import org.javamoney.moneta.Money
+import ua.piraeusbank.banking.domain.conversion.MoneyConverter
 import java.time.Instant
 import java.time.LocalDateTime
 import javax.money.CurrencyUnit
@@ -13,22 +14,23 @@ data class AccountEntity(
         @Id @Column(name = "account_id") val accountId: Long? = null,
         @ManyToOne
         @JoinColumn(name = "account_type_id")
-        val accountTypeId: AccountType,
+        val accountType: AccountTypeEntity,
         @ManyToOne
         @JoinColumn(name = "customer_id")
         val customer: CustomerEntity,
         @Column(name = "creation_date") val creationDate: LocalDateTime,
         @Column(name = "status") val status: AccountStatus,
+        @Convert(converter = MoneyConverter::class)
         @Column(name = "balance") val balance: Money,
         @ManyToOne
         @JoinColumn(name = "currency_id")
-        val currency: Currency)
+        val currency: CurrencyEntity)
 
 
 @Entity
 @Table(name = "ACCOUNT_TYPE")
-data class AccountType(
-        @Id @Column(name = "account_type_id") val accountTypeId: Long,
+data class AccountTypeEntity(
+        @Id @Column(name = "account_type_id") val accountTypeId: Long? = null,
         @Column(name = "name") val name: String,
         @Column(name = "description") val description: String
 )
@@ -42,6 +44,7 @@ data class TransactionEntity(
         @JoinColumn(name = "transaction_type_id")
         val type: TransactionType,
         @Column(name = "timestamp") val timestamp: Instant,
+        @Convert(converter = MoneyConverter::class)
         @Column(name = "amount") val amount: Money? = null,
         @ManyToOne
         @JoinColumn(name = "source_account_id")
@@ -62,7 +65,7 @@ data class TransactionType(
 
 @Entity
 @Table(name = "CURRENCY")
-data class Currency(
+data class CurrencyEntity(
         @Id @Column(name = "currency_id") val id: Long,
         @Column(name = "currency_code") val currencyCode: String,
         @Column(name = "numeric_code") val numericCode: Int

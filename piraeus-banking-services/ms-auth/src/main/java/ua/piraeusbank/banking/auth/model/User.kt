@@ -1,14 +1,17 @@
 package ua.piraeusbank.banking.auth.model
 
-import org.springframework.data.annotation.Id
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
+import javax.persistence.Column
 import javax.persistence.Entity
+import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
 @Table(name = "User")
-data class User(@Id val _username: String, val _password: String) : UserDetails {
+data class User(@Id
+                @Column(name = "username") val _username: String,
+                @Column(name = "password") val _password: String) : UserDetails {
 
 
     override fun getPassword(): String{

@@ -1,6 +1,7 @@
 package ua.piraeusbank.banking.domain.entity
 
 import org.javamoney.moneta.Money
+import ua.piraeusbank.banking.domain.conversion.MoneyConverter
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -25,7 +26,10 @@ data class StatementEntity(
         @Column(name = "date") val date: LocalDate,
         @Column(name = "type") val type: String,
         @Column(name = "description") val description: String,
+        @Convert(converter = MoneyConverter::class)
         @Column(name = "paid_in") val paidIn: Money,
+        @Convert(converter = MoneyConverter::class)
         @Column(name = "paid_out") val paidOut: Money,
+        @Convert(converter = MoneyConverter::class)
         @Column(name = "balance") val balance: Money
 )

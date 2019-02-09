@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 @EnableResourceServer
 @EnableDiscoveryClient
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-open class AuthApplication
+class AuthApplication
 
 fun main(args: Array<String>) {
     SpringApplication.run(AuthApplication::class.java, *args)

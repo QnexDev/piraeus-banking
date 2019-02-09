@@ -5,6 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import ua.piraeusbank.banking.account.service.AccountCreationRequest
 import ua.piraeusbank.banking.account.service.MoneyTransferRequest
 import ua.piraeusbank.banking.domain.entity.TransactionEntity
 
@@ -16,6 +17,9 @@ interface AccountRestClient {
 
     @POST("/money/transfer")
     fun transferMoney(@Body transferRequest: MoneyTransferRequest)
+
+    @POST("/")
+    fun createAccount(@Body request: AccountCreationRequest)
 
     @GET("/transaction/{transactionId}")
     fun getTransaction(@Path("transactionId") transactionId: Long): TransactionEntity

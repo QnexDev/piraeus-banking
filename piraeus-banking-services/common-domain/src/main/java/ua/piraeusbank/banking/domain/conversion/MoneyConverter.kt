@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.account.conversion
+package ua.piraeusbank.banking.domain.conversion
 
 import org.javamoney.moneta.FastMoney
 import org.javamoney.moneta.Money
@@ -7,8 +7,10 @@ import java.math.BigDecimal
 import java.util.*
 import javax.money.MonetaryAmount
 import javax.persistence.AttributeConverter
+import javax.persistence.Converter
 
-class MonetaryAmountConveter : AttributeConverter<MonetaryAmount, BigDecimal> {
+@Converter
+class MoneyConverter : AttributeConverter<MonetaryAmount, BigDecimal> {
 
     override fun convertToDatabaseColumn(attribute: MonetaryAmount?): BigDecimal {
         return Optional.ofNullable(attribute).orElse(FastMoney
@@ -21,7 +23,6 @@ class MonetaryAmountConveter : AttributeConverter<MonetaryAmount, BigDecimal> {
     }
 
     companion object {
-
 
         private val EXTRACT_BIG_DECIMAL = { m: MonetaryAmount ->
             m.number.numberValue(BigDecimal::class.java)

@@ -16,7 +16,7 @@ import ua.piraeusbank.banking.auth.service.security.UserDetailsServiceImpl
 
 @Configuration
 @EnableAuthorizationServer
-open class OAuth2AuthorizationConfig : AuthorizationServerConfigurerAdapter() {
+class OAuth2AuthorizationConfig : AuthorizationServerConfigurerAdapter() {
 
     private val tokenStore = InMemoryTokenStore()
     private val NOOP_PASSWORD_ENCODE = "{noop}"
@@ -41,18 +41,18 @@ open class OAuth2AuthorizationConfig : AuthorizationServerConfigurerAdapter() {
                 .authorizedGrantTypes("refresh_token", "password")
                 .scopes("ui")
                 .and()
-                .withClient("account-service")
-                .secret(env.getProperty("ACCOUNT_SERVICE_PASSWORD"))
+                .withClient("ms-account")
+                .secret(env.getProperty("MS_ACCOUNT_PASSWORD"))
                 .authorizedGrantTypes("client_credentials", "refresh_token")
                 .scopes("server")
                 .and()
-                .withClient("statistics-service")
-                .secret(env.getProperty("STATISTICS_SERVICE_PASSWORD"))
+                .withClient("ms-bank-card")
+                .secret(env.getProperty("MS_CARD_PASSWORD"))
                 .authorizedGrantTypes("client_credentials", "refresh_token")
                 .scopes("server")
                 .and()
-                .withClient("notification-service")
-                .secret(env.getProperty("NOTIFICATION_SERVICE_PASSWORD"))
+                .withClient("ms-customer")
+                .secret(env.getProperty("MS_CUSTOMER_PASSWORD"))
                 .authorizedGrantTypes("client_credentials", "refresh_token")
                 .scopes("server")
         // @formatter:on

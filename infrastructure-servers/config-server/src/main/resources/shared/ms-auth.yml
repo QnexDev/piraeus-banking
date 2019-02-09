@@ -1,4 +1,4 @@
 server:
   servlet:
     context-path: /auth
-  port: 5000
+  port: 8001

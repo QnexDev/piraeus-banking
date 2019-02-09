@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import ua.piraeusbank.banking.auth.service.security.UserDetailsServiceImpl
 
 @Configuration
-open class WebSecurityConfig : WebSecurityConfigurerAdapter() {
+class WebSecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
     private lateinit var userDetailsService: UserDetailsServiceImpl

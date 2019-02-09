@@ -6,15 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import ua.piraeusbank.banking.account.NotEnoughMoneyException
 import ua.piraeusbank.banking.account.TransactionProcessingException
-import ua.piraeusbank.banking.domain.entity.AccountEntity
-import ua.piraeusbank.banking.domain.entity.AccountStatus
-import ua.piraeusbank.banking.domain.entity.TransactionType
-import ua.piraeusbank.banking.domain.entity.TransactionTypeCode
+import ua.piraeusbank.banking.domain.entity.*
 import javax.persistence.EntityManager
 import javax.persistence.LockModeType
 import javax.persistence.PersistenceContext
 
-interface TransactionTypeRepository: JpaRepository<TransactionType, Long> {
+interface TransactionTypeRepository : JpaRepository<TransactionType, Long> {
     fun findByCode(code: TransactionTypeCode): TransactionType
 }
 
@@ -22,15 +19,27 @@ interface BaseAccountRepository : JpaRepository<AccountEntity, Long>
 
 interface AccountRepository {
 
+    fun getOne(accountId: Long): AccountEntity
+
     fun getAccountBalance(accountId: Long): Money
 
     fun transferMoney(sourceAccountId: Long, targetAccountId: Long, amount: Money)
+
+    fun getCustomerReference(customerId: Long): CustomerEntity
+
+    fun save(newAccount: AccountEntity)
 }
 
 @Repository
 class AccountRepositoryImpl(
         @Autowired val baseAccountRepository: BaseAccountRepository)
     : AccountRepository {
+
+    override fun save(newAccount: AccountEntity) {
+        baseAccountRepository.saveAndFlush(newAccount)
+    }
+
+    override fun getOne(accountId: Long): AccountEntity = baseAccountRepository.getOne(accountId)
 
 
     override fun getAccountBalance(accountId: Long): Money = baseAccountRepository.getOne(accountId).balance
@@ -39,8 +48,8 @@ class AccountRepositoryImpl(
     private lateinit var em: EntityManager
 
     override fun transferMoney(sourceAccountId: Long,
-                      targetAccountId: Long,
-                      amount: Money) {
+                               targetAccountId: Long,
+                               amount: Money) {
         val query = em.createQuery(
                 "select a from Account a where a.id in (:sourceAccountId, :targetAccountId)")
         query.setParameter("sourceAccountId", sourceAccountId)
@@ -74,6 +83,10 @@ class AccountRepositoryImpl(
         em.persist(sourceAccount.copy(balance = sourceAccountBalance.subtract(amount)))
 
         em.persist(targetAccount.copy(balance = targetAccountBalance.add(amount)))
+    }
+
+    override fun getCustomerReference(customerId: Long): CustomerEntity {
+        return em.getReference(CustomerEntity::class.java, customerId)
     }
 
 }
