@@ -10,7 +10,9 @@ data class BankCardNumber(val number: BigInteger, val binCode: Int)
 @Entity
 @Table(name = "CARD_PAYMENT_NETWORK")
 data class BankCardNetworkEntity(
-        @Id @Column(name = "card_payment_network_id") val id: Long? = null,
+        @GeneratedValue
+        @Id @Column(name = "card_payment_network_id" +
+                "@GeneratedValue") val id: Long? = null,
         @Enumerated(EnumType.STRING)
         @Column(name = "code")
         val code: CardNetworkCode,

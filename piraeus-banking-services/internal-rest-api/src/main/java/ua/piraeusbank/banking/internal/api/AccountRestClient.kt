@@ -1,6 +1,7 @@
 package ua.piraeusbank.banking.internal.api
 
 import org.javamoney.moneta.Money
+import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -19,7 +20,7 @@ interface AccountRestClient {
     fun transferMoney(@Body transferRequest: MoneyTransferRequest)
 
     @POST("/")
-    fun createAccount(@Body request: AccountCreationRequest): Long
+    fun createAccount(@Body request: AccountCreationRequest): Call<Long>
 
     @GET("/transaction/{transactionId}")
     fun getTransaction(@Path("transactionId") transactionId: Long): TransactionEntity

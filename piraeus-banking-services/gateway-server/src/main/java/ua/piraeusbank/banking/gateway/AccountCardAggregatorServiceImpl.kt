@@ -2,12 +2,14 @@ package ua.piraeusbank.banking.gateway
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cloud.client.discovery.DiscoveryClient
+import org.springframework.jms.annotation.JmsListener
 import org.springframework.stereotype.Service
 import ua.piraeusbank.banking.common.domain.AccountAndCardCreationRequest
 import ua.piraeusbank.banking.common.domain.CardMoneyTransferRequest
 import ua.piraeusbank.banking.common.domain.PaymentCard
 import ua.piraeusbank.banking.domain.entity.CardNetworkCode
 import ua.piraeusbank.banking.domain.model.AccountCreationRequest
+import ua.piraeusbank.banking.domain.model.DefaultCardAccountCreationMessage
 import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 import ua.piraeusbank.banking.domain.model.OrderCardRequest
 import ua.piraeusbank.banking.gateway.conversion.CardConvertParams
@@ -20,21 +22,21 @@ interface AccountCardAggregatorService {
     fun createCardAndAccount(request: AccountAndCardCreationRequest)
     fun findPaymentCard(cardId: Long): PaymentCard
     fun findPaymentCardsByCustomerId(customerId: Long): List<PaymentCard>
-    fun transferMoneyBetweenCards(request: CardMoneyTransferRequest)
+    fun transferBetweenCards(request: CardMoneyTransferRequest)
 }
 
 @Service
 class AccountCardAggregatorServiceImpl(
-        @Autowired private val  discoveryClient: DiscoveryClient,
+        @Autowired private val discoveryClient: DiscoveryClient,
         @Autowired private val cardConverter: CardConverter) : AccountCardAggregatorService {
 
-    private val cardRestClient: CardRestClient = RetrofitServiceGenerator.createService("card")
-    private val accountRestClient: AccountRestClient = RetrofitServiceGenerator.createService("account")
+    private val cardRestClient: CardRestClient = RetrofitServiceGenerator.createService("http://localhost:4000/card/")
+    private val accountRestClient: AccountRestClient = RetrofitServiceGenerator.createService("http://localhost:4000/auth/")
 
 
     override fun createCardAndAccount(request: AccountAndCardCreationRequest) {
-        val accountId = accountRestClient.createAccount(AccountCreationRequest(request.customerId, request.currencyCode))
-        cardRestClient.orderCard(OrderCardRequest(request.customerId, accountId, CardNetworkCode.valueOf(request.networkCode)))
+        val accountIdCall = accountRestClient.createAccount(AccountCreationRequest(request.customerId, request.currencyCode))
+        cardRestClient.orderCard(OrderCardRequest(request.customerId, accountIdCall.execute().body(), CardNetworkCode.valueOf(request.networkCode)))
     }
 
     override fun findPaymentCard(cardId: Long): PaymentCard {
@@ -51,7 +53,7 @@ class AccountCardAggregatorServiceImpl(
         }
     }
 
-    override fun transferMoneyBetweenCards(request: CardMoneyTransferRequest) {
+    override fun transferBetweenCards(request: CardMoneyTransferRequest) {
         val sourceCard = cardRestClient.getCardById(request.sourceCardId)
         val targetCard = cardRestClient.getCardById(request.targetCardId)
 
@@ -60,6 +62,11 @@ class AccountCardAggregatorServiceImpl(
                 targetAccountId = targetCard.account.accountId!!,
                 description = request.description,
                 amount = request.amount))
+    }
+
+    @JmsListener(destination = "account", containerFactory = "connectionFactory")
+    fun handleDefaultCardAccountCreation(message: DefaultCardAccountCreationMessage) {
+        createCardAndAccount(message.request)
     }
 }
 

@@ -8,7 +8,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "User")
+@Table(name = "USER")
 data class User(@Id
                 @Column(name = "username") val _username: String,
                 @Column(name = "password") val _password: String) : UserDetails {

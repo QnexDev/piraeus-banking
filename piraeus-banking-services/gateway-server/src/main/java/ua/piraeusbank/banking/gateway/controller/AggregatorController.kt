@@ -25,5 +25,5 @@ class AggregatorController(
 
     @PutMapping("/card/money/transfer")
     fun transferMoneyBetweenCards(@RequestBody request: CardMoneyTransferRequest) =
-            accountCardAggregatorService.transferMoneyBetweenCards(request)
+            accountCardAggregatorService.transferBetweenCards(request)
 }

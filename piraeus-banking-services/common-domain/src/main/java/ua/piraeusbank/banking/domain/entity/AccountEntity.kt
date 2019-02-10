@@ -11,6 +11,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "ACCOUNT")
 data class AccountEntity(
+        @GeneratedValue
         @Id @Column(name = "account_id") val accountId: Long? = null,
         @ManyToOne
         @JoinColumn(name = "account_type_id")
@@ -30,6 +31,7 @@ data class AccountEntity(
 @Entity
 @Table(name = "ACCOUNT_TYPE")
 data class AccountTypeEntity(
+        @GeneratedValue
         @Id @Column(name = "account_type_id") val accountTypeId: Long? = null,
         @Column(name = "name") val name: String,
         @Column(name = "description") val description: String
@@ -38,6 +40,7 @@ data class AccountTypeEntity(
 @Entity
 @Table(name = "TRANSACTION")
 data class TransactionEntity(
+        @GeneratedValue
         @Id @Column(name = "transaction_id") val id: Long? = null,
         @Column(name = "status") val status: TransactionStatus,
         @ManyToOne
@@ -58,6 +61,7 @@ data class TransactionEntity(
 @Entity
 @Table(name = "TRANSACTION_TYPE")
 data class TransactionType(
+        @GeneratedValue
         @Id @Column(name = "transaction_type_id") val transactionTypeId: Long,
         @Column(name = "code") val code: TransactionTypeCode,
         @Column(name = "description") val description: String
@@ -66,6 +70,7 @@ data class TransactionType(
 @Entity
 @Table(name = "CURRENCY")
 data class CurrencyEntity(
+        @GeneratedValue
         @Id @Column(name = "currency_id") val id: Long,
         @Column(name = "currency_code") val currencyCode: String,
         @Column(name = "numeric_code") val numericCode: Int

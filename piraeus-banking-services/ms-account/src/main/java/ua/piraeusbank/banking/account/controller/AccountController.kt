@@ -24,7 +24,7 @@ class AccountController(@Autowired val accountService: AccountService) {
         accountService.createAccount(request)
     }
 
-    @GetMapping("/transaction/{transactionId}")
+    @GetMapping("/transactions/{transactionId}")
     fun getTransaction(@PathVariable("transactionId") transactionId: Long): TransactionEntity =
             accountService.getTransaction(transactionId)
 

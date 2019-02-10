@@ -19,7 +19,7 @@ zuul:
   routes:
     ms-auth:
         path: /auth/**
-        url: http://localhost:5000
+        url: http://localhost:8001
         stripPrefix: false
         sensitiveHeaders:
 
@@ -28,13 +28,18 @@ zuul:
         serviceId: ms-account
         stripPrefix: false
         sensitiveHeaders:
+
     ms-bank-card:
       path: /cards/**
-      serviceId: ms-account
+      serviceId: ms-bank-card
       stripPrefix: false
       sensitiveHeaders:
 
-
+    ms-customer:
+      path: /customer/**
+      serviceId: ms-customer
+      stripPrefix: false
+      sensitiveHeaders:
 
 server:
   port: 4000

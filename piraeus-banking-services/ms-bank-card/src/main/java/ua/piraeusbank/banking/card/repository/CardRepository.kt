@@ -2,6 +2,7 @@ package ua.piraeusbank.banking.card.repository
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import org.springframework.stereotype.Repository
 import ua.piraeusbank.banking.domain.entity.AccountEntity
 import ua.piraeusbank.banking.domain.entity.BankCardEntity
@@ -12,6 +13,8 @@ import javax.persistence.PersistenceContext
 
 internal interface BaseCardRepository : JpaRepository<BankCardEntity, Long> {
 
+    @Query("select b from BankCardEntity b inner join b.cardholder c " +
+            "where c.customerId = :customerId")
     fun findCardsByCustomerId(customerId: Long): List<BankCardEntity>
 }
 
@@ -32,7 +35,7 @@ internal class CardRepositoryImpl(@Autowired private val baseCardRepository: Bas
 
     @PersistenceContext
     private lateinit var em: EntityManager
-    
+
     override fun getOne(cardId: Long): BankCardEntity = baseCardRepository.getOne(cardId)
 
     override fun findCardsByCustomerId(customerId: Long): List<BankCardEntity> = baseCardRepository.findCardsByCustomerId(customerId)
@@ -45,7 +48,7 @@ internal class CardRepositoryImpl(@Autowired private val baseCardRepository: Bas
                 pinCode = params.pinCode!!,
                 securityCode = params.securityCode!!,
                 expirationDate = params.expirationDate!!,
-                cardholder = em.getReference(CustomerEntity::class.java, params.customerId),
+                cardholder = CustomerEntity.reference(params.customerId!!),
                 network = params.network!!,
                 binCode = params.binCode!!,
                 number = params.number!!,
