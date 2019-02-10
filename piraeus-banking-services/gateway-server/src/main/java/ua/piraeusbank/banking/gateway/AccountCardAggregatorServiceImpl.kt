@@ -12,9 +12,9 @@ import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 import ua.piraeusbank.banking.domain.model.OrderCardRequest
 import ua.piraeusbank.banking.gateway.conversion.CardConvertParams
 import ua.piraeusbank.banking.gateway.conversion.CardConverter
-import ua.piraeusbank.banking.gateway.rest.client.internal.AccountRestClient
-import ua.piraeusbank.banking.gateway.rest.client.internal.CardRestClient
-import ua.piraeusbank.banking.gateway.rest.client.internal.RetrofitServiceGenerator
+import ua.piraeusbank.banking.internal.api.AccountRestClient
+import ua.piraeusbank.banking.internal.api.CardRestClient
+import ua.piraeusbank.banking.internal.api.RetrofitServiceGenerator
 
 interface AccountCardAggregatorService {
     fun createCardAndAccount(request: AccountAndCardCreationRequest)

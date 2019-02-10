@@ -2,13 +2,12 @@ package ua.piraeusbank.banking.customer.repository
 
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
-import ua.piraeusbank.banking.domain.entity.StatementEntity
-import ua.piraeusbank.banking.domain.entity.TransactionEntity
+import ua.piraeusbank.banking.domain.entity.StatementRecordEntity
 
-interface StatementRepository : JpaRepository<StatementEntity, Long> {
+interface StatementRepository : JpaRepository<StatementRecordEntity, Long> {
 
     //FIXME
-    @Query("select t from StatementEntity t where t.customer = :customerId")
-    fun findAllByCustomerId(customerId: Long): List<StatementEntity>
+    @Query("select t from StatementRecordEntity t where t.customer = :customerId")
+    fun findAllByCustomerId(customerId: Long): List<StatementRecordEntity>
 
 }

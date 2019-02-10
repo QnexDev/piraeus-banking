@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jms.annotation.JmsListener
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ua.piraeusbank.banking.common.config.AccountMoneyTransferMessage
 import ua.piraeusbank.banking.customer.repository.StatementRepository
+import ua.piraeusbank.banking.domain.entity.StatementRecordEntity
+import ua.piraeusbank.banking.domain.model.AccountMoneyTransferMessage
+import java.time.LocalDate
 
 @Service
 class StatementService(@Autowired val statementRepository: StatementRepository) {
@@ -15,7 +17,27 @@ class StatementService(@Autowired val statementRepository: StatementRepository) 
 
 
     @JmsListener(destination = "account", containerFactory = "connectionFactory")
-    fun receiveAccountMessage(message: AccountMoneyTransferMessage) {
+    fun handleAccountMessage(message: AccountMoneyTransferMessage) {
+        val transaction = message.transaction
+        val transferAmount = transaction.amount
 
+        val sourceAccount = transaction.sourceAccount
+        val targetAccount = transaction.targetAccount
+
+        statementRepository.saveAndFlush(StatementRecordEntity(
+                date = LocalDate.now(),
+                description = transaction.description!!,
+                customer = sourceAccount?.customer!!,
+                paidOut = transferAmount,
+                type = transaction.type.toString()
+        ))
+
+        statementRepository.saveAndFlush(StatementRecordEntity(
+                date = LocalDate.now(),
+                description = transaction.description!!,
+                customer = targetAccount?.customer!!,
+                paidIn = transferAmount,
+                type = transaction.type.toString()
+        ))
     }
 }

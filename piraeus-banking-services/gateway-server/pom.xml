@@ -28,6 +28,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>ua.piraeusbank.banking</groupId>
+            <artifactId>internal-rest-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.javamoney.moneta</groupId>
             <artifactId>moneta-core</artifactId>
         </dependency>

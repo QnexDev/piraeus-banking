@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.gateway.rest.client.internal
+package ua.piraeusbank.banking.internal.api
 
 import retrofit2.http.*
 import ua.piraeusbank.banking.common.domain.ChangePinCodeRequest

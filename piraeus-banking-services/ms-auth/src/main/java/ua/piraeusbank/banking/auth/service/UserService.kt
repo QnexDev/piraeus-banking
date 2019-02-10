@@ -10,7 +10,7 @@ import ua.piraeusbank.banking.auth.respository.UserRepository
 import javax.annotation.PostConstruct
 
 interface UserService {
-    fun create(user: User)
+    fun create(user: User): User
 }
 
 @Service
@@ -18,19 +18,23 @@ class UserServiceImpl(@Autowired val userRepository: UserRepository) : UserServi
 
     @PostConstruct
     fun init() {
-        create(User(_username = "test", _password = "test"))
+        userRepository.findById("test").orElseGet {
+            create(User(_username = "test", _password = "test"))
+        }
     }
 
     @Transactional
-    override fun create(user: User) {
+    override fun create(user: User): User {
         val existing = userRepository.findById(user.username)
         existing.ifPresent { throw IllegalArgumentException("user already exists: " + it.username) }
 
         val hash = encoder.encode(user.password)
 
-        userRepository.save(user.copy(_password = hash))
+        val newUser = userRepository.save(user.copy(_password = hash))
 
-        LOG.info("new user has been created: {}", user.username)
+        LOG.info("new auth user has been created: {}", user.username)
+
+        return newUser
     }
 
     companion object {

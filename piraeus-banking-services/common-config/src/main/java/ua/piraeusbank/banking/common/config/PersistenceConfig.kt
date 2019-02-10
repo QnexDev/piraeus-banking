@@ -1,13 +1,10 @@
 package ua.piraeusbank.banking.common.config
 
 import org.h2.Driver
-import org.h2.tools.Server
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.core.env.Environment
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.jdbc.datasource.DriverManagerDataSource
@@ -17,7 +14,6 @@ import org.springframework.orm.jpa.vendor.Database
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter
 import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.annotation.EnableTransactionManagement
-import org.springframework.util.Assert
 import java.util.*
 import javax.sql.DataSource
 
@@ -26,16 +22,7 @@ import javax.sql.DataSource
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = ["ua.piraeusbank.banking"])
 @EntityScan("ua.piraeusbank.banking")
-class BootstrapPersistenceConfig {
-
-    @Autowired
-    private lateinit var enviroment: Environment
-
-
-    @Bean(destroyMethod = "stop")
-    fun dataBaseServer(@Value("\${db.connection.port}") port: Int): Server {
-        return Server.createTcpServer("-tcpPort", port.toString()).start()
-    }
+class PersistenceConfig {
 
     @Bean
     fun entityManagerFactory(dataSource: DataSource): LocalContainerEntityManagerFactoryBean {
@@ -55,9 +42,7 @@ class BootstrapPersistenceConfig {
     @Bean
     fun dataSource(@Value("\${db.connection.url}") url: String,
                    @Value("\${db.connection.username}") username: String,
-                   @Value("\${db.connection.password}") password: String,
-                   server: Server): DataSource {
-        Assert.isTrue(server.isRunning(false), "Database is not running!")
+                   @Value("\${db.connection.password}") password: String): DataSource {
         val dataSource = DriverManagerDataSource()
         dataSource.setDriverClassName(Driver::class.java.name)
         dataSource.url = url

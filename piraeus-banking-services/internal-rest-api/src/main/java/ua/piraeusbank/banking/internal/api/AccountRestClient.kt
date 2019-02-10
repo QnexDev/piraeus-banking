@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.gateway.rest.client.internal
+package ua.piraeusbank.banking.internal.api
 
 import org.javamoney.moneta.Money
 import retrofit2.http.Body

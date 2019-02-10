@@ -8,7 +8,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "CUSTOMER")
 data class CustomerEntity(
-        @Id @Column(name = "customer_id") val customerId: Long,
+        @Id @Column(name = "customer_id") val customerId: Long? = null,
         @Column(name = "name") val name: String,
         @Column(name = "last_name") val lastName: String,
         @Column(name = "phone_number") val phoneNumber: String,
@@ -18,8 +18,8 @@ data class CustomerEntity(
 
 @Entity
 @Table(name = "STATEMENT")
-data class StatementEntity(
-        @Id @Column(name = "statement_id") val statement_id: Long,
+data class StatementRecordEntity(
+        @Id @Column(name = "statementId") val statementId: Long? = null,
         @ManyToOne
         @JoinColumn(name = "customer_id")
         val customer: CustomerEntity,
@@ -27,9 +27,7 @@ data class StatementEntity(
         @Column(name = "type") val type: String,
         @Column(name = "description") val description: String,
         @Convert(converter = MoneyConverter::class)
-        @Column(name = "paid_in") val paidIn: Money,
+        @Column(name = "paid_in") val paidIn: Money? = null,
         @Convert(converter = MoneyConverter::class)
-        @Column(name = "paid_out") val paidOut: Money,
-        @Convert(converter = MoneyConverter::class)
-        @Column(name = "balance") val balance: Money
+        @Column(name = "paid_out") val paidOut: Money? = null
 )

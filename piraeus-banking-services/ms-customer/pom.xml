@@ -59,6 +59,11 @@
             <groupId>org.zalando</groupId>
             <artifactId>jackson-datatype-money</artifactId>
         </dependency>
+        <dependency>
+            <groupId>ua.piraeusbank.banking</groupId>
+            <artifactId>internal-rest-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

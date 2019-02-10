@@ -21,6 +21,7 @@
         <module>common-domain</module>
         <module>gateway-server</module>
         <module>common-client</module>
+        <module>internal-rest-api</module>
     </modules>
 
     <dependencies>

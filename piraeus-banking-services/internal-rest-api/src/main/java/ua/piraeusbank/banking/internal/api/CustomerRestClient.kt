@@ -1,14 +1,14 @@
-package ua.piraeusbank.banking.gateway.rest.client.internal
+package ua.piraeusbank.banking.internal.api
 
 import retrofit2.http.GET
 import retrofit2.http.Path
 import ua.piraeusbank.banking.domain.entity.CustomerEntity
-import ua.piraeusbank.banking.domain.entity.StatementEntity
+import ua.piraeusbank.banking.domain.entity.StatementRecordEntity
 
 interface CustomerRestClient {
 
     @GET("/statements/{customerId}")
-    fun getStatements(@Path("customerId") customerId: Long): List<StatementEntity>
+    fun getStatements(@Path("customerId") customerId: Long): List<StatementRecordEntity>
 
     @GET("/{customerId}")
     fun getCustomer(@Path("customerId") customerId: Long): CustomerEntity

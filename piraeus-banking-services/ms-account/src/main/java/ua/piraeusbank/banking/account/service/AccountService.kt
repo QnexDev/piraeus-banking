@@ -8,12 +8,12 @@ import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
 import ua.piraeusbank.banking.account.TransactionProcessingException
 import ua.piraeusbank.banking.account.repository.*
-import ua.piraeusbank.banking.common.config.AccountMoneyTransferMessage
 import ua.piraeusbank.banking.domain.entity.*
 import ua.piraeusbank.banking.domain.entity.TransactionStatus.*
 import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.CHECK
 import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.TRANSFER
 import ua.piraeusbank.banking.domain.model.AccountCreationRequest
+import ua.piraeusbank.banking.domain.model.AccountMoneyTransferMessage
 import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 import java.time.Instant
 import java.time.LocalDateTime
@@ -128,26 +128,29 @@ class TransactionExecutorImpl(
                 val result = txTemplate.execute {
                     execution()
                 }
-                txRepository.saveAndFlush(
+                val completedTransaction = txRepository.saveAndFlush(
                         TransactionEntity(
                                 id = entity.id,
                                 status = COMPLETED,
                                 timestamp = Instant.now(),
                                 type = transactionType))
-                return result
-            } catch (e: Throwable) {
-                txRepository.saveAndFlush(
-                        TransactionEntity(
-                                id = entity.id,
-                                status = FAILED,
-                                timestamp = Instant.now(),
-                                errorMessage = e.message,
-                                type = transactionType))
-                return null
-            } finally {
                 jmsTemplate.convertAndSend(
                         "account",
-                        AccountMoneyTransferMessage(requireNotNull(entity.id)))
+                        AccountMoneyTransferMessage(completedTransaction))
+                return result
+            } catch (e: Throwable) {
+                val failedTransaction = TransactionEntity(
+                        id = entity.id,
+                        status = FAILED,
+                        timestamp = Instant.now(),
+                        errorMessage = e.message,
+                        type = transactionType)
+                txRepository.saveAndFlush(
+                        failedTransaction)
+                jmsTemplate.convertAndSend(
+                        "account",
+                        AccountMoneyTransferMessage(failedTransaction))
+                return null
             }
         } catch (e: Throwable) {
             return null
