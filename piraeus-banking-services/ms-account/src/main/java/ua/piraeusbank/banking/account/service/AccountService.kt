@@ -13,6 +13,8 @@ import ua.piraeusbank.banking.domain.entity.*
 import ua.piraeusbank.banking.domain.entity.TransactionStatus.*
 import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.CHECK
 import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.TRANSFER
+import ua.piraeusbank.banking.domain.model.AccountCreationRequest
+import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 import java.time.Instant
 import java.time.LocalDateTime
 import javax.annotation.PostConstruct
@@ -29,7 +31,7 @@ interface AccountService {
 
     fun getIncomingTransactions(accountId: Long): List<TransactionEntity>
 
-    fun createAccount(request: AccountCreationRequest)
+    fun createAccount(request: AccountCreationRequest): Long
 }
 
 @Service
@@ -54,7 +56,7 @@ class AccountServiceImpl(
     }
 
     @Transactional
-    override fun createAccount(request: AccountCreationRequest) {
+    override fun createAccount(request: AccountCreationRequest): Long {
         val accountType = accountTypeRepository.findByName("CURRENT")
                 .orElseThrow { IllegalArgumentException("Wrong account type") }
 
@@ -67,7 +69,7 @@ class AccountServiceImpl(
                 customer = accountRepository.getCustomerReference(request.customerId)
         )
 
-        accountRepository.save(newAccount)
+        return accountRepository.save(newAccount)
     }
 
     @Transactional
@@ -160,15 +162,3 @@ fun context(type: TransactionTypeCode,
 
 data class TransactionExecutorContext(val type: TransactionTypeCode,
                                       val moneyTransferRequest: MoneyTransferRequest? = null)
-
-
-data class MoneyTransferRequest(
-        val sourceAccountId: Long,
-        val targetAccountId: Long,
-        val amount: Money,
-        val description: String?)
-
-data class AccountCreationRequest(
-        val accountTypeId: AccountTypeEntity,
-        val customerId: Long,
-        val currencyCode: String)

@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.customer.client
+package ua.piraeusbank.banking.gateway.rest.client.internal
 
 import retrofit2.http.GET
 import retrofit2.http.Path

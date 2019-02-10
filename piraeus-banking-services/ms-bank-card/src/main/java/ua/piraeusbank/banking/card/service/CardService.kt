@@ -5,24 +5,23 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ua.piraeusbank.banking.card.CardProcessingException
-import ua.piraeusbank.banking.card.conversion.CardModelConverterAlias
-import ua.piraeusbank.banking.domain.entity.BankCard
-import ua.piraeusbank.banking.domain.entity.BankCardData
+import ua.piraeusbank.banking.card.repository.CardNetworkRepository
+import ua.piraeusbank.banking.card.repository.CardRepository
+import ua.piraeusbank.banking.common.domain.ChangePinCodeRequest
+import ua.piraeusbank.banking.domain.entity.BankCardEntity
+import ua.piraeusbank.banking.domain.entity.BankCardParams
 import ua.piraeusbank.banking.domain.entity.BankCardStatus.*
 import ua.piraeusbank.banking.domain.entity.BankCardType.DEBIT
-import ua.piraeusbank.banking.domain.entity.CardNetworkCode
-import ua.piraeusbank.banking.card.repository.CardRepository
-import ua.piraeusbank.banking.card.repository.CardNetworkRepository
-import ua.piraeusbank.banking.domain.entity.BankCardParams
+import ua.piraeusbank.banking.domain.model.OrderCardRequest
 import java.time.LocalDate
 
 internal interface CardService {
 
-    fun getCardInfoById(cardId: Long): BankCardData
+    fun getCardById(cardId: Long): BankCardEntity
 
-    fun findAllCardInfos(): List<BankCardData>
+    fun findCardsByCustomerId(customerId: Long): List<BankCardEntity>
 
-    fun orderCard(request: IssueCardRequest)
+    fun orderCard(request: OrderCardRequest)
 
     fun closeCard(cardId: Long)
 
@@ -47,8 +46,7 @@ internal class CardServiceImpl(
         private val securityCodeGenerator: SecurityCodeGeneratorAlias,
         @Qualifier("cardNumberGenerator")
         @Autowired
-        private val cardNumberGenerator: CardNumberGeneratorAlias,
-        @Autowired private val cardModelConverter: CardModelConverterAlias) : CardService {
+        private val cardNumberGenerator: CardNumberGeneratorAlias) : CardService {
 
     companion object {
         const val SERVICE_DURATION_IN_YEAR = 3L
@@ -56,17 +54,17 @@ internal class CardServiceImpl(
     }
 
     @Transactional(readOnly = true)
-    override fun getCardInfoById(cardId: Long): BankCardData {
-        return cardModelConverter(cardRepository.getOne(cardId))
+    override fun getCardById(cardId: Long): BankCardEntity {
+        return cardRepository.getOne(cardId)
     }
 
     @Transactional(readOnly = true)
-    override fun findAllCardInfos(): List<BankCardData> {
-        return cardRepository.findAll().map { cardModelConverter(it) }
+    override fun findCardsByCustomerId(customerId: Long): List<BankCardEntity> {
+        return cardRepository.findCardsByCustomerId(customerId)
     }
 
     @Transactional
-    override fun orderCard(request: IssueCardRequest) {
+    override fun orderCard(request: OrderCardRequest) {
         val cardNetwork = cardNetworkRepository.findByCode(request.networkCode)
 
         val (number, binCode) = cardNumberGenerator.generate(cardNetwork)
@@ -128,24 +126,21 @@ internal class CardServiceImpl(
         return bankCard.securityCode
     }
 
-    private fun throwIfOpened(bankCard: BankCard) {
+    private fun throwIfOpened(bankCard: BankCardEntity) {
         if (bankCard.status == OPENED) {
             throw CardProcessingException("This card is opened!")
         }
     }
 
-    private fun throwIfBlocked(bankCard: BankCard) {
+    private fun throwIfBlocked(bankCard: BankCardEntity) {
         if (bankCard.status == BLOCKED) {
             throw CardProcessingException("This card has been blocked!")
         }
     }
 
-    private fun throwIfClosed(bankCard: BankCard) {
+    private fun throwIfClosed(bankCard: BankCardEntity) {
         if (bankCard.status == CLOSED) {
             throw CardProcessingException("This card has been closed!")
         }
     }
 }
-
-data class IssueCardRequest(val customerId: Long, val accountId: Long, val networkCode: CardNetworkCode)
-data class ChangePinCodeRequest(val cardId: Long, val newPinCode: Short)

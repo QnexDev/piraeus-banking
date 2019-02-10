@@ -1,13 +1,13 @@
-package ua.piraeusbank.banking.account.client
+package ua.piraeusbank.banking.gateway.rest.client.internal
 
 import org.javamoney.moneta.Money
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import ua.piraeusbank.banking.account.service.AccountCreationRequest
-import ua.piraeusbank.banking.account.service.MoneyTransferRequest
 import ua.piraeusbank.banking.domain.entity.TransactionEntity
+import ua.piraeusbank.banking.domain.model.AccountCreationRequest
+import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 
 
 interface AccountRestClient {
@@ -19,7 +19,7 @@ interface AccountRestClient {
     fun transferMoney(@Body transferRequest: MoneyTransferRequest)
 
     @POST("/")
-    fun createAccount(@Body request: AccountCreationRequest)
+    fun createAccount(@Body request: AccountCreationRequest): Long
 
     @GET("/transaction/{transactionId}")
     fun getTransaction(@Path("transactionId") transactionId: Long): TransactionEntity

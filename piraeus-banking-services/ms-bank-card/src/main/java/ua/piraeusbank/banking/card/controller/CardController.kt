@@ -3,21 +3,21 @@ package ua.piraeusbank.banking.card.controller
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 import ua.piraeusbank.banking.card.service.CardService
-import ua.piraeusbank.banking.card.service.ChangePinCodeRequest
-import ua.piraeusbank.banking.card.service.IssueCardRequest
-import ua.piraeusbank.banking.domain.entity.BankCardData
+import ua.piraeusbank.banking.common.domain.ChangePinCodeRequest
+import ua.piraeusbank.banking.domain.entity.BankCardEntity
+import ua.piraeusbank.banking.domain.model.OrderCardRequest
 
 @RestController
 internal class CardController(@Autowired val cardService: CardService) {
 
-    @GetMapping
-    fun findAllCards() = cardService.findAllCardInfos()
+    @GetMapping("/customer/{customerId}")
+    fun findCardsByCustomerId(@PathVariable customerId: Long) = cardService.findCardsByCustomerId(customerId)
 
     @PostMapping
-    fun issueCard(@RequestBody issueCardRequest: IssueCardRequest) = cardService.orderCard(issueCardRequest)
+    fun orderCard(@RequestBody orderCardRequest: OrderCardRequest) = cardService.orderCard(orderCardRequest)
 
     @GetMapping("/{cardId}")
-    fun getCardById(@PathVariable cardId: Long): BankCardData = cardService.getCardInfoById(cardId)
+    fun getCardById(@PathVariable cardId: Long): BankCardEntity = cardService.getCardById(cardId)
 
     @PutMapping("/{cardId}/close")
     fun closeCard(@PathVariable cardId: Long) = cardService.closeCard(cardId)

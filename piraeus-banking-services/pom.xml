@@ -19,6 +19,8 @@
         <module>ms-bank-card</module>
         <module>ms-auth</module>
         <module>common-domain</module>
+        <module>gateway-server</module>
+        <module>common-client</module>
     </modules>
 
     <dependencies>

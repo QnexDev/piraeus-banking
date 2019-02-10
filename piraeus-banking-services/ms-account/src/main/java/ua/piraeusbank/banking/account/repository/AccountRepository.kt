@@ -27,7 +27,7 @@ interface AccountRepository {
 
     fun getCustomerReference(customerId: Long): CustomerEntity
 
-    fun save(newAccount: AccountEntity)
+    fun save(newAccount: AccountEntity): Long
 }
 
 @Repository
@@ -35,8 +35,8 @@ class AccountRepositoryImpl(
         @Autowired val baseAccountRepository: BaseAccountRepository)
     : AccountRepository {
 
-    override fun save(newAccount: AccountEntity) {
-        baseAccountRepository.saveAndFlush(newAccount)
+    override fun save(newAccount: AccountEntity): Long {
+        return baseAccountRepository.saveAndFlush(newAccount).accountId!!
     }
 
     override fun getOne(accountId: Long): AccountEntity = baseAccountRepository.getOne(accountId)

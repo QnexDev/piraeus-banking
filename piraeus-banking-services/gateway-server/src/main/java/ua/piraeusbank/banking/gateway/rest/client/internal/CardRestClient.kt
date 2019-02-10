@@ -1,20 +1,20 @@
-package ua.piraeusbank.banking.card.client
+package ua.piraeusbank.banking.gateway.rest.client.internal
 
 import retrofit2.http.*
-import ua.piraeusbank.banking.card.service.ChangePinCodeRequest
-import ua.piraeusbank.banking.card.service.IssueCardRequest
-import ua.piraeusbank.banking.domain.entity.BankCardData
+import ua.piraeusbank.banking.common.domain.ChangePinCodeRequest
+import ua.piraeusbank.banking.domain.entity.BankCardEntity
+import ua.piraeusbank.banking.domain.model.OrderCardRequest
 
 interface CardRestClient {
-    
-    @GET
-    fun findAllCards()
+
+    @GET("/customer/{customerId}")
+    fun findCardsByCustomerId(@Path("customerId") customerId: Long): List<BankCardEntity>
 
     @POST
-    fun issueCard(@Body issueCardRequest: IssueCardRequest)
+    fun orderCard(@Body request: OrderCardRequest)
 
     @GET("/{cardId}")
-    fun getCardById(@Path("cardId") cardId: Long): BankCardData
+    fun getCardById(@Path("cardId") cardId: Long): BankCardEntity
 
     @PUT("/{cardId}/close")
     fun closeCard(@Path("cardId") cardId: Long)

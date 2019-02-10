@@ -1,42 +1,45 @@
 package ua.piraeusbank.banking.card.repository
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.domain.Example
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import ua.piraeusbank.banking.card.service.CardServiceImpl
-import ua.piraeusbank.banking.card.service.Empty
-import ua.piraeusbank.banking.domain.entity.*
-import java.time.LocalDate
-import java.util.*
+import ua.piraeusbank.banking.domain.entity.AccountEntity
+import ua.piraeusbank.banking.domain.entity.BankCardEntity
+import ua.piraeusbank.banking.domain.entity.BankCardParams
+import ua.piraeusbank.banking.domain.entity.CustomerEntity
 import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 
-internal interface BaseCardRepository : JpaRepository<BankCard, Long>
+internal interface BaseCardRepository : JpaRepository<BankCardEntity, Long> {
+
+    fun findCardsByCustomerId(customerId: Long): List<BankCardEntity>
+}
 
 internal interface CardRepository {
 
-    fun getOne(cardId: Long): BankCard
+    fun getOne(cardId: Long): BankCardEntity
 
-    fun findAll(): List<BankCard>
+    fun findCardsByCustomerId(customerId: Long): List<BankCardEntity>
 
     fun save(params: BankCardParams)
 
-    fun save(card: BankCard)
+    fun save(card: BankCardEntity)
 }
 
 @Repository
 internal class CardRepositoryImpl(@Autowired private val baseCardRepository: BaseCardRepository) : CardRepository {
 
+
     @PersistenceContext
     private lateinit var em: EntityManager
     
-    override fun getOne(cardId: Long): BankCard = baseCardRepository.getOne(cardId)
+    override fun getOne(cardId: Long): BankCardEntity = baseCardRepository.getOne(cardId)
 
-    override fun findAll(): List<BankCard> = baseCardRepository.findAll()
+    override fun findCardsByCustomerId(customerId: Long): List<BankCardEntity> = baseCardRepository.findCardsByCustomerId(customerId)
 
     override fun save(params: BankCardParams) {
-        val newBankCard = BankCard(
+        val newBankCard = BankCardEntity(
+                name = "Payment Card",
                 status = params.status!!,
                 type = params.type!!,
                 pinCode = params.pinCode!!,
@@ -52,7 +55,7 @@ internal class CardRepositoryImpl(@Autowired private val baseCardRepository: Bas
         em.flush()
     }
 
-    override fun save(card: BankCard) {
+    override fun save(card: BankCardEntity) {
         baseCardRepository.saveAndFlush(card)
     }
 

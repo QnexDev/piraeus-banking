@@ -3,10 +3,10 @@ package ua.piraeusbank.banking.account.controller
 import org.javamoney.moneta.Money
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
-import ua.piraeusbank.banking.account.service.AccountCreationRequest
 import ua.piraeusbank.banking.account.service.AccountService
-import ua.piraeusbank.banking.account.service.MoneyTransferRequest
 import ua.piraeusbank.banking.domain.entity.TransactionEntity
+import ua.piraeusbank.banking.domain.model.AccountCreationRequest
+import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 
 @RestController
 class AccountController(@Autowired val accountService: AccountService) {

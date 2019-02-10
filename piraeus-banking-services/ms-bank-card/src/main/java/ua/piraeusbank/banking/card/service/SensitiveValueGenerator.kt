@@ -1,7 +1,7 @@
 package ua.piraeusbank.banking.card.service
 
 import org.springframework.stereotype.Service
-import ua.piraeusbank.banking.domain.entity.BankCardNetwork
+import ua.piraeusbank.banking.domain.entity.BankCardNetworkEntity
 import ua.piraeusbank.banking.domain.entity.BankCardNumber
 import ua.piraeusbank.banking.domain.entity.CardNetworkCode.*
 import java.math.BigInteger
@@ -31,17 +31,17 @@ class NaiveSecurityCodeGenerator : SecurityCodeGeneratorAlias {
     override fun generate(params: Empty): Short = Random.nextInt(1000, 9999).toShort()
 }
 
-internal typealias CardNumberGeneratorAlias = SensitiveValueGenerator<BankCardNetwork, BankCardNumber>
+internal typealias CardNumberGeneratorAlias = SensitiveValueGenerator<BankCardNetworkEntity, BankCardNumber>
 
 @Service("cardNumberGenerator")
 internal class NaiveCardNumberGenerator : CardNumberGeneratorAlias {
 
-    override fun generate(params: BankCardNetwork): BankCardNumber = when (params.code) {
+    override fun generate(params: BankCardNetworkEntity): BankCardNumber = when (params.code) {
         VISA -> generateNumber(params)
         MASTERCARD -> generateNumber(params)
     }
 
-    fun generateNumber(network: BankCardNetwork): BankCardNumber {
+    fun generateNumber(network: BankCardNetworkEntity): BankCardNumber {
         val number =
                 "${network.prefixNumbers}${threeDigits()}${fourDigits()}${fourDigits()}${fourDigits()}".toBigInteger()
 
