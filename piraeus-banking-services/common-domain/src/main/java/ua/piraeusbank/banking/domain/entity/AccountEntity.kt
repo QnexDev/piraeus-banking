@@ -45,7 +45,7 @@ data class TransactionEntity(
         @Column(name = "status") val status: TransactionStatus,
         @ManyToOne
         @JoinColumn(name = "transaction_type_id")
-        val type: TransactionType,
+        val type: TransactionTypeEntity,
         @Column(name = "timestamp") val timestamp: Instant,
         @Convert(converter = MoneyConverter::class)
         @Column(name = "amount") val amount: Money? = null,
@@ -60,10 +60,10 @@ data class TransactionEntity(
 
 @Entity
 @Table(name = "TRANSACTION_TYPE")
-data class TransactionType(
+data class TransactionTypeEntity(
         @GeneratedValue
-        @Id @Column(name = "transaction_type_id") val transactionTypeId: Long,
-        @Column(name = "code") val code: TransactionTypeCode,
+        @Id @Column(name = "transaction_type_id") val transactionTypeId: Long? = null,
+        @Enumerated(EnumType.STRING) @Column(name = "code") val code: TransactionTypeCode,
         @Column(name = "description") val description: String
 )
 
@@ -71,7 +71,7 @@ data class TransactionType(
 @Table(name = "CURRENCY")
 data class CurrencyEntity(
         @GeneratedValue
-        @Id @Column(name = "currency_id") val id: Long,
+        @Id @Column(name = "currency_id") val id: Long? = null,
         @Column(name = "currency_code") val currencyCode: String,
         @Column(name = "numeric_code") val numericCode: Int
 )

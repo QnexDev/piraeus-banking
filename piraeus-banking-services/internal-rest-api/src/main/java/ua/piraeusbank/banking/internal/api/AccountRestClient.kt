@@ -14,21 +14,21 @@ import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 interface AccountRestClient {
 
     @GET("{accountId}/balance/check")
-    fun checkCurrentBalance(@Path("accountId") accountId: Long): Money
+    fun checkCurrentBalance(@Path("accountId") accountId: Long): Call<Money>
 
-    @POST("/money/transfer")
-    fun transferMoney(@Body transferRequest: MoneyTransferRequest)
+    @POST("money/transfer")
+    fun transferMoney(@Body transferRequest: MoneyTransferRequest): Call<Void>
 
-    @POST("/")
+    @POST(".")
     fun createAccount(@Body request: AccountCreationRequest): Call<Long>
 
-    @GET("/transaction/{transactionId}")
-    fun getTransaction(@Path("transactionId") transactionId: Long): TransactionEntity
+    @GET("transaction/{transactionId}")
+    fun getTransaction(@Path("transactionId") transactionId: Long): Call<TransactionEntity>
 
-    @GET("/transactions/outgoing")
-    fun getOutgoingTransactions(accountId: Long): List<TransactionEntity>
+    @GET("transactions/outgoing")
+    fun getOutgoingTransactions(accountId: Long): Call<List<TransactionEntity>>
 
 
-    @GET("/transactions/incoming")
-    fun getIncomingTransactions(accountId: Long): List<TransactionEntity>
+    @GET("transactions/incoming")
+    fun getIncomingTransactions(accountId: Long): Call<List<TransactionEntity>>
 }

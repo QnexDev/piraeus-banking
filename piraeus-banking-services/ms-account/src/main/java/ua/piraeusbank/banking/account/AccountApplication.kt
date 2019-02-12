@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import ua.piraeusbank.banking.common.config.MessagingConfig
 import ua.piraeusbank.banking.common.config.PersistenceConfig
 import ua.piraeusbank.banking.common.config.ResourceServerConfig
+import ua.piraeusbank.banking.common.config.RestAuthConfig
 
 @SpringBootApplication
 @EnableResourceServer

@@ -8,28 +8,28 @@ import ua.piraeusbank.banking.domain.model.OrderCardRequest
 
 interface CardRestClient {
 
-    @GET("/customer/{customerId}")
-    fun findCardsByCustomerId(@Path("customerId") customerId: Long): List<BankCardEntity>
+    @GET("customer/{customerId}")
+    fun findCardsByCustomerId(@Path("customerId") customerId: Long): Call<List<BankCardEntity>>
 
     @POST
     fun orderCard(@Body request: OrderCardRequest): Call<Void>
 
-    @GET("/{cardId}")
-    fun getCardById(@Path("cardId") cardId: Long): BankCardEntity
+    @GET("{cardId}")
+    fun getCardById(@Path("cardId") cardId: Long): Call<BankCardEntity>
 
-    @PUT("/{cardId}/close")
+    @PUT("{cardId}/close")
     fun closeCard(@Path("cardId") cardId: Long): Call<Void>
 
-    @PUT("/{cardId}/block")
+    @PUT("{cardId}/block")
     fun blockCard(@Path("cardId") cardId: Long): Call<Void>
 
-    @PUT("/{cardId}/unblock")
+    @PUT("{cardId}/unblock")
     fun unblockCard(@Path("cardId") cardId: Long): Call<Void>
 
-    @PUT("/{cardId}/change/pin")
+    @PUT("{cardId}/change/pin")
     fun changePinCode(@Path("cardId") cardId: Long,
                       @Body changePinCodeRequest: ChangePinCodeRequest): Call<Void>
 
-    @GET("/{cardId}/securityCode")
+    @GET("{cardId}/securityCode")
     fun getSecurityCode(@Path("cardId") cardId: Long): Call<Short>
 }

@@ -7,12 +7,13 @@ import org.springframework.stereotype.Repository
 import ua.piraeusbank.banking.account.NotEnoughMoneyException
 import ua.piraeusbank.banking.account.TransactionProcessingException
 import ua.piraeusbank.banking.domain.entity.*
+import java.util.*
 import javax.persistence.EntityManager
 import javax.persistence.LockModeType
 import javax.persistence.PersistenceContext
 
-interface TransactionTypeRepository : JpaRepository<TransactionType, Long> {
-    fun findByCode(code: TransactionTypeCode): TransactionType
+interface TransactionTypeRepository : JpaRepository<TransactionTypeEntity, Long> {
+    fun findByCode(code: TransactionTypeCode): Optional<TransactionTypeEntity>
 }
 
 interface BaseAccountRepository : JpaRepository<AccountEntity, Long>

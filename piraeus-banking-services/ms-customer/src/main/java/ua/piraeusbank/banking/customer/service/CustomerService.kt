@@ -8,23 +8,22 @@ import ua.piraeusbank.banking.common.domain.AccountAndCardCreationRequest
 import ua.piraeusbank.banking.customer.repository.CustomerRepository
 import ua.piraeusbank.banking.domain.entity.CustomerEntity
 import ua.piraeusbank.banking.domain.model.AuthUser
+import ua.piraeusbank.banking.domain.model.CardAccountCreationMessage
 import ua.piraeusbank.banking.domain.model.CustomerRegistrationRequest
-import ua.piraeusbank.banking.domain.model.DefaultCardAccountCreationMessage
-import ua.piraeusbank.banking.internal.api.AuthUserRestClient
+import ua.piraeusbank.banking.domain.model.UserRegistrationMessage
 import java.time.LocalDate
 import javax.annotation.PostConstruct
 
 @Service
 class CustomerService(
         @Autowired val customerRepository: CustomerRepository,
-        @Autowired val jmsTemplate: JmsTemplate,
-        @Autowired val authUserRestClient: AuthUserRestClient) {
+        @Autowired val jmsTemplate: JmsTemplate) {
 
     @PostConstruct
     fun init() {
-        customerRepository.findByPhoneNumber("+380636303637").orElseGet {
+        customerRepository.findByPhoneNumber("+330636303618").orElseGet {
             registerCustomer(CustomerRegistrationRequest(
-                    phoneNumber = "+380636303637",
+                    phoneNumber = "+330636303618",
                     lastName = "Denysenko",
                     dateOfBirthday = LocalDate.of(1993, 2, 18),
                     email = "qnexdev@mgail.com",
@@ -39,7 +38,9 @@ class CustomerService(
 
     @Transactional
     fun registerCustomer(request: CustomerRegistrationRequest): CustomerEntity {
-        authUserRestClient.createUser(AuthUser(request.phoneNumber, request.password))
+        jmsTemplate.convertAndSend(
+                "registration",
+                UserRegistrationMessage(AuthUser(request.phoneNumber, request.password)))
 
         val newCustomer = customerRepository.saveAndFlush(
                 CustomerEntity(
@@ -50,8 +51,8 @@ class CustomerService(
                         phoneNumber = request.phoneNumber))
 
         jmsTemplate.convertAndSend(
-                "account",
-                DefaultCardAccountCreationMessage(
+                "accountCreation",
+                CardAccountCreationMessage(
                         AccountAndCardCreationRequest(
                                 customerId = newCustomer.customerId!!,
                                 currencyCode = "UAH",

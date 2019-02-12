@@ -40,7 +40,8 @@ class AccountServiceImpl(
         @Autowired val txRepository: TransactionRepository,
         @Autowired val accountRepository: AccountRepository,
         @Autowired val accountTypeRepository: AccountTypeRepository,
-        @Autowired val currencyRepository: CurrencyRepository) : AccountService {
+        @Autowired val currencyRepository: CurrencyRepository,
+        @Autowired val txTypeRepository: TransactionTypeRepository) : AccountService {
 
     @PostConstruct
     @Transactional
@@ -48,6 +49,16 @@ class AccountServiceImpl(
         accountTypeRepository.findByName("CURRENT").orElseGet {
             accountTypeRepository.saveAndFlush(
                     AccountTypeEntity(name = "CURRENT", description = "current account type"))
+        }
+        txTypeRepository.findByCode(CHECK).orElseGet {
+            txTypeRepository.saveAndFlush(TransactionTypeEntity(code = CHECK, description = "check transaction type"))
+        }
+
+        txTypeRepository.findByCode(TRANSFER).orElseGet {
+            txTypeRepository.saveAndFlush(TransactionTypeEntity(code = TRANSFER, description = "transfer transaction type"))
+        }
+        currencyRepository.getByCurrencyCode("UAH").orElseGet {
+            currencyRepository.saveAndFlush(CurrencyEntity(currencyCode = "UAH", numericCode = 1))
         }
     }
 
@@ -65,7 +76,7 @@ class AccountServiceImpl(
                 accountType = accountType,
                 creationDate = LocalDateTime.now(),
                 balance = Money.of(0, DEFAULT_CURRENCY),
-                currency = currencyRepository.getByCurrencyCode(request.currencyCode),
+                currency = currencyRepository.getByCurrencyCode(request.currencyCode).get(),
                 customer = accountRepository.getCustomerReference(request.customerId)
         )
 
@@ -111,9 +122,19 @@ class TransactionExecutorImpl(
             val (type, transferRequest) = context
 
             val transactionType = txTypeRepository.findByCode(type)
-            val sourceAccount = transferRequest?.sourceAccountId?.let { accountRepository.getOne(it) }
-            val targetAccount = transferRequest?.targetAccountId?.let { accountRepository.getOne(it) }
-
+                    .orElseThrow { IllegalStateException("Wrong transaction code!") }
+            val sourceAccount = transferRequest?.sourceAccountId?.let { accountRepository.getOne(it) }?.let {
+                if (type == TRANSFER) {
+                    throw IllegalStateException("sourceAccountId hasn't found")
+                }
+                it
+            }
+            val targetAccount = transferRequest?.targetAccountId?.let { accountRepository.getOne(it) }?.let {
+                if (type == TRANSFER) {
+                    throw IllegalStateException("targetAccountId hasn't found")
+                }
+                it
+            }
 
             val entity = txRepository.saveAndFlush(
                     TransactionEntity(

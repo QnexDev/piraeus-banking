@@ -20,8 +20,8 @@ class AccountController(@Autowired val accountService: AccountService) {
             accountService.transferMoney(transferRequest)
 
     @PostMapping("/")
-    fun createAccount(@RequestBody request: AccountCreationRequest) {
-        accountService.createAccount(request)
+    fun createAccount(@RequestBody request: AccountCreationRequest): Long {
+        return accountService.createAccount(request)
     }
 
     @GetMapping("/transactions/{transactionId}")

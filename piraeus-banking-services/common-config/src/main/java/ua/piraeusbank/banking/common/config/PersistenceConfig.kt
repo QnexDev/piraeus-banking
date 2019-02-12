@@ -68,6 +68,7 @@ class PersistenceConfig {
 
         hibernateProperties.setProperty("hibernate.show_sql", "true")
         hibernateProperties.setProperty("hibernate.format_sql", "true")
+//        hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "create-drop")
         hibernateProperties.setProperty("hibernate.globally_quoted_identifiers", "true")
 
         return hibernateProperties}
