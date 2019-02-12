@@ -1,5 +1,6 @@
 package ua.piraeusbank.banking.customer.service
 
+import org.javamoney.moneta.Money
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jms.core.JmsTemplate
 import org.springframework.stereotype.Service
@@ -21,12 +22,12 @@ class CustomerService(
 
     @PostConstruct
     fun init() {
-        customerRepository.findByPhoneNumber("+330636303618").orElseGet {
+        customerRepository.findByPhoneNumber("+3806363036393438").orElseGet {
             registerCustomer(CustomerRegistrationRequest(
-                    phoneNumber = "+330636303618",
+                    phoneNumber = "+3806363036393438",
                     lastName = "Denysenko",
                     dateOfBirthday = LocalDate.of(1993, 2, 18),
-                    email = "qnexdev@mgail.com",
+                    email = "qnexdev@gmail.com",
                     name = "Alex",
                     password = "stalker2"
             ))
@@ -56,7 +57,8 @@ class CustomerService(
                         AccountAndCardCreationRequest(
                                 customerId = newCustomer.customerId!!,
                                 currencyCode = "UAH",
-                                networkCode = "VISA"
+                                networkCode = "VISA",
+                                balance = Money.of(10000, "UAH")
                         )))
 
         return newCustomer

@@ -29,6 +29,12 @@ zuul:
         stripPrefix: false
         sensitiveHeaders:
 
+    ms-aggregator:
+      path: /aggregator/**
+      serviceId: ms-account
+      stripPrefix: false
+      sensitiveHeaders:
+
     ms-bank-card:
       path: /cards/**
       serviceId: ms-bank-card

@@ -32,7 +32,7 @@ data class StatementRecordEntity(
         val customer: CustomerEntity,
         @Column(name = "date") val date: LocalDate,
         @Column(name = "type") val type: String,
-        @Column(name = "description") val description: String,
+        @Column(name = "description") val description: String?,
         @Convert(converter = MoneyConverter::class)
         @Column(name = "paid_in") val paidIn: Money? = null,
         @Convert(converter = MoneyConverter::class)

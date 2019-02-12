@@ -42,7 +42,7 @@ class ResourceServerConfig : ResourceServerConfigurerAdapter() {
  * Extended implementation of [org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices]
  *
  * By default, it designed to return only user details. This class provides [.getRequest] method, which
- * returns clientId and scope of calling service. This information used in controller's security checks.
+ * returns clientId and scope of calling service. This information used in ua.piraeusbank.banking.aggregator.controller's security checks.
  */
 class CustomUserInfoTokenServices(
         private val userInfoEndpointUrl: String,

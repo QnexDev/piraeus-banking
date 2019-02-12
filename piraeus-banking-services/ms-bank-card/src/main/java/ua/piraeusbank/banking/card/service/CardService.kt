@@ -9,11 +9,14 @@ import ua.piraeusbank.banking.card.repository.CardNetworkRepository
 import ua.piraeusbank.banking.card.repository.CardRepository
 import ua.piraeusbank.banking.common.domain.ChangePinCodeRequest
 import ua.piraeusbank.banking.domain.entity.BankCardEntity
+import ua.piraeusbank.banking.domain.entity.BankCardNetworkEntity
 import ua.piraeusbank.banking.domain.entity.BankCardParams
 import ua.piraeusbank.banking.domain.entity.BankCardStatus.*
 import ua.piraeusbank.banking.domain.entity.BankCardType.DEBIT
+import ua.piraeusbank.banking.domain.entity.CardNetworkCode
 import ua.piraeusbank.banking.domain.model.OrderCardRequest
 import java.time.LocalDate
+import javax.annotation.PostConstruct
 
 internal interface CardService {
 
@@ -53,6 +56,24 @@ internal class CardServiceImpl(
         const val PIN_CODE_DIGITS_LENGTH = 4
     }
 
+    @PostConstruct
+    fun init() {
+        cardNetworkRepository.findByCode(CardNetworkCode.VISA).orElseGet {
+            cardNetworkRepository.saveAndFlush(BankCardNetworkEntity(
+                    description = "VISA",
+                    code = CardNetworkCode.VISA,
+                    name = "VISA",
+                    prefixNumbers = 4))
+        }
+        cardNetworkRepository.findByCode(CardNetworkCode.MASTERCARD).orElseGet {
+            cardNetworkRepository.saveAndFlush(BankCardNetworkEntity(
+                    description = "MASTERCARD",
+                    code = CardNetworkCode.MASTERCARD,
+                    name = "MASTERCARD",
+                    prefixNumbers = 5))
+        }
+    }
+
     @Transactional(readOnly = true)
     override fun getCardById(cardId: Long): BankCardEntity {
         return cardRepository.getOne(cardId)
@@ -65,7 +86,7 @@ internal class CardServiceImpl(
 
     @Transactional
     override fun orderCard(request: OrderCardRequest) {
-        val cardNetwork = cardNetworkRepository.findByCode(request.networkCode)
+        val cardNetwork = cardNetworkRepository.findByCode(request.networkCode).get()
 
         val (number, binCode) = cardNumberGenerator.generate(cardNetwork)
 

@@ -12,7 +12,8 @@ data class MoneyTransferRequest(
 
 data class AccountCreationRequest(
         val customerId: Long,
-        val currencyCode: String)
+        val currencyCode: String,
+        val balance: Money = Money.of(0, "UAH"))
 
 
 

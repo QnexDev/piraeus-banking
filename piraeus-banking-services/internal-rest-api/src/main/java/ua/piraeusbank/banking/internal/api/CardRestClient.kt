@@ -11,7 +11,7 @@ interface CardRestClient {
     @GET("customer/{customerId}")
     fun findCardsByCustomerId(@Path("customerId") customerId: Long): Call<List<BankCardEntity>>
 
-    @POST
+    @POST(".")
     fun orderCard(@Body request: OrderCardRequest): Call<Void>
 
     @GET("{cardId}")

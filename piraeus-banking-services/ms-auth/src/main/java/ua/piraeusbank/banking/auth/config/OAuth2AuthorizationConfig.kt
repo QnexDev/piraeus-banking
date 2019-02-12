@@ -55,6 +55,11 @@ class OAuth2AuthorizationConfig : AuthorizationServerConfigurerAdapter() {
                 .secret(env.getProperty("MS_CUSTOMER_PASSWORD"))
                 .authorizedGrantTypes("client_credentials", "refresh_token")
                 .scopes("server")
+                .and()
+                .withClient("ms-aggregator")
+                .secret(env.getProperty("MS_AGGREGATOR_PASSWORD"))
+                .authorizedGrantTypes("client_credentials", "refresh_token")
+                .scopes("server")
         // @formatter:on
     }
 

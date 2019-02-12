@@ -26,7 +26,7 @@ class StatementService(@Autowired val statementRepository: StatementRepository) 
 
         statementRepository.saveAndFlush(StatementRecordEntity(
                 date = LocalDate.now(),
-                description = transaction.description!!,
+                description = transaction.description,
                 customer = sourceAccount?.customer!!,
                 paidOut = transferAmount,
                 type = transaction.type.toString()

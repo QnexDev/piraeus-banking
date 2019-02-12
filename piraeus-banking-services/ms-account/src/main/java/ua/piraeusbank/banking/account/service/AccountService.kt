@@ -75,7 +75,7 @@ class AccountServiceImpl(
                 status = AccountStatus.OPENED,
                 accountType = accountType,
                 creationDate = LocalDateTime.now(),
-                balance = Money.of(0, DEFAULT_CURRENCY),
+                balance = request.balance,
                 currency = currencyRepository.getByCurrencyCode(request.currencyCode).get(),
                 customer = accountRepository.getCustomerReference(request.customerId)
         )

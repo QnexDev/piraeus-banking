@@ -24,7 +24,7 @@ object RetrofitServiceGenerator {
 
         val builder = Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .addConverterFactory(JacksonConverterFactory.create())
+                .addConverterFactory(JacksonConverterFactory.create(objectMapper))
 
         return builder.client(httpClient).build().create(S::class.java)
     }

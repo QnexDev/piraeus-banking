@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.gateway
+package ua.piraeusbank.banking.aggregator.service
 
 import okhttp3.Interceptor
 import org.springframework.beans.factory.annotation.Autowired
@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cloud.client.discovery.DiscoveryClient
 import org.springframework.jms.annotation.JmsListener
 import org.springframework.stereotype.Service
+import ua.piraeusbank.banking.aggregator.conversion.CardConvertParams
+import ua.piraeusbank.banking.aggregator.conversion.CardConverter
 import ua.piraeusbank.banking.common.domain.AccountAndCardCreationRequest
 import ua.piraeusbank.banking.common.domain.CardMoneyTransferRequest
 import ua.piraeusbank.banking.common.domain.PaymentCard
@@ -14,8 +16,6 @@ import ua.piraeusbank.banking.domain.model.AccountCreationRequest
 import ua.piraeusbank.banking.domain.model.CardAccountCreationMessage
 import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 import ua.piraeusbank.banking.domain.model.OrderCardRequest
-import ua.piraeusbank.banking.gateway.conversion.CardConvertParams
-import ua.piraeusbank.banking.gateway.conversion.CardConverter
 import ua.piraeusbank.banking.internal.api.AccountRestClient
 import ua.piraeusbank.banking.internal.api.CardRestClient
 import ua.piraeusbank.banking.internal.api.RetrofitServiceGenerator
@@ -39,13 +39,13 @@ class AccountCardAggregatorServiceImpl(
 
 
     override fun createCardAndAccount(request: AccountAndCardCreationRequest) {
-        val accountIdCall = accountRestClient.createAccount(
-                AccountCreationRequest(request.customerId, request.currencyCode)).execute().body()
+        val accountId = accountRestClient.createAccount(
+                AccountCreationRequest(request.customerId, request.currencyCode, request.balance)).execute().body()
         cardRestClient.orderCard(
                 OrderCardRequest(
                         request.customerId,
-                        accountIdCall,
-                        CardNetworkCode.valueOf(request.networkCode)))
+                        accountId,
+                        CardNetworkCode.valueOf(request.networkCode))).execute()
     }
 
     override fun findPaymentCard(cardId: Long): PaymentCard {

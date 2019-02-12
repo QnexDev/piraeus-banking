@@ -1,4 +1,4 @@
-package ua.piraeusbank.banking.gateway.conversion
+package ua.piraeusbank.banking.aggregator.conversion
 
 import org.javamoney.moneta.Money
 import org.springframework.stereotype.Service
