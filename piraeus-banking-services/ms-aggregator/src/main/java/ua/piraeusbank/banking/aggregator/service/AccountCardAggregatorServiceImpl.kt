@@ -70,7 +70,7 @@ class AccountCardAggregatorServiceImpl(
                 sourceAccountId = sourceCard.account.accountId!!,
                 targetAccountId = targetCard.account.accountId!!,
                 description = request.description,
-                amount = request.amount))
+                amount = request.amount)).execute()
     }
 
     @JmsListener(destination = "accountCreation", containerFactory = "connectionFactory")

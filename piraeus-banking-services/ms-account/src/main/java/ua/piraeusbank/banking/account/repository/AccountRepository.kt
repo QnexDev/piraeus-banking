@@ -20,7 +20,7 @@ interface BaseAccountRepository : JpaRepository<AccountEntity, Long>
 
 interface AccountRepository {
 
-    fun getOne(accountId: Long): AccountEntity
+    fun findById(accountId: Long): Optional<AccountEntity>
 
     fun getAccountBalance(accountId: Long): Money
 
@@ -40,7 +40,8 @@ class AccountRepositoryImpl(
         return baseAccountRepository.saveAndFlush(newAccount).accountId!!
     }
 
-    override fun getOne(accountId: Long): AccountEntity = baseAccountRepository.getOne(accountId)
+    override fun findById(accountId: Long): Optional<AccountEntity> =
+            baseAccountRepository.findById(accountId)
 
 
     override fun getAccountBalance(accountId: Long): Money = baseAccountRepository.getOne(accountId).balance
@@ -52,7 +53,7 @@ class AccountRepositoryImpl(
                                targetAccountId: Long,
                                amount: Money) {
         val query = em.createQuery(
-                "select a from Account a where a.id in (:sourceAccountId, :targetAccountId)")
+                "select a from AccountEntity a where a.accountId in (:sourceAccountId, :targetAccountId)")
         query.setParameter("sourceAccountId", sourceAccountId)
         query.setParameter("targetAccountId", targetAccountId)
         query.lockMode = LockModeType.PESSIMISTIC_WRITE
@@ -81,9 +82,9 @@ class AccountRepositoryImpl(
             throw NotEnoughMoneyException("Not enough money in the account!")
         }
 
-        em.persist(sourceAccount.copy(balance = sourceAccountBalance.subtract(amount)))
+        em.merge(sourceAccount.copy(balance = sourceAccountBalance.subtract(amount)))
 
-        em.persist(targetAccount.copy(balance = targetAccountBalance.add(amount)))
+        em.merge(targetAccount.copy(balance = targetAccountBalance.add(amount)))
     }
 
     override fun getCustomerReference(customerId: Long): CustomerEntity {

@@ -42,7 +42,7 @@ data class AccountTypeEntity(
 data class TransactionEntity(
         @GeneratedValue
         @Id @Column(name = "transaction_id") val id: Long? = null,
-        @Column(name = "status") val status: TransactionStatus,
+        @Enumerated(EnumType.STRING) @Column(name = "status") val status: TransactionStatus,
         @ManyToOne
         @JoinColumn(name = "transaction_type_id")
         val type: TransactionTypeEntity,

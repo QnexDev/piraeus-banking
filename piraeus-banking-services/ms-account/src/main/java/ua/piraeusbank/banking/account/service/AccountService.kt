@@ -6,10 +6,10 @@ import org.springframework.jms.core.JmsTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.support.TransactionTemplate
-import ua.piraeusbank.banking.account.TransactionProcessingException
 import ua.piraeusbank.banking.account.repository.*
 import ua.piraeusbank.banking.domain.entity.*
-import ua.piraeusbank.banking.domain.entity.TransactionStatus.*
+import ua.piraeusbank.banking.domain.entity.TransactionStatus.COMPLETED
+import ua.piraeusbank.banking.domain.entity.TransactionStatus.FAILED
 import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.CHECK
 import ua.piraeusbank.banking.domain.entity.TransactionTypeCode.TRANSFER
 import ua.piraeusbank.banking.domain.model.AccountCreationRequest
@@ -21,9 +21,9 @@ import javax.annotation.PostConstruct
 
 interface AccountService {
 
-    fun checkCurrentBalance(accountId: Long): Money
+    fun checkCurrentBalance(accountId: Long): Money?
 
-    fun transferMoney(request: MoneyTransferRequest)
+    fun transferMoney(request: MoneyTransferRequest): Unit?
 
     fun getTransaction(transactionId: Long): TransactionEntity
 
@@ -86,12 +86,14 @@ class AccountServiceImpl(
     @Transactional
     override fun checkCurrentBalance(accountId: Long) = txExecutor.execute(context(CHECK)) {
         accountRepository.getAccountBalance(accountId)
-    } ?: throw TransactionProcessingException(TRANSACTION_EXECUTION_ERROR_MSG)
+    }
 
     @Transactional
-    override fun transferMoney(request: MoneyTransferRequest) = txExecutor.execute(context(TRANSFER, request)) {
-        accountRepository.transferMoney(request.sourceAccountId, request.sourceAccountId, request.amount)
-    } ?: throw TransactionProcessingException(TRANSACTION_EXECUTION_ERROR_MSG)
+    override fun transferMoney(request: MoneyTransferRequest) {
+        txExecutor.execute(context(TRANSFER, request)) {
+            accountRepository.transferMoney(request.sourceAccountId, request.targetAccountId, request.amount)
+        }
+    }
 
     @Transactional(readOnly = true)
     override fun getTransaction(transactionId: Long): TransactionEntity = txRepository.getOne(transactionId)
@@ -123,49 +125,59 @@ class TransactionExecutorImpl(
 
             val transactionType = txTypeRepository.findByCode(type)
                     .orElseThrow { IllegalStateException("Wrong transaction code!") }
-            val sourceAccount = transferRequest?.sourceAccountId?.let { accountRepository.getOne(it) }?.let {
-                if (type == TRANSFER) {
-                    throw IllegalStateException("sourceAccountId hasn't found")
+            val sourceAccount = transferRequest?.sourceAccountId?.let {
+                accountRepository.findById(it).orElseGet {
+                    if (type == TRANSFER) {
+                        throw IllegalStateException("sourceAccountId hasn't found")
+                    }
+                    null
                 }
-                it
             }
-            val targetAccount = transferRequest?.targetAccountId?.let { accountRepository.getOne(it) }?.let {
-                if (type == TRANSFER) {
-                    throw IllegalStateException("targetAccountId hasn't found")
+            val targetAccount = transferRequest?.targetAccountId?.let {
+                accountRepository.findById(it).orElseGet {
+                    if (type == TRANSFER) {
+                        throw IllegalStateException("targetAccountId hasn't found")
+                    }
+                    null
                 }
-                it
             }
 
-            val entity = txRepository.saveAndFlush(
-                    TransactionEntity(
-                            status = STARTED,
-                            timestamp = Instant.now(),
-                            type = transactionType,
-                            amount = transferRequest?.amount,
-                            sourceAccount = sourceAccount,
-                            targetAccount = targetAccount,
-                            description = transferRequest?.description))
+//            val entity = txRepository.saveAndFlush(
+//                    TransactionEntity(
+//                            status = STARTED,
+//                            timestamp = Instant.now(),
+//                            type = transactionType,
+//                            amount = transferRequest?.amount,
+//                            sourceAccount = sourceAccount,
+//                            targetAccount = targetAccount,
+//                            description = transferRequest?.description))
             try {
-                val result = txTemplate.execute {
-                    execution()
-                }
+                execution()
                 val completedTransaction = txRepository.saveAndFlush(
                         TransactionEntity(
-                                id = entity.id,
+//                                id = entity.id,
                                 status = COMPLETED,
                                 timestamp = Instant.now(),
-                                type = transactionType))
+                                type = transactionType,
+                                description = transferRequest?.description,
+                                amount = transferRequest?.amount,
+                                sourceAccount = sourceAccount,
+                                targetAccount = targetAccount))
                 jmsTemplate.convertAndSend(
                         "account",
                         AccountMoneyTransferMessage(completedTransaction))
-                return result
+                return null
             } catch (e: Throwable) {
                 val failedTransaction = TransactionEntity(
-                        id = entity.id,
+//                        id = entity.id,
                         status = FAILED,
                         timestamp = Instant.now(),
                         errorMessage = e.message,
-                        type = transactionType)
+                        type = transactionType,
+                        description = transferRequest?.description,
+                        amount = transferRequest?.amount,
+                        sourceAccount = sourceAccount,
+                        targetAccount = targetAccount)
                 txRepository.saveAndFlush(
                         failedTransaction)
                 jmsTemplate.convertAndSend(

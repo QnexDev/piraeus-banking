@@ -6,6 +6,7 @@ import org.springframework.jms.core.JmsTemplate
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ua.piraeusbank.banking.common.domain.AccountAndCardCreationRequest
+import ua.piraeusbank.banking.common.domain.Customer
 import ua.piraeusbank.banking.customer.repository.CustomerRepository
 import ua.piraeusbank.banking.domain.entity.CustomerEntity
 import ua.piraeusbank.banking.domain.model.AuthUser
@@ -35,7 +36,16 @@ class CustomerService(
     }
 
     @Transactional(readOnly = true)
-    fun getCustomer(customerId: Long): CustomerEntity = customerRepository.getOne(customerId)
+    fun findByPhoneNumber(phoneNumber: String): Customer = customerRepository.findByPhoneNumber(phoneNumber).map {
+        Customer(
+                customerId = it.customerId,
+                name = it.name,
+                email = it.email,
+                dateOfBirthday = it.dateOfBirthday,
+                lastName = it.lastName,
+                phoneNumber = it.phoneNumber
+        )
+    }.get()
 
     @Transactional
     fun registerCustomer(request: CustomerRegistrationRequest): CustomerEntity {

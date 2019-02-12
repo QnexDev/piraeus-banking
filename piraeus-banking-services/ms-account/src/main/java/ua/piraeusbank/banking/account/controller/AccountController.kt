@@ -12,11 +12,11 @@ import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 class AccountController(@Autowired val accountService: AccountService) {
 
     @GetMapping("{accountId}/balance/check")
-    fun checkCurrentBalance(@PathVariable("accountId") accountId: Long): Money =
+    fun checkCurrentBalance(@PathVariable("accountId") accountId: Long): Money? =
             accountService.checkCurrentBalance(accountId)
 
     @PostMapping("/money/transfer")
-    fun transferMoney(@RequestBody transferRequest: MoneyTransferRequest): Unit =
+    fun transferMoney(@RequestBody transferRequest: MoneyTransferRequest): Unit? =
             accountService.transferMoney(transferRequest)
 
     @PostMapping("/")

@@ -6,8 +6,8 @@ import ua.piraeusbank.banking.domain.entity.StatementRecordEntity
 
 interface StatementRepository : JpaRepository<StatementRecordEntity, Long> {
 
-    //FIXME
-    @Query("select t from StatementRecordEntity t where t.customer = :customerId")
+    @Query("select t from StatementRecordEntity t inner join t.customer c " +
+                        "where c.customerId = :customerId")
     fun findAllByCustomerId(customerId: Long): List<StatementRecordEntity>
 
 }

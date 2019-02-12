@@ -23,7 +23,7 @@ class AggregatorController(
     fun findPaymentCardsByCustomerId(@PathVariable customerId: Long): List<PaymentCard> =
             accountCardAggregatorService.findPaymentCardsByCustomerId(customerId)
 
-    @PutMapping("/card/money/transfer")
+    @PostMapping("/card/money/transfer")
     fun transferMoneyBetweenCards(@RequestBody request: CardMoneyTransferRequest) =
             accountCardAggregatorService.transferBetweenCards(request)
 }

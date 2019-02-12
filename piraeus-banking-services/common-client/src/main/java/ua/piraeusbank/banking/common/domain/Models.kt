@@ -23,3 +23,23 @@ data class CardTransaction(
         val targetCard: PaymentCard? = null,
         val description: String? = null,
         val errorMessage: String? = null)
+
+
+data class StatementRecord(
+        val statementId: Long? = null,
+        val customerId: Long,
+        val date: LocalDate,
+        val type: String,
+        val description: String?,
+        val paidIn: Money? = null,
+        val paidOut: Money? = null
+)
+
+data class Customer(
+        val customerId: Long? = null,
+        val name: String,
+        val lastName: String,
+        val phoneNumber: String,
+        val email: String,
+        val dateOfBirthday: LocalDate
+)
