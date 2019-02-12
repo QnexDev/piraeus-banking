@@ -1,0 +1,17 @@
+security:
+  oauth2:
+    client:
+      clientId: ms-aggregator
+      clientSecret: ${MS_AGGREGATOR_PASSWORD}
+      accessTokenUri: http://localhost:8001/auth/oauth/token
+      grant-type: client_credentials
+      scope: server
+
+server:
+  servlet:
+    context-path: /aggregator
+  port: 8004
+
+feign:
+  hystrix:
+    enabled: true
