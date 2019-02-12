@@ -59,8 +59,5 @@ class AppSettingsPm : ScreenPresentationModel() {
     override fun onCreate() {
         super.onCreate()
         languageSelection.observable.subscribe { selectedlanguage.consumer }.untilDestroy()
-
-
-
     }
 }

@@ -10,7 +10,7 @@ import kotlinx.android.synthetic.main.bank_card_layout.view.*
 import ua.piraeusbank.banking.client.R
 import ua.piraeusbank.banking.client.ui.model.PaymentCard
 
-class AccountCardsAdapter(private val cards: List<PaymentCard>, private val cardLayout: Int) :
+class AccountCardsAdapter(val cards: MutableList<PaymentCard>, private val cardLayout: Int) :
     RecyclerView.Adapter<AccountCardsAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
@@ -24,15 +24,16 @@ class AccountCardsAdapter(private val cards: List<PaymentCard>, private val card
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.cardName.text = cards[position].cardName
-        holder.cardNumber.text = "*${cards[position].cardNumber}"
+        holder.cardName.text = cards[position].name
+        holder.cardNumber.text = "*${cards[position].binCode}"
         holder.cardType.setImageResource(
-            when (cards[position].cardType) {
-                PaymentCard.Type.VISA -> R.drawable.ic_visa
-                PaymentCard.Type.MASTERCARD -> R.drawable.ic_mastercard
+            when (cards[position].networkCode) {
+                "VISA" -> R.drawable.ic_visa
+                "MASTERCARD" -> R.drawable.ic_mastercard
+                else -> throw IllegalArgumentException("Wrong card network code")
             }
         )
-        holder.moneyAmount.text = cards[position].moneyAmount
+        holder.moneyAmount.text = cards[position].balance.amount.toString()
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

@@ -50,7 +50,7 @@
 
 
     <EditText
-            android:id="@+id/amountInput"
+            android:id="@+id/noteInput"
             style="@style/Widget.AppCompat.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

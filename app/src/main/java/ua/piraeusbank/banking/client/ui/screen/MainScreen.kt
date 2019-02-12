@@ -2,38 +2,38 @@ package ua.piraeusbank.banking.client.ui.screen
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import com.fasterxml.jackson.core.type.TypeReference
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.view.touches
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.screen_main.*
+import ua.piraeusbank.banking.client.App
 import ua.piraeusbank.banking.client.R
+import ua.piraeusbank.banking.client.service.client.getPaymentCardsByCustomerId
 import ua.piraeusbank.banking.client.ui.model.BankServiceKind
 import ua.piraeusbank.banking.client.ui.model.PaymentCard
 import ua.piraeusbank.banking.client.ui.navigation.SelectBankServiceMessage
 import ua.piraeusbank.banking.client.ui.navigation.ShowMoreBankServicesMessage
 import ua.piraeusbank.banking.client.ui.navigation.ViewAllCardsMessage
 import ua.piraeusbank.banking.client.ui.navigation.ViewBankCardMessage
-import ua.piraeusbank.banking.client.ui.screen.adapter.BankServiceAdapter
 import ua.piraeusbank.banking.client.ui.screen.adapter.AccountCardsAdapter
+import ua.piraeusbank.banking.client.ui.screen.adapter.BankServiceAdapter
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
+import ua.piraeusbank.banking.client.util.CurrentUserContext
 import java.util.concurrent.TimeUnit
 
 class MainScreen : Screen<MainPm>() {
 
     private lateinit var bankCardsView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var bankCardAdapter: RecyclerView.Adapter<*>
+    private lateinit var bankCardAdapter: AccountCardsAdapter
     private lateinit var bankServicesAdapter: BankServiceAdapter
 
 
     companion object {
         fun create() = MainScreen()
-
-        val PAYMENT_CARDS = listOf(
-            PaymentCard("Payment bank card", 7718, PaymentCard.Type.MASTERCARD, "9 950 UAH"),
-            PaymentCard("Credit bank card", 5614, PaymentCard.Type.VISA, "7 680 UAH"),
-            PaymentCard("Credit bank card", 1414, PaymentCard.Type.VISA, "10 150 UAH")
-        )
     }
 
     override val screenLayout = R.layout.screen_main
@@ -45,7 +45,26 @@ class MainScreen : Screen<MainPm>() {
     override fun onBindPresentationModel(pm: MainPm) {
         super.onBindPresentationModel(pm)
 
-        bankServicesAdapter = BankServiceAdapter(BankServicesScreen.BANK_SERVICE_VIEW_CONFIGS.take(6))
+
+        Schedulers.io().scheduleDirect {
+            val customerId = CurrentUserContext.customer.customerId!!
+            App.component.cardRestClient.getPaymentCardsByCustomerId(customerId)
+                .subscribeOn(Schedulers.io())
+                .map {
+                    val paymentCards: List<PaymentCard> =
+                        App.component.objectMapper.readValue<List<PaymentCard>>(it.string(), object : TypeReference<List<PaymentCard>>() {})
+
+                    bankCardAdapter.cards.addAll(paymentCards)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    bankCardAdapter.notifyDataSetChanged()
+                }
+        }
+
+
+
+        bankServicesAdapter = BankServiceAdapter(BankServicesScreen.BANK_SERVICE_VIEW_CONFIGS.take(6).toMutableList())
         { _, config -> pm.selectBankServiceAction.consumer.accept(config.bankServiceKind) }
 
         mainBankServicesGrid.apply {
@@ -55,7 +74,7 @@ class MainScreen : Screen<MainPm>() {
 
         viewManager = LinearLayoutManager(this.context)
         bankCardAdapter = AccountCardsAdapter(
-            PAYMENT_CARDS,
+            ArrayList(),
             R.layout.bank_card_layout
         )
 

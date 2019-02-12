@@ -3,15 +3,20 @@ package ua.piraeusbank.banking.client.ui.screen
 import com.jakewharton.rxbinding2.view.clicks
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.screen_login.*
 import me.dmdev.rxpm.skipWhileInProgress
 import me.dmdev.rxpm.widget.inputControl
 import ua.piraeusbank.banking.client.App
 import ua.piraeusbank.banking.client.R
+import ua.piraeusbank.banking.client.service.client.AuthRestClient
+import ua.piraeusbank.banking.client.service.client.CustomerRestClient
+import ua.piraeusbank.banking.client.service.client.RetrofitServiceGenerator
 import ua.piraeusbank.banking.client.ui.navigation.StartRegistrationMessage
 import ua.piraeusbank.banking.client.ui.navigation.UserHasAuthorizedMessage
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
+import ua.piraeusbank.banking.client.util.CurrentUserContext
 import ua.piraeusbank.banking.client.util.PhoneUtils
 import ua.piraeusbank.banking.client.util.ResourceProvider
 
@@ -53,6 +58,9 @@ class LoginPm(
 
     override fun onCreate() {
         super.onCreate()
+        val customerRestClient: CustomerRestClient =
+            RetrofitServiceGenerator.createService("http://192.168.0.102:8003/customer/")
+
 
         Observable.combineLatest(
             phoneNumberControl.textChanges.observable,
@@ -70,7 +78,22 @@ class LoginPm(
         loginAction.observable
             .skipWhileInProgress(inProgress.observable)
             .map { Pair(phoneNumberControl.text.value, passwordControl.text.value) }
-            .subscribe { sendMessage(UserHasAuthorizedMessage) }
+            .subscribe {
+                Schedulers.io().scheduleDirect {
+                    try {
+                        val accessToken = AuthRestClient.obtainAccessToken(it.first, it.second)
+                        CurrentUserContext.accessToken = accessToken
+                        val response = customerRestClient.findByPhoneNumber(it.first).execute()
+                        val customer = response.body()
+                        when(response.isSuccessful) {
+                            true -> sendMessage(UserHasAuthorizedMessage(accessToken, customer))
+                            false -> showError(response.errorBody().string())
+                        }
+                    } catch (e: Throwable) {
+                        showError(e.message)
+                    }
+                }
+            }
             .untilDestroy()
 
         startRegistrationAction.observable

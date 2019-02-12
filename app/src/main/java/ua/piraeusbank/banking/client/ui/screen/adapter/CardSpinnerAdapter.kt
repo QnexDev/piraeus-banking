@@ -14,7 +14,7 @@ import ua.piraeusbank.banking.client.ui.model.PaymentCard
 class CardSpinnerAdapter(context: Context,
                          private val viewResourceId: Int,
                          private val dropDownViewResourceId: Int,
-                         private val cards: List<PaymentCard>) :
+                         val cards: MutableList<PaymentCard>) :
     ArrayAdapter<PaymentCard>(context, viewResourceId, cards) {
 
     override fun getCount(): Int {
@@ -56,15 +56,16 @@ class CardSpinnerAdapter(context: Context,
             convertView
         }
 
-        viewHolder.cardName.text = cards[position].cardName
-        viewHolder.cardNumber.text = "*${cards[position].cardNumber}"
+        viewHolder.cardName.text = cards[position].name
+        viewHolder.cardNumber.text = "*${cards[position].binCode}"
         viewHolder.cardType?.setImageResource(
-            when (cards[position].cardType) {
-                PaymentCard.Type.VISA -> R.drawable.ic_visa
-                PaymentCard.Type.MASTERCARD -> R.drawable.ic_mastercard
+            when (cards[position].networkCode) {
+                "VISA" -> R.drawable.ic_visa
+                "MASTERCARD" -> R.drawable.ic_mastercard
+                else -> throw IllegalArgumentException("Wrong card network code")
             }
         )
-        viewHolder.moneyAmount.text = cards[position].moneyAmount
+        viewHolder.moneyAmount.text = cards[position].balance.amount.toString()
 
         return view
     }

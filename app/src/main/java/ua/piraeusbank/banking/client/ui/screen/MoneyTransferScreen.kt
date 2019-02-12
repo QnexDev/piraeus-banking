@@ -2,16 +2,22 @@ package ua.piraeusbank.banking.client.ui.screen
 
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import com.fasterxml.jackson.core.type.TypeReference
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.selectionEvents
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.screen_money_transfer.*
+import ua.piraeusbank.banking.client.App
 import ua.piraeusbank.banking.client.R
+import ua.piraeusbank.banking.client.service.client.getPaymentCardsByCustomerId
 import ua.piraeusbank.banking.client.ui.model.CurrencyCode
 import ua.piraeusbank.banking.client.ui.model.PaymentCard
 import ua.piraeusbank.banking.client.ui.navigation.MoneyTransferStartedMessage
 import ua.piraeusbank.banking.client.ui.screen.adapter.CardSpinnerAdapter
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
+import ua.piraeusbank.banking.client.util.CurrentUserContext
 import ua.piraeusbank.banking.client.util.toSelectedItemTransformation
 
 class MoneyTransferScreen : Screen<MoneyTransferPm>() {
@@ -34,19 +40,33 @@ class MoneyTransferScreen : Screen<MoneyTransferPm>() {
     override fun onBindPresentationModel(pm: MoneyTransferPm) {
         super.onBindPresentationModel(pm)
 
-        val cards = MainScreen.PAYMENT_CARDS
+        val customerId = CurrentUserContext.customer.customerId!!
+        App.component.cardRestClient.getPaymentCardsByCustomerId(customerId)
+            .subscribeOn(Schedulers.io())
+            .map {
+                val paymentCards: List<PaymentCard> =
+                    App.component.objectMapper.readValue<List<PaymentCard>>(it.string(), object : TypeReference<List<PaymentCard>>() {})
+
+                fromCardAdapter.cards.addAll(paymentCards)
+                toCardAdapter.cards.addAll(paymentCards)
+            }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                fromCardAdapter.notifyDataSetChanged()
+                toCardAdapter.notifyDataSetChanged()
+            }
 
         fromCardAdapter = CardSpinnerAdapter(
             requireContext(),
             R.layout.transfer_card_layout,
             R.layout.simple_transfer_card_layout,
-            cards
+            ArrayList()
         ).also { adapter ->
             fromCards.adapter = adapter
 
             fromCards.selectionEvents().skipInitialValue()
                 .compose(toSelectedItemTransformation)
-                .map { cards[it.position()] }
+                .map { fromCardAdapter.cards[it.position()] }
                 .subscribe { pm.currencySelection.consumer }
         }
 
@@ -54,13 +74,13 @@ class MoneyTransferScreen : Screen<MoneyTransferPm>() {
             requireContext(),
             R.layout.transfer_card_layout,
             R.layout.simple_transfer_card_layout,
-            cards
+            ArrayList()
         ).also { adapter ->
             toCards.adapter = adapter
 
             toCards.selectionEvents().skipInitialValue()
                 .compose(toSelectedItemTransformation)
-                .map { cards[it.position()] }
+                .map { toCardAdapter.cards[it.position()] }
                 .subscribe { pm.currencySelection.consumer }
         }
 

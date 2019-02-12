@@ -13,6 +13,7 @@ import ua.piraeusbank.banking.client.ui.navigation.*
 import ua.piraeusbank.banking.client.ui.screen.*
 import ua.piraeusbank.banking.client.ui.screen.base.BackHandler
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
+import ua.piraeusbank.banking.client.util.CurrentUserContext
 
 class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
 
@@ -43,7 +44,11 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
 
             is BackMessage -> super.onBackPressed()
 
-            is UserHasAuthorizedMessage -> sfm.openScreen(MainScreen.create(), addToBackStack = false)
+            is UserHasAuthorizedMessage -> {
+                CurrentUserContext.customer = message.customer
+                CurrentUserContext.accessToken = message.accessToken
+                sfm.openScreen(MainScreen.create(), addToBackStack = false)
+            }
 
             is ViewAllCardsMessage -> sfm.openScreen(AccountScreen.create())
 

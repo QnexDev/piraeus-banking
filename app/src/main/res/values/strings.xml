@@ -40,9 +40,9 @@
     <string name="menu_card_order_card">Order card</string>
     <string name="menu_card_close_card">Close card</string>
     <string name="menu_card_get_security_code">Get Security Code</string>
-    <string name="menu_card_get_pin">Get PIN Code</string>
+    <string name="menu_card_change_pin">Change PIN Code</string>
     <string name="menu_card_change_pin_descr">After the changes You will receive a new PIN code in an SMS message</string>
-    <string name="menu_card_change_security_code_descr">This code is required for card payment online.
+    <string name="menu_card_get_security_code_descr">This code is required for card payment online.
         You will receive a CVV2 code of the selected card in a SMS masagge</string>
     <string name="menu_card_close_card_descr">You can close the card only with zero balance!</string>
 

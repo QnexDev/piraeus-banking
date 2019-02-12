@@ -24,8 +24,8 @@ class CardMenuScreen : Screen<CardMenuPm>() {
             CardMenuPreferences(R.drawable.ic_unblock_card, R.string.menu_card_unblock_card, UNBLOCK_CARD),
             CardMenuPreferences(R.drawable.ic_add_card, R.string.menu_card_order_card, ORDER_CARD),
             CardMenuPreferences(R.drawable.ic_secutity_code, R.string.menu_card_get_security_code, GET_SECURITY_CODE,
-                R.string.menu_card_change_security_code_descr),
-            CardMenuPreferences(R.drawable.ic_pin_code, R.string.menu_card_get_pin, GET_PIN_CODE,
+                R.string.menu_card_get_security_code_descr),
+            CardMenuPreferences(R.drawable.ic_pin_code, R.string.menu_card_change_pin, CHANGE_PIN_CODE,
                 R.string.menu_card_change_pin_descr),
             CardMenuPreferences(R.drawable.ic_close_card, R.string.menu_card_close_card, CLOSE_CARD,
                 R.string.menu_card_close_card_descr)
