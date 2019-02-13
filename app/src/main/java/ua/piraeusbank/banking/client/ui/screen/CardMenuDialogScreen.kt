@@ -58,7 +58,7 @@ class CardMenuDialogScreen : Screen<CardMenuDialogPm>() {
         }
 
         val customerId = CurrentUserContext.customer.customerId!!
-        App.component.cardRestClient.getPaymentCardsByCustomerId(customerId)
+        App.component.cardAccountRestClient.getPaymentCardsByCustomerId(customerId)
             .subscribeOn(Schedulers.io())
             .map {
                 val paymentCards: List<PaymentCard> =
@@ -83,6 +83,7 @@ class CardMenuDialogScreen : Screen<CardMenuDialogPm>() {
 //                .compose(toSelectedItemTransformation)
 //                .map { cards[it.position()] }
 //                .subscribe { pm.currencySelection.consumer }
+
         }
     }
 }

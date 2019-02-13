@@ -36,7 +36,7 @@ class AccountScreen : Screen<AccountPm>() {
         super.onBindPresentationModel(pm)
 
         val customerId = CurrentUserContext.customer.customerId!!
-        App.component.cardRestClient.getPaymentCardsByCustomerId(customerId)
+        App.component.cardAccountRestClient.getPaymentCardsByCustomerId(customerId)
             .subscribeOn(Schedulers.io())
             .map {
                 val paymentCards: List<PaymentCard> =

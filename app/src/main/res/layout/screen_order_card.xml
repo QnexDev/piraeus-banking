@@ -9,7 +9,7 @@
               android:theme="@style/AppTheme">
 
     <android.support.v7.widget.Toolbar
-            android:id="@+id/cardMenuToolbar"
+            android:id="@+id/cardOrderMenuToolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/primary"
@@ -67,7 +67,7 @@
 
         <Spinner
                 style="@style/Widget.AppCompat.Spinner.Underlined"
-                android:id="@+id/currencySpinner"
+                android:id="@+id/currencyOrderSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left|center"
@@ -97,7 +97,7 @@
 
 
     <Button
-            android:id="@+id/confirmButton"
+            android:id="@+id/confirmOrderButton"
             style="@style/ActionButton"
             android:layout_gravity="center"
             android:layout_width="match_parent"

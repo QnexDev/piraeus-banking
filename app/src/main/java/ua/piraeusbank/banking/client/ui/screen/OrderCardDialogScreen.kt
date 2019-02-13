@@ -2,14 +2,22 @@ package ua.piraeusbank.banking.client.ui.screen
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding2.widget.selectionEvents
-import kotlinx.android.synthetic.main.screen_card_menu_dialog.*
-import kotlinx.android.synthetic.main.screen_money_transfer.*
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.screen_order_card.*
+import ua.piraeusbank.banking.client.App
 import ua.piraeusbank.banking.client.R
+import ua.piraeusbank.banking.client.service.client.rxCreateCardAndAccount
 import ua.piraeusbank.banking.client.ui.model.CurrencyCode
+import ua.piraeusbank.banking.client.ui.model.request.AccountAndCardCreationRequest
 import ua.piraeusbank.banking.client.ui.screen.adapter.CardMenuPreferences
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
+import ua.piraeusbank.banking.client.util.CurrentUserContext
 import ua.piraeusbank.banking.client.util.toSelectedItemTransformation
 
 class OrderCardDialogScreen : Screen<OrderCardDialogScreenPm>() {
@@ -34,7 +42,7 @@ class OrderCardDialogScreen : Screen<OrderCardDialogScreenPm>() {
 
     override fun onBindPresentationModel(pm: OrderCardDialogScreenPm) {
         val preferences = arguments?.get("preferences") as CardMenuPreferences
-        cardMenuToolbar.title = resources.getString(preferences.name)
+        cardOrderMenuToolbar.title = resources.getString(preferences.name)
 
         super.onBindPresentationModel(pm)
 
@@ -44,12 +52,28 @@ class OrderCardDialogScreen : Screen<OrderCardDialogScreenPm>() {
             android.R.layout.simple_spinner_item
         ).also { adapter ->
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            currencySpinner.adapter = adapter
-            currencySpinner.setSelection(2, false)
-            currencySpinner.selectionEvents().skipInitialValue()
+            currencyOrderSpinner.adapter = adapter
+            currencyOrderSpinner.setSelection(2, false)
+            currencyOrderSpinner.selectionEvents().skipInitialValue()
                 .compose(toSelectedItemTransformation)
                 .map { toCurrencyCode(it.id().toInt()) }
                 .subscribe { pm.currencySelection.consumer }
+        }
+
+        val customerId = CurrentUserContext.customer.customerId!!
+
+        confirmOrderButton.clicks() bindTo Consumer {
+            App.component.cardAccountRestClient.rxCreateCardAndAccount(
+                AccountAndCardCreationRequest(customerId, "UAH", "VISA"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    if (it.isEmpty()) {
+                        Toast.makeText(requireContext(), "The card has been created!", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(requireContext(), it, Toast.LENGTH_LONG).show()
+                    }
+                }
         }
     }
 

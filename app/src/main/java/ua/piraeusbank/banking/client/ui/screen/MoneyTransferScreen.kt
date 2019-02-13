@@ -8,10 +8,12 @@ import com.jakewharton.rxbinding2.widget.selectionEvents
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.screen_money_transfer.*
+import me.dmdev.rxpm.widget.inputControl
 import ua.piraeusbank.banking.client.App
 import ua.piraeusbank.banking.client.R
 import ua.piraeusbank.banking.client.service.client.getPaymentCardsByCustomerId
 import ua.piraeusbank.banking.client.ui.model.CurrencyCode
+import ua.piraeusbank.banking.client.ui.model.Money
 import ua.piraeusbank.banking.client.ui.model.PaymentCard
 import ua.piraeusbank.banking.client.ui.navigation.MoneyTransferStartedMessage
 import ua.piraeusbank.banking.client.ui.screen.adapter.CardSpinnerAdapter
@@ -41,48 +43,53 @@ class MoneyTransferScreen : Screen<MoneyTransferPm>() {
         super.onBindPresentationModel(pm)
 
         val customerId = CurrentUserContext.customer.customerId!!
-        App.component.cardRestClient.getPaymentCardsByCustomerId(customerId)
+        App.component.cardAccountRestClient.getPaymentCardsByCustomerId(customerId)
             .subscribeOn(Schedulers.io())
             .map {
                 val paymentCards: List<PaymentCard> =
-                    App.component.objectMapper.readValue<List<PaymentCard>>(it.string(), object : TypeReference<List<PaymentCard>>() {})
+                    App.component.objectMapper.readValue<List<PaymentCard>>(
+                        it.string(),
+                        object : TypeReference<List<PaymentCard>>() {})
 
-                fromCardAdapter.cards.addAll(paymentCards)
-                toCardAdapter.cards.addAll(paymentCards)
+                paymentCards
             }
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                fromCardAdapter.notifyDataSetChanged()
-                toCardAdapter.notifyDataSetChanged()
+            .subscribe { cards ->
+                fromCardAdapter = CardSpinnerAdapter(
+                    requireContext(),
+                    R.layout.transfer_card_layout,
+                    R.layout.simple_transfer_card_layout,
+                    cards.toMutableList()
+                ).also { adapter ->
+                    fromCards.adapter = adapter
+
+                    fromCards.selectionEvents().skipInitialValue()
+                        .compose(toSelectedItemTransformation)
+                        .map { fromCardAdapter.cards[it.position()] }
+                        .subscribe {  pm.cardFrom = it }
+                }
+
+                toCardAdapter = CardSpinnerAdapter(
+                    requireContext(),
+                    R.layout.transfer_card_layout,
+                    R.layout.simple_transfer_card_layout,
+                    cards.filter { it != cards.firstOrNull() }.toMutableList()
+                ).also { adapter ->
+                    toCards.adapter = adapter
+
+                    toCards.selectionEvents().skipInitialValue()
+                        .compose(toSelectedItemTransformation)
+                        .map { toCardAdapter.cards[it.position()] }
+                        .subscribe { pm.cardTo = it }
+                }
+
+                pm.cardFrom = cards.first()
+                cards.elementAtOrNull(1)?.let {
+                    pm.cardTo = it
+                }
             }
 
-        fromCardAdapter = CardSpinnerAdapter(
-            requireContext(),
-            R.layout.transfer_card_layout,
-            R.layout.simple_transfer_card_layout,
-            ArrayList()
-        ).also { adapter ->
-            fromCards.adapter = adapter
 
-            fromCards.selectionEvents().skipInitialValue()
-                .compose(toSelectedItemTransformation)
-                .map { fromCardAdapter.cards[it.position()] }
-                .subscribe { pm.currencySelection.consumer }
-        }
-
-        toCardAdapter = CardSpinnerAdapter(
-            requireContext(),
-            R.layout.transfer_card_layout,
-            R.layout.simple_transfer_card_layout,
-            ArrayList()
-        ).also { adapter ->
-            toCards.adapter = adapter
-
-            toCards.selectionEvents().skipInitialValue()
-                .compose(toSelectedItemTransformation)
-                .map { toCardAdapter.cards[it.position()] }
-                .subscribe { pm.currencySelection.consumer }
-        }
 
         currencyAdapter = ArrayAdapter.createFromResource(
             requireContext(),
@@ -101,7 +108,7 @@ class MoneyTransferScreen : Screen<MoneyTransferPm>() {
         amountInput.setText(100.toString(), TextView.BufferType.EDITABLE)
 
         transferLink.clicks() bindTo pm.transferAction
-
+        pm.amount bindTo amountInput
     }
 
     private fun toCurrencyCode(it: Int): CurrencyCode {
@@ -117,6 +124,8 @@ class MoneyTransferScreen : Screen<MoneyTransferPm>() {
 // TODO Maybe need to extract ot separate component (spinner actions)
 class MoneyTransferPm : ScreenPresentationModel() {
 
+    val amount = inputControl()
+
     val currencySelection = Action<CurrencyCode>()
     val fromCardSelection = Action<PaymentCard>()
     val toCardSelection = Action<PaymentCard>()
@@ -126,6 +135,9 @@ class MoneyTransferPm : ScreenPresentationModel() {
     val selectedCardFrom = State<PaymentCard>()
     val selectedCardTo = State<PaymentCard>()
 
+    lateinit var cardFrom : PaymentCard
+    lateinit var cardTo : PaymentCard
+
     override fun onCreate() {
         super.onCreate()
         currencySelection.observable.subscribe { selectedCurrency.consumer }.untilDestroy()
@@ -133,7 +145,19 @@ class MoneyTransferPm : ScreenPresentationModel() {
         toCardSelection.observable.subscribe { selectedCardTo.consumer }.untilDestroy()
 
         transferAction.observable
-            .subscribe { sendMessage(MoneyTransferStartedMessage) }
+            .subscribe {
+                try {
+                    sendMessage(
+                        MoneyTransferStartedMessage(
+                            cardFrom.id,
+                            cardTo.id,
+                            Money(amount.text.value.toBigDecimal(), "UAH")
+                        )
+                    )
+                } catch (e: Throwable) {
+                    showError("Wrong input data!")
+                }
+            }
             .untilDestroy()
 
     }

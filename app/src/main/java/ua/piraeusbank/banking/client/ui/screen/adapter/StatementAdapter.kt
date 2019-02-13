@@ -11,14 +11,14 @@ import ua.piraeusbank.banking.client.ui.model.StatementRecord
 import ua.piraeusbank.banking.client.ui.model.TransferType
 
 class StatementAdapter(
-    private val cardStatement: List<StatementRecord>,
+    val statementRecords: MutableList<StatementRecord>,
     private val layout: Int,
     private val extendedView: Boolean = false
 ) :
     RecyclerView.Adapter<StatementAdapter.ViewHolder>() {
 
     override fun getItemCount(): Int {
-        return cardStatement.size
+        return statementRecords.size
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -30,39 +30,42 @@ class StatementAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val context = holder.rootView.context
 
-        val statementRecord = cardStatement[position]
+        val statementRecord = statementRecords[position]
         holder.actionDescr.text = statementRecord.description
-        val transferType = when (statementRecord.transferType) {
+        val type = TransferType.valueOf(statementRecord.type)
+        val transferType = when (type) {
             TransferType.INCOMING -> R.drawable.ic_arrow_double_left
             TransferType.OUTGOING -> R.drawable.ic_arrow_double_right
         }
         holder.transferType.setImageResource(
             transferType
         )
-        holder.actionTimestamp.text = statementRecord.timestamp
+        holder.actionTimestamp.text = statementRecord.timestamp.toString()
 
-        holder.recordAmount.text = statementRecord.amount
 
-        when (statementRecord.transferType) {
+        when (type) {
             TransferType.INCOMING -> {
+                holder.recordAmount.text = statementRecord.paidIn?.amount.toString()
                 holder.recordAmount.setTextColor(ContextCompat.getColor(context, R.color.green))
             }
             TransferType.OUTGOING -> {
+                holder.recordAmount.text = statementRecord.paidOut?.amount.toString()
+
                 holder.recordAmount.setTextColor(ContextCompat.getColor(context, R.color.red))
             }
         }
 
         if (extendedView) {
-            when (statementRecord.transferType) {
+            when (type) {
                 TransferType.INCOMING -> {
-                    holder.cardLabel.text = statementRecord.senderCard
+                    holder.cardLabel.text = "*4235"
                     holder.actionLabel.text = context.getString(R.string.statement_sender_label_txt)
-                    holder.accountLabel.text = statementRecord.senderAccount
+                    holder.accountLabel.text = statementRecord.customerName + " " + statementRecord.customerLastname
                 }
                 TransferType.OUTGOING -> {
-                    holder.cardLabel.text = statementRecord.recipientCard
+                    holder.cardLabel.text = "*5235"
                     holder.actionLabel.text = context.getString(R.string.statement_recipient_label_txt)
-                    holder.accountLabel.text = statementRecord.recipientAccount
+                    holder.accountLabel.text = statementRecord.customerName + " " + statementRecord.customerLastname
                 }
             }
         } else {

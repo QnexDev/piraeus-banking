@@ -1,15 +1,18 @@
 package ua.piraeusbank.banking.client.ui.model
 
+import java.time.Instant
+import java.time.LocalDate
+
 data class StatementRecord(
-    val senderCard: String,
-    val recipientCard: String,
-    val senderAccount: String,
-    val recipientAccount: String,
-    val transferType: TransferType,
-    val description: String,
-    val timestamp: String,
-    val amount: String,
-    val currency: String
+    val statementId: Long? = null,
+    val customerName: String,
+    val customerLastname: String,
+    val date: LocalDate,
+    val type: String,
+    val description: String?,
+    val paidIn: Money? = null,
+    val paidOut: Money? = null,
+    val timestamp: Instant
 )
 
 enum class TransferType {

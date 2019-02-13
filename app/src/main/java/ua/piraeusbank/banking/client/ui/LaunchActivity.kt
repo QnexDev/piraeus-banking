@@ -50,6 +50,8 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
                 sfm.openScreen(MainScreen.create(), addToBackStack = false)
             }
 
+            is OnMainScreenMessage -> sfm.openScreen(MainScreen.create())
+
             is ViewAllCardsMessage -> sfm.openScreen(AccountScreen.create())
 
             is ViewBankCardMessage -> sfm.openScreen(CardStatementScreen.create())
@@ -60,7 +62,7 @@ class LaunchActivity : AppCompatActivity(), NavigationMessageHandler {
 
             is StartRegistrationMessage -> sfm.openScreen(RegistrationScreen.create())
 
-            is MoneyTransferStartedMessage -> sfm.openScreen(TransferConfirmDialog.create())
+            is MoneyTransferStartedMessage -> sfm.openScreen(TransferConfirmDialog.create(message))
 
             is SelectCardMenuMessage -> sfm.openScreen(selectCardMenuScreen(message))
         }

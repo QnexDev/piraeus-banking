@@ -10,8 +10,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
-import ua.piraeusbank.banking.common.domain.AccountAndCardCreationRequest
-import ua.piraeusbank.banking.common.domain.CardMoneyTransferRequest
+import ua.piraeusbank.banking.client.ui.model.request.AccountAndCardCreationRequest
+import ua.piraeusbank.banking.client.ui.model.request.CardMoneyTransferRequest
 import ua.piraeusbank.banking.common.domain.PaymentCard
 
 interface CardAccountRestClient {
@@ -28,6 +28,46 @@ interface CardAccountRestClient {
     @POST("card/money/transfer")
     fun transferMoneyBetweenCards(@Body request: CardMoneyTransferRequest): Call<Void>
 
+}
+
+fun CardAccountRestClient.rxTransferMoneyBetweenCards(request: CardMoneyTransferRequest): Observable<String> {
+
+    val subject = PublishSubject.create<String>()
+
+    transferMoneyBetweenCards(request).enqueue(object: Callback<Void?> {
+        override fun onFailure(call: Call<Void?>, t: Throwable) {
+            subject.onError(t)
+        }
+
+        override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
+            if (response.isSuccessful) {
+                subject.onNext("")
+            } else {
+                subject.onNext(response.errorBody().string())
+            }
+        }
+    })
+    return subject
+}
+
+fun CardAccountRestClient.rxCreateCardAndAccount(request: AccountAndCardCreationRequest): Observable<String> {
+
+    val subject = PublishSubject.create<String>()
+
+    createCardAndAccount(request).enqueue(object: Callback<Void?> {
+        override fun onFailure(call: Call<Void?>, t: Throwable) {
+            subject.onError(t)
+        }
+
+        override fun onResponse(call: Call<Void?>, response: Response<Void?>) {
+            if (response.isSuccessful) {
+                subject.onNext("")
+            } else {
+                subject.onNext(response.errorBody().string())
+            }
+        }
+    })
+    return subject
 }
 
 fun CardAccountRestClient.getPaymentCardsByCustomerId(customerId: Long): Observable<ResponseBody> {

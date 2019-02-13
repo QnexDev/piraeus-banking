@@ -2,19 +2,22 @@ package ua.piraeusbank.banking.client.ui.screen
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.screen_card_statement.*
+import ua.piraeusbank.banking.client.App
 import ua.piraeusbank.banking.client.R
-import ua.piraeusbank.banking.client.ui.model.StatementRecord
-import ua.piraeusbank.banking.client.ui.model.TransferType
+import ua.piraeusbank.banking.client.service.client.getRxStatements
 import ua.piraeusbank.banking.client.ui.screen.adapter.StatementAdapter
 import ua.piraeusbank.banking.client.ui.screen.base.Screen
 import ua.piraeusbank.banking.client.ui.screen.base.ScreenPresentationModel
+import ua.piraeusbank.banking.client.util.CurrentUserContext
 
 class AccountStatementScreen : Screen<AccountStatementPm>() {
 
     private lateinit var statementView: RecyclerView
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private lateinit var statementAdapter: RecyclerView.Adapter<*>
+    private lateinit var statementAdapter: StatementAdapter
 
     companion object {
         fun create() = AccountStatementScreen()
@@ -29,44 +32,24 @@ class AccountStatementScreen : Screen<AccountStatementPm>() {
     override fun onBindPresentationModel(pm: AccountStatementPm) {
         super.onBindPresentationModel(pm)
 
+        Schedulers.io().scheduleDirect {
+            val customerId = CurrentUserContext.customer.customerId!!
+            App.component.customerRestClient.getRxStatements(customerId)
+                .subscribeOn(Schedulers.io())
+                .map {
+
+                    statementAdapter.statementRecords.addAll(it)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    statementAdapter.notifyDataSetChanged()
+                    moneyAmount.text = 9000.toString()
+                }
+        }
+
         viewManager = LinearLayoutManager(this.context)
         statementAdapter = StatementAdapter(
-            listOf(
-                StatementRecord(
-                    "*4308",
-                    "",
-                    "Petrenko Grigory",
-                    "",
-                    TransferType.INCOMING,
-                    "With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase",
-                    "14.12.18 05:23",
-                    "+200",
-                    "UAH"
-                ),
-                StatementRecord(
-                    "",
-                    "*7408",
-                    "",
-                    "Pavlov Oleg",
-                    TransferType.OUTGOING,
-                    "With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase",
-                    "15.12.18 04:11",
-                    "-1000",
-                    "UAH"
-
-                ),
-                StatementRecord(
-                    "",
-                    "*7408",
-                    "",
-                    "Pavlov Oleg",
-                    TransferType.OUTGOING,
-                    "With a debit card (also known as a bank card, check card or some other description) when a cardholder makes a purchase",
-                    "16.12.18 14:54",
-                    "-2000",
-                    "UAH"
-                )
-            ),
+            ArrayList(),
             R.layout.statement_record_layout,
             true
         )
