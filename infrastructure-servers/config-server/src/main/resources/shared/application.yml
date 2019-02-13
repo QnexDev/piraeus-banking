@@ -15,22 +15,22 @@ eureka:
     prefer-ip-address: true
   client:
     serviceUrl:
-      defaultZone: http://localhost:8762/eureka/
+      defaultZone: http://192.168.0.102:8762/eureka/
 
 security:
   oauth2:
     resource:
-      user-info-uri: http://localhost:8001/auth/users/current
+      user-info-uri: http://192.168.0.102:8001/auth/users/current
 
 spring:
   activemq:
-    broker-url: tcp://localhost:61616
+    broker-url: tcp://192.168.0.102:61616
     user: admin
     password: admin
 
 db:
   connection:
-    url: jdbc:h2:tcp://localhost:9123/~/test
+    url: jdbc:h2:tcp://192.168.0.102:9123/~/test
     port: 9123
     username: sa
     password:

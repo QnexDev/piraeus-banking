@@ -14,7 +14,7 @@ import ua.piraeusbank.banking.domain.model.MoneyTransferRequest
 interface AccountRestClient {
 
     @GET("{accountId}/balance/check")
-    fun checkCurrentBalance(@Path("accountId") accountId: Long): Call<Money>
+    fun checkCurrentBalance(@Path("accountId") accountId: Long): Call<Money?>
 
     @POST("money/transfer")
     fun transferMoney(@Body transferRequest: MoneyTransferRequest): Call<Void>

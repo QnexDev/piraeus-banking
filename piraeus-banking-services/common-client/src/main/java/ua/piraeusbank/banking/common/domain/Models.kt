@@ -27,12 +27,14 @@ data class CardTransaction(
 
 data class StatementRecord(
         val statementId: Long? = null,
-        val customerId: Long,
+        val customerName: String,
+        val customerLastname: String,
         val date: LocalDate,
         val type: String,
         val description: String?,
         val paidIn: Money? = null,
-        val paidOut: Money? = null
+        val paidOut: Money? = null,
+        val timestamp: Instant
 )
 
 data class Customer(

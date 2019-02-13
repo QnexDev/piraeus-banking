@@ -3,7 +3,7 @@ spring:
     name: ms-bank-card
   cloud:
     config:
-      uri: http://localhost:8889
+      uri: http://192.168.0.102:8889
       fail-fast: true
       password: ${CONFIG_SERVICE_PASSWORD}
       username: user

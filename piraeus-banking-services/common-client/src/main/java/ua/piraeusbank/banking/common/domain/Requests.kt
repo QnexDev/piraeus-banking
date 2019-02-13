@@ -7,7 +7,7 @@ data class AccountAndCardCreationRequest(
         val customerId: Long,
         val currencyCode: String,
         val networkCode: String,
-        val balance: Money = Money.of(0, "UAH"))
+        val balance: Money? = null)
 
 data class ChangePinCodeRequest(val cardId: Long, val newPinCode: Short)
 data class CardMoneyTransferRequest(

@@ -29,7 +29,7 @@ class RestAuthConfig {
             override fun load(key: String): String {
                 val body = OkHttpClient().newBuilder().build().newCall(
                         Request.Builder()
-                                .url("http://localhost:8001/auth/oauth/token")
+                                .url("http://192.168.0.102:8001/auth/oauth/token")
                                 .post(requestBody)
                                 .addHeader(
                                         "Authorization",

@@ -30,7 +30,7 @@ class BootstrapConfig {
     @Bean
     fun brokerServer(): BrokerService {
         val broker = BrokerService()
-        broker.addConnector("tcp://localhost:61616")
+        broker.addConnector("tcp://192.168.0.102:61616")
         broker.start()
         return broker
     }

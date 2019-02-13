@@ -1,6 +1,7 @@
 package ua.piraeusbank.banking.aggregator.service
 
 import okhttp3.Interceptor
+import org.javamoney.moneta.Money
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.cloud.client.discovery.DiscoveryClient
@@ -34,13 +35,14 @@ class AccountCardAggregatorServiceImpl(
         @Qualifier("tokenAuthenticator")
         @Autowired private val tokenAuthenticator: Interceptor) : AccountCardAggregatorService {
 
-    private val cardRestClient: CardRestClient = RetrofitServiceGenerator.createService("http://localhost:8002/cards/", tokenAuthenticator)
-    private val accountRestClient: AccountRestClient = RetrofitServiceGenerator.createService("http://localhost:8000/accounts/", tokenAuthenticator)
+    private val cardRestClient: CardRestClient = RetrofitServiceGenerator.createService("http://192.168.0.102:8002/cards/", tokenAuthenticator)
+    private val accountRestClient: AccountRestClient = RetrofitServiceGenerator.createService("http://192.168.0.102:8000/accounts/", tokenAuthenticator)
 
 
     override fun createCardAndAccount(request: AccountAndCardCreationRequest) {
         val accountId = accountRestClient.createAccount(
-                AccountCreationRequest(request.customerId, request.currencyCode, request.balance)).execute().body()
+                AccountCreationRequest(request.customerId, request.currencyCode, request.balance ?:
+                Money.of(0, "UAH"))).execute().body()
         cardRestClient.orderCard(
                 OrderCardRequest(
                         request.customerId,
@@ -50,15 +52,15 @@ class AccountCardAggregatorServiceImpl(
 
     override fun findPaymentCard(cardId: Long): PaymentCard {
         val card = cardRestClient.getCardById(cardId).execute().body()
-        val balance = accountRestClient.checkCurrentBalance(card.account.accountId!!).execute().body()
-        return cardConverter.convert(card, CardConvertParams(balance))
+//        val balance = accountRestClient.checkCurrentBalance(card.account.accountId!!).execute().body()!!
+        return cardConverter.convert(card, CardConvertParams(card.account.balance))
     }
 
     override fun findPaymentCardsByCustomerId(customerId: Long): List<PaymentCard> {
         val cards = cardRestClient.findCardsByCustomerId(customerId).execute().body()
         return cards.map {
-            val balance = accountRestClient.checkCurrentBalance(it.account.accountId!!).execute().body()
-            cardConverter.convert(it, CardConvertParams(balance))
+//            val balance = accountRestClient.checkCurrentBalance(it.account.accountId!!).execute().body()!!
+            cardConverter.convert(it, CardConvertParams(it.account.balance))
         }
     }
 

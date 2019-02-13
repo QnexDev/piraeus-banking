@@ -3,7 +3,7 @@ security:
     client:
       clientId: ms-cutomer
       clientSecret: ${MS_CUSTOMER_PASSWORD}
-      accessTokenUri: http://localhost:8001/auth/oauth/token
+      accessTokenUri: http://192.168.0.102:8001/auth/oauth/token
       grant-type: client_credentials
       scope: server
 

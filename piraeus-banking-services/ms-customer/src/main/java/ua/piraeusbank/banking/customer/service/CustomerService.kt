@@ -23,14 +23,25 @@ class CustomerService(
 
     @PostConstruct
     fun init() {
-        customerRepository.findByPhoneNumber("+3806363036393438").orElseGet {
+        customerRepository.findByPhoneNumber("+380636303637").orElseGet {
             registerCustomer(CustomerRegistrationRequest(
-                    phoneNumber = "+3806363036393438",
+                    phoneNumber = "+380636303637",
                     lastName = "Denysenko",
                     dateOfBirthday = LocalDate.of(1993, 2, 18),
                     email = "qnexdev@gmail.com",
                     name = "Alex",
-                    password = "stalker2"
+                    password = "1"
+            ))
+        }
+
+        customerRepository.findByPhoneNumber("+380636303638").orElseGet {
+            registerCustomer(CustomerRegistrationRequest(
+                    phoneNumber = "+380636303638",
+                    lastName = "Denysenko",
+                    dateOfBirthday = LocalDate.of(1997, 4, 6),
+                    email = "igor@gmail.com",
+                    name = "Igor",
+                    password = "1"
             ))
         }
     }

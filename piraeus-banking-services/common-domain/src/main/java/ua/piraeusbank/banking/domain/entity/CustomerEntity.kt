@@ -2,6 +2,7 @@ package ua.piraeusbank.banking.domain.entity
 
 import org.javamoney.moneta.Money
 import ua.piraeusbank.banking.domain.conversion.MoneyConverter
+import java.time.Instant
 import java.time.LocalDate
 import javax.persistence.*
 
@@ -27,14 +28,18 @@ data class CustomerEntity(
 data class StatementRecordEntity(
         @GeneratedValue
         @Id @Column(name = "statementId") val statementId: Long? = null,
-        @ManyToOne
-        @JoinColumn(name = "customer_id")
-        val customer: CustomerEntity,
+        @Column(name = "customer_id") val customerId: Long,
+        @Column(name = "customer_lastname") val customerLastname: String,
+        @Column(name = "customer_name") val customerName: String,
         @Column(name = "date") val date: LocalDate,
-        @Column(name = "type") val type: String,
+        @Enumerated(EnumType.STRING) @Column(name = "type") val type: TransferType,
         @Column(name = "description") val description: String?,
         @Convert(converter = MoneyConverter::class)
         @Column(name = "paid_in") val paidIn: Money? = null,
         @Convert(converter = MoneyConverter::class)
-        @Column(name = "paid_out") val paidOut: Money? = null
-)
+        @Column(name = "paid_out") val paidOut: Money? = null,
+        @Column(name = "timestamp") val timestamp: Instant)
+
+enum class TransferType {
+        INCOMING, OUTGOING
+}

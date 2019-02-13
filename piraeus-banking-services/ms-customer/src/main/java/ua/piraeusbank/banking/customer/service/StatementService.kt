@@ -8,6 +8,7 @@ import ua.piraeusbank.banking.common.domain.StatementRecord
 import ua.piraeusbank.banking.customer.repository.StatementRepository
 import ua.piraeusbank.banking.domain.entity.StatementRecordEntity
 import ua.piraeusbank.banking.domain.entity.TransactionTypeCode
+import ua.piraeusbank.banking.domain.entity.TransferType
 import ua.piraeusbank.banking.domain.model.AccountMoneyTransferMessage
 import java.time.LocalDate
 
@@ -18,13 +19,15 @@ class StatementService(@Autowired val statementRepository: StatementRepository) 
     fun getStatements(customerId: Long) =
             statementRepository.findAllByCustomerId(customerId).map {
                 StatementRecord(
-                        customerId = it.customer.customerId!!,
+                        customerName = it.customerName,
+                        customerLastname = it.customerLastname,
                         description = it.description,
-                        type = it.type,
+                        type = it.type.name,
                         paidIn = it.paidIn,
                         paidOut = it.paidOut,
                         date = it.date,
-                        statementId = it.statementId
+                        statementId = it.statementId,
+                        timestamp = it.timestamp
                 )
             }
 
@@ -43,17 +46,24 @@ class StatementService(@Autowired val statementRepository: StatementRepository) 
         statementRepository.saveAndFlush(StatementRecordEntity(
                 date = LocalDate.now(),
                 description = transaction.description,
-                customer = sourceAccount?.customer!!,
+                customerLastname = sourceAccount?.customer?.name!!,
+                customerName = sourceAccount.customer.lastName,
                 paidOut = transferAmount,
-                type = transaction.type.code.name
+                type = TransferType.OUTGOING,
+                timestamp = transaction.timestamp,
+                customerId = sourceAccount.customer.customerId!!
+
         ))
 
         statementRepository.saveAndFlush(StatementRecordEntity(
                 date = LocalDate.now(),
                 description = transaction.description,
-                customer = targetAccount?.customer!!,
+                customerLastname = targetAccount?.customer?.name!!,
+                customerName = targetAccount.customer.lastName,
                 paidIn = transferAmount,
-                type =  transaction.type.code.name
+                type = TransferType.INCOMING,
+                timestamp = transaction.timestamp,
+                customerId = targetAccount.customer.customerId!!
         ))
     }
 }
